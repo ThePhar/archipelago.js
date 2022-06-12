@@ -1,7 +1,6 @@
 import { APBaseObject } from "./__base";
 
-export interface Version extends APBaseObject {
-    readonly class: "Version";
+export interface NetworkVersion extends APBaseObject {
     readonly major: number;
     readonly minor: number;
     readonly build: number;
