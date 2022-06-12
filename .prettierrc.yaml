@@ -32,11 +32,14 @@
 #   There's no need to ask about that cat.    .O##########OOOOOOO###OOOO#OOOO  #
 #                                                                              #
 ################################################################################
-root: true
-parser: "@typescript-eslint/parser"
-plugins:
-  - "@typescript-eslint"
-extends:
-  - "eslint:recommended"
-  - "plugin:@typescript-eslint/recommended"
-  - "prettier"
+printWidth: 120
+tabWidth: 4
+useTabs: false
+semi: true
+singleQuote: false
+quoteProps: consistent
+trailingComma: all
+bracketSpacing: true
+arrowParens: always
+proseWrap: always
+endOfLine: lf
