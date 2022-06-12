@@ -11,5 +11,5 @@ export interface ConnectPacket extends APBasePacket {
     readonly uuid: string;
     readonly version: NetworkVersion;
     readonly items_handling: ItemsHandlingFlags | number;
-    readonly tags: CommonTags | string;
+    readonly tags: (CommonTags | string)[];
 }
