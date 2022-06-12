@@ -1,0 +1,2 @@
+# Ignore build directory for linting.
+dist
