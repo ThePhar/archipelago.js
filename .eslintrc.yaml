@@ -32,6 +32,7 @@
 #   There's no need to ask about that cat.    .O##########OOOOOOO###OOOO#OOOO  #
 #                                                                              #
 ################################################################################
+
 root: true
 parser: "@typescript-eslint/parser"
 plugins:
