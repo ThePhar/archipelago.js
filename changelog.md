@@ -1,10 +1,16 @@
-# 0.1.1
+## 0.1.2
+
+Bug Fixes:
+
+- Changes to automation suite, which can cause issues with 0.1.1.
+
+## 0.1.1
 
 Bug Fixes:
 
 - Fixed references and included type definitions from TypeScript build.
 
-# 0.1.0
+## 0.1.0
 
 Initial release.
 
