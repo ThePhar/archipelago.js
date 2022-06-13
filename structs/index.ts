@@ -5,7 +5,6 @@ export * from "./bounce";
 export * from "./ArchipelagoClient";
 export * from "./DataOperations";
 export * from "./DataPackageObject";
-export * from "./bounce/DeathLinkData";
 export * from "./GameData";
 export * from "./JSONMessagePart";
 export * from "./NetworkItem";
