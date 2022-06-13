@@ -1,3 +1,9 @@
+## 0.1.5
+
+Features:
+
+- Implicitly determines type of packet when comparing `cmd` property on a packet.
+
 ## 0.1.4
 
 Bug Fixes
