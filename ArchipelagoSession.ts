@@ -5,7 +5,6 @@ import { SessionStatus } from "./enums/SessionStatus";
 import { APBasePacket, NetworkVersion } from "./interfaces";
 
 export class ArchipelagoSession {
-    readonly #timeout = 5000;
     readonly #uri: string;
     #client = new WebSocketClient();
     #socket?: connection;
@@ -67,8 +66,8 @@ export class ArchipelagoSession {
                 reject(error);
             });
 
-            // Connect and await room info.
-            this.#client.connect(this.#uri, undefined, undefined, undefined, { timeout: this.#timeout });
+            // Connect.
+            this.#client.connect(this.#uri);
         });
 
         // We should be connected at this point, so let's go ahead and attempt to connect to the AP server.
