@@ -1,4 +1,3 @@
-import "module-alias/register";
 import EventEmitter from "events";
 import { client as WebSocket, connection as Connection, Message } from "websocket";
 

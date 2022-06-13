@@ -10,20 +10,22 @@ import { ArchipelagoClient, NetworkVersion } from "archipelago.js";
 
 // Set up our client.
 const version = new NetworkVersion(0, 3, 2);
-const client = new ArchipelagoClient("archipelago.gg:38281", version);
+const client = new ArchipelagoClient("localhost:38281", version);
 
 // Connect to the AP server and log in.
-client.connect("NodeGame", "Phar", "")
-    .then(() => console.log("Connected!"))
+client.connect("Archipelago", "Test", "")
+    .then(() => {
+        console.log("Connected!");
+
+        // Send packets!
+        client.send({ cmd: "Say", text: "Hello, world!" });
+    })
     .catch(console.error);
 
 // Listen for packets.
 client.addListener("packetReceived", (packet) => {
     console.log(packet);
 });
-
-// Send packets.
-client.send({ cmd: "Say", text: "Hello, world!" });
 ```
 
 The `ArchipelagoClient` handles all the main interactions with the Archipelago server, including sending and receiving packets and maintaining the websocket connection.
