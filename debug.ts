@@ -1,12 +1,12 @@
-import { ArchipelagoSession } from "./ArchipelagoSession";
+import { ArchipelagoClient } from "./ArchipelagoClient";
 import { NetworkVersion } from "./interfaces";
 import { SayPacket } from "./interfaces/packets";
 
 console.log("Hello, world");
 
-const session = ArchipelagoSession.createSession("localhost:38281");
-session.connect("Archipelago", "Test", "", new NetworkVersion(0, 3, 2)).then(() => {
-    session.send({ cmd: "Say", text: "Hello, there!" } as SayPacket);
+const client = new ArchipelagoClient("localhost:38281", new NetworkVersion(0, 3, 2));
+client.connect("Archipelago", "Test", "").then(() => {
+    client.send({ cmd: "Say", text: "Hello, there!" } as SayPacket);
 });
 
 // Make compiler happy.
