@@ -1,9 +1,9 @@
-import { Permission } from "@enums";
+import { CommandPacketType, Permission } from "@enums";
 import { BasePacket } from "@packets";
 import { NetworkPlayer, NetworkVersion } from "@structs";
 
 export interface RoomInfoPacket extends BasePacket {
-    readonly cmd: "RoomInfo";
+    readonly cmd: CommandPacketType.ROOM_INFO;
     readonly version: NetworkVersion;
     readonly tags: string[];
     readonly password: boolean;

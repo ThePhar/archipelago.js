@@ -1,8 +1,9 @@
+import { CommandPacketType } from "@enums";
 import { BasePacket } from "@packets";
 import { APBaseObject } from "@structs";
 
 export class BouncePacket implements BasePacket {
-    public readonly cmd = "Bounce";
+    public readonly cmd = CommandPacketType.BOUNCE;
     public readonly data: APBaseObject;
     public readonly games?: ReadonlyArray<string>;
     public readonly slots?: ReadonlyArray<number>;

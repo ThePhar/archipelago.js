@@ -1,4 +1,5 @@
 export * from "./ClientStatus";
+export * from "./CommandPacketType";
 export * from "./ItemFlags";
 export * from "./ItemsHandlingFlags";
 export * from "./Permission";

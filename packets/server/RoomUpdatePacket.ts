@@ -1,9 +1,9 @@
-import { Permission } from "@enums";
+import { CommandPacketType, Permission } from "@enums";
 import { BasePacket } from "@packets";
 import { NetworkPlayer, NetworkVersion } from "@structs";
 
 export interface RoomUpdatePacket extends BasePacket {
-    readonly cmd: "RoomUpdate";
+    readonly cmd: CommandPacketType.ROOM_UPDATE;
     readonly hint_points?: number;
     readonly players?: NetworkPlayer[];
     readonly checked_locations?: number[];

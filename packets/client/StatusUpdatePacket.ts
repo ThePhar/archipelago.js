@@ -1,8 +1,8 @@
-import { ClientStatus } from "@enums";
+import { ClientStatus, CommandPacketType } from "@enums";
 import { BasePacket } from "@packets";
 
 export class StatusUpdatePacket implements BasePacket {
-    public readonly cmd = "StatusUpdate";
+    public readonly cmd = CommandPacketType.STATUS_UPDATE;
     public readonly status: ClientStatus;
 
     public constructor(status: ClientStatus) {

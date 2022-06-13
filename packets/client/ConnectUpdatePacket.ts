@@ -1,7 +1,8 @@
+import { CommandPacketType } from "@enums";
 import { BasePacket } from "@packets";
 
 export class ConnectUpdatePacket implements BasePacket {
-    readonly cmd = "ConnectUpdate";
+    readonly cmd = CommandPacketType.CONNECT_UPDATE;
     readonly items_handling: number;
     readonly tags: ReadonlyArray<string>;
 

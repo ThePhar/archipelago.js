@@ -1,10 +1,10 @@
 import { randomUUID } from "crypto";
-import { ItemsHandlingFlags } from "@enums";
+import { CommandPacketType, ItemsHandlingFlags } from "@enums";
 import { BasePacket } from "@packets";
 import { NetworkVersion } from "@structs";
 
 export class ConnectPacket implements BasePacket {
-    public readonly cmd = "Connect";
+    public readonly cmd = CommandPacketType.CONNECT;
     public readonly uuid: string;
     public readonly game: string;
     public readonly name: string;

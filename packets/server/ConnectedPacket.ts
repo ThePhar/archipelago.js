@@ -1,8 +1,9 @@
+import { CommandPacketType } from "@enums";
 import { BasePacket } from "@packets";
 import { APBaseObject, NetworkPlayer, NetworkSlot } from "@structs";
 
 export interface ConnectedPacket extends BasePacket {
-    readonly cmd: "Connected";
+    readonly cmd: CommandPacketType.CONNECTED;
     readonly team: number;
     readonly slot: number;
     readonly players: NetworkPlayer[];
