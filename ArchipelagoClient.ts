@@ -1,9 +1,10 @@
+import "module-alias/register";
 import EventEmitter from "events";
-import * as Packet from "./interfaces/packets";
 import { client as WebSocket, connection as Connection, Message } from "websocket";
-import { APBasePacket, NetworkVersion } from "./interfaces";
-import { BounceManager, DataManager, ItemsManager, LocationsManager, RoomManager, SessionManager } from "./managers";
-import { SessionStatus } from "./enums/SessionStatus";
+
+import * as Packet from "@packets";
+import { SessionStatus } from "@enums";
+import { NetworkVersion } from "@structs";
 
 export class ArchipelagoClient {
     readonly #uri: string;
@@ -13,12 +14,6 @@ export class ArchipelagoClient {
     #connection?: Connection;
     #status = SessionStatus.DISCONNECTED;
     #emitter = new EventEmitter();
-    #bounceManager = new BounceManager(this);
-    #dataManager = new DataManager(this);
-    #itemsManager = new ItemsManager(this);
-    #locationsManager = new LocationsManager(this);
-    #roomManager = new RoomManager(this);
-    #sessionManager = new SessionManager(this);
 
     /**
      * Create a new client for connecting to Archipelago servers.
@@ -34,32 +29,11 @@ export class ArchipelagoClient {
         this.addListener("packetReceived", (packet) => console.log(packet));
     }
 
+    /**
+     * Get the current WebSocket connection status to the Archipelago server.
+     */
     public get status(): SessionStatus {
         return this.#status;
-    }
-
-    public get bounceManager(): BounceManager {
-        return this.#bounceManager;
-    }
-
-    public get dataManager(): DataManager {
-        return this.#dataManager;
-    }
-
-    public get itemsManager(): ItemsManager {
-        return this.#itemsManager;
-    }
-
-    public get locationsManager(): LocationsManager {
-        return this.#locationsManager;
-    }
-
-    public get roomManager(): RoomManager {
-        return this.#roomManager;
-    }
-
-    public get sessionManager(): SessionManager {
-        return this.#sessionManager;
     }
 
     /**
@@ -101,7 +75,7 @@ export class ArchipelagoClient {
      * @param packets A list of packets to send to the AP server. They are processed in the order they are defined in
      * this list.
      */
-    public send(...packets: APBasePacket[]): void {
+    public send(...packets: Packet.BasePacket[]): void {
         if (this.#connection !== undefined && this.status === SessionStatus.CONNECTED) {
             this.#connection.send(JSON.stringify(packets));
         }
@@ -117,14 +91,6 @@ export class ArchipelagoClient {
 
         // Clear our event listeners.
         this.#emitter.removeAllListeners("packetReceived");
-
-        // Re-initialize Managers and prepare any old ones for garbage collection.
-        this.#bounceManager = new BounceManager(this);
-        this.#dataManager = new DataManager(this);
-        this.#itemsManager = new ItemsManager(this);
-        this.#locationsManager = new LocationsManager(this);
-        this.#roomManager = new RoomManager(this);
-        this.#sessionManager = new SessionManager(this);
     }
 
     /**
@@ -132,7 +98,7 @@ export class ArchipelagoClient {
      * @param event The event to listen for.
      * @param listener The listener callback function to run when a packet is received.
      */
-    public addListener(event: "packetReceived", listener: (packet: APBasePacket) => void): void {
+    public addListener(event: "packetReceived", listener: (packet: Packet.BasePacket) => void): void {
         if (event !== "packetReceived") return;
 
         this.#emitter.addListener("packetReceived", listener);
@@ -153,7 +119,7 @@ export class ArchipelagoClient {
         if (buffer.type !== "utf8") return;
 
         // Parse packets and fire our packetReceived event for each packet.
-        const packets = JSON.parse(buffer.utf8Data) as APBasePacket[];
+        const packets = JSON.parse(buffer.utf8Data) as Packet.BasePacket[];
         for (const packet of packets) {
             this.#emitter.emit("packetReceived", packet);
         }

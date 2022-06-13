@@ -1,7 +1,3 @@
-
-# Created by https://www.toptal.com/developers/gitignore/api/node,webstorm+all
-# Edit at https://www.toptal.com/developers/gitignore?templates=node,webstorm+all
-
 ### Node ###
 # Logs
 logs
@@ -223,8 +219,8 @@ fabric.properties
 
 ### WebStorm+all Patch ###
 # Ignore everything.
-
 .idea/*
 
-
-# End of https://www.toptal.com/developers/gitignore/api/node,webstorm+all
+### Archipelago ###
+# Ignore debug testing file.
+debug.ts

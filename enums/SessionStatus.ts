@@ -1,5 +1,6 @@
+// prettier-ignore
 export enum SessionStatus {
     DISCONNECTED = "Disconnected",
-    CONNECTING = "Connecting",
-    CONNECTED = "Connected",
+    CONNECTING   = "Connecting",
+    CONNECTED    = "Connected",
 }

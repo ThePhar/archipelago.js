@@ -1,6 +1,6 @@
 import { ArchipelagoClient } from "./ArchipelagoClient";
-import { NetworkVersion } from "./interfaces";
-import { SayPacket } from "./interfaces/packets";
+import { NetworkVersion } from "./structs";
+import { SayPacket } from "./packets";
 
 console.log("Hello, world");
 
