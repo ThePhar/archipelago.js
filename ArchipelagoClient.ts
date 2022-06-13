@@ -1,6 +1,6 @@
 import EventEmitter from "events";
 import * as Packet from "./interfaces/packets";
-import { client as WebSocket, connection as Connection, IUtf8Message, Message } from "websocket";
+import { client as WebSocket, connection as Connection, Message } from "websocket";
 import { APBasePacket, NetworkVersion } from "./interfaces";
 import { BounceManager, DataManager, ItemsManager, LocationsManager, RoomManager, SessionManager } from "./managers";
 import { SessionStatus } from "./enums/SessionStatus";
