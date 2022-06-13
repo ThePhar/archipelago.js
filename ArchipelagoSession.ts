@@ -3,6 +3,13 @@ import { ConnectPacket } from "./interfaces/packets";
 import { client as WebSocketClient, connection, Message } from "websocket";
 import { SessionStatus } from "./enums/SessionStatus";
 import { APBasePacket, NetworkVersion } from "./interfaces";
+import { ConnectionManager } from "./managers/ConnectionManager";
+import { DataManager } from "./managers/DataManager";
+import { DeathLinkManager } from "./managers/DeathLinkManager";
+import { ItemsManager } from "./managers/ItemsManager";
+import { LocationsManager } from "./managers/LocationsManager";
+import { PlayersManager } from "./managers/PlayersManager";
+import { RoomManager } from "./managers/RoomManager";
 
 export class ArchipelagoSession {
     readonly #uri: string;
@@ -10,16 +17,58 @@ export class ArchipelagoSession {
     #socket?: connection;
     #status = SessionStatus.DISCONNECTED;
 
+    #connectionManager: ConnectionManager;
+    #dataManager: DataManager;
+    #deathLinkManager: DeathLinkManager;
+    #itemsManager: ItemsManager;
+    #locationsManager: LocationsManager;
+    #playersManager: PlayersManager;
+    #roomManager: RoomManager;
+
     private constructor(address: string) {
         // TODO: Do validation on this, to ensure it matches what we expect hostnames to look like.
         this.#uri = `ws://${address}/`;
+
+        // Instantiate our managers. TODO: Move to connection logic?
+        this.#connectionManager = new ConnectionManager();
+        this.#dataManager = new DataManager();
+        this.#deathLinkManager = new DeathLinkManager();
+        this.#itemsManager = new ItemsManager();
+        this.#locationsManager = new LocationsManager();
+        this.#playersManager = new PlayersManager();
+        this.#roomManager = new RoomManager();
     }
 
-    /**
-     * Gets the current websocket connection status for this session.
-     */
     public get status(): SessionStatus {
         return this.#status;
+    }
+
+    public get connectionManager(): ConnectionManager {
+        return this.#connectionManager;
+    }
+
+    public get dataManager(): DataManager {
+        return this.#dataManager;
+    }
+
+    public get deathLinkManager(): DeathLinkManager {
+        return this.#deathLinkManager;
+    }
+
+    public get itemsManager(): ItemsManager {
+        return this.#itemsManager;
+    }
+
+    public get locationsManager(): LocationsManager {
+        return this.#locationsManager;
+    }
+
+    public get playersManager(): PlayersManager {
+        return this.#playersManager;
+    }
+
+    public get roomManager(): RoomManager {
+        return this.#roomManager;
     }
 
     /**
@@ -86,7 +135,7 @@ export class ArchipelagoSession {
     }
 
     private onMessage(message: Message): void {
-        // Ignore non-utf8 messages.
+        // Ignore binary messages.
         if (message.type !== "utf8") return;
 
         // Process message as JSON packet array.
