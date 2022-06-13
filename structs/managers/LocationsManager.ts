@@ -1,9 +1,9 @@
 import { ArchipelagoClient } from "@structs";
 
 export class LocationsManager {
-    #client: ArchipelagoClient;
+    private _client: ArchipelagoClient;
 
     public constructor(client: ArchipelagoClient) {
-        this.#client = client;
+        this._client = client;
     }
 }

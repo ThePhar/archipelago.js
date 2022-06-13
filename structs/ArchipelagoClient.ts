@@ -6,12 +6,12 @@ import { SessionStatus } from "@enums";
 import { NetworkVersion } from "@structs";
 
 export class ArchipelagoClient {
-    readonly #uri: string;
-    readonly #version: NetworkVersion;
-    #socket = new WebSocket();
-    #connection?: Connection;
-    #status = SessionStatus.DISCONNECTED;
-    #emitter = new EventEmitter();
+    private readonly _uri: string;
+    private readonly _version: NetworkVersion;
+    private _socket = new WebSocket();
+    private _connection?: Connection;
+    private _status = SessionStatus.DISCONNECTED;
+    private _emitter = new EventEmitter();
 
     /**
      * Create a new client for connecting to Archipelago servers.
@@ -24,15 +24,15 @@ export class ArchipelagoClient {
             throw new Error(`Inputted address: '${address} does not appear to be a valid address:port`);
         }
 
-        this.#uri = `ws://${address}/`;
-        this.#version = version;
+        this._uri = `ws://${address}/`;
+        this._version = version;
     }
 
     /**
      * Get the current WebSocket connection status to the Archipelago server.
      */
     public get status(): SessionStatus {
-        return this.#status;
+        return this._status;
     }
 
     /**
@@ -46,27 +46,27 @@ export class ArchipelagoClient {
      */
     public async connect(game: string, name: string, password: string, tags?: string[], itemsHandling?: number) {
         // First establish the initial connection.
-        this.#status = SessionStatus.CONNECTING;
-        this.#connection = await new Promise<Connection>((resolve, reject) => {
+        this._status = SessionStatus.CONNECTING;
+        this._connection = await new Promise<Connection>((resolve, reject) => {
             // On successful connection.
-            this.#socket.on("connect", (connection) => {
-                this.#status = SessionStatus.CONNECTED;
+            this._socket.on("connect", (connection) => {
+                this._status = SessionStatus.CONNECTED;
                 connection.on("message", this.parsePackets.bind(this));
                 resolve(connection);
             });
 
             // On unsuccessful connection.
-            this.#socket.on("connectFailed", (error) => {
-                this.#status = SessionStatus.DISCONNECTED;
+            this._socket.on("connectFailed", (error) => {
+                this._status = SessionStatus.DISCONNECTED;
                 reject(error);
             });
 
             // Connect.
-            this.#socket.connect(this.#uri);
+            this._socket.connect(this._uri);
         });
 
         // We should be connected at this point, so let's go ahead and attempt to connect to the AP server.
-        this.send(new ConnectPacket(game, name, password, this.#version, tags, itemsHandling));
+        this.send(new ConnectPacket(game, name, password, this._version, tags, itemsHandling));
     }
 
     /**
@@ -75,8 +75,8 @@ export class ArchipelagoClient {
      * this list.
      */
     public send(...packets: ArchipelagoClientPacket[]): void {
-        if (this.#connection !== undefined && this.status === SessionStatus.CONNECTED) {
-            this.#connection.send(JSON.stringify(packets));
+        if (this._connection !== undefined && this.status === SessionStatus.CONNECTED) {
+            this._connection.send(JSON.stringify(packets));
         }
     }
 
@@ -84,12 +84,12 @@ export class ArchipelagoClient {
      * Disconnect from the server and re-initialize any managers.
      */
     public disconnect(): void {
-        this.#connection?.close(0, "Disconnecting");
-        this.#connection = undefined;
-        this.#status = SessionStatus.DISCONNECTED;
+        this._connection?.close(0, "Disconnecting");
+        this._connection = undefined;
+        this._status = SessionStatus.DISCONNECTED;
 
         // Clear our event listeners.
-        this.#emitter.removeAllListeners("packetReceived");
+        this._emitter.removeAllListeners("packetReceived");
     }
 
     /**
@@ -100,7 +100,7 @@ export class ArchipelagoClient {
     public addListener(event: "packetReceived", listener: (packet: ArchipelagoServerPacket) => void): void {
         if (event !== "packetReceived") return;
 
-        this.#emitter.addListener("packetReceived", listener);
+        this._emitter.addListener("packetReceived", listener);
     }
 
     /**
@@ -111,7 +111,7 @@ export class ArchipelagoClient {
     public removeListener(event: "packetReceived", listener: EventListener): void {
         if (event !== "packetReceived") return;
 
-        this.#emitter.removeListener("packetReceived", listener);
+        this._emitter.removeListener("packetReceived", listener);
     }
 
     private parsePackets(buffer: Message): void {
@@ -120,7 +120,7 @@ export class ArchipelagoClient {
         // Parse packets and fire our packetReceived event for each packet.
         const packets = JSON.parse(buffer.utf8Data) as ArchipelagoServerPacket[];
         for (const packet of packets) {
-            this.#emitter.emit("packetReceived", packet);
+            this._emitter.emit("packetReceived", packet);
         }
     }
 }
