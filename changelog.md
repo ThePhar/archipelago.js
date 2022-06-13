@@ -1,3 +1,9 @@
+## 0.1.3
+
+Bug Fixes
+
+- Fixed a module lookup bug that prevented modules from being found if archipelago.js was imported via node_modules.
+
 ## 0.1.2
 
 Bug Fixes:
