@@ -262,3 +262,6 @@ debug.ts
 *.jsx
 *.d.ts
 *.d.ts.map
+
+# Ignore .npmrc
+.npmrc
