@@ -257,6 +257,8 @@ fabric.properties
 # Ignore debug testing file.
 debug.ts
 
-# Ignore compiled JavaScript
+# Ignore compiled JavaScript and TypeScript definition files.
 *.js
 *.jsx
+*.d.ts
+*.d.ts.map

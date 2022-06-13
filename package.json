@@ -1,6 +1,6 @@
 {
   "name": "archipelago.js",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A general-purpose library for communicating with Archipelago game servers written in Node.js.",
   "license": "MIT",
   "author": {
@@ -13,6 +13,8 @@
     "build": "tsc",
     "lint": "eslint ."
   },
+  "types": "index.d.ts",
+  "repository": "https://github.com/ThePhar/archipelago.js",
   "bugs": {
     "url": "https://github.com/ThePhar/archipelago.js/issues"
   },
