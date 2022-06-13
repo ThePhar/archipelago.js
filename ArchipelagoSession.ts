@@ -1,58 +1,45 @@
 import * as Packet from "./interfaces/packets";
-import { ConnectPacket } from "./interfaces/packets";
-import { client as WebSocketClient, connection, Message } from "websocket";
-import { SessionStatus } from "./enums/SessionStatus";
+import { client as WebSocketClient, connection as Connection, Message } from "websocket";
 import { APBasePacket, NetworkVersion } from "./interfaces";
-import { ConnectionManager } from "./managers/ConnectionManager";
-import { DataManager } from "./managers/DataManager";
-import { DeathLinkManager } from "./managers/DeathLinkManager";
-import { ItemsManager } from "./managers/ItemsManager";
-import { LocationsManager } from "./managers/LocationsManager";
-import { PlayersManager } from "./managers/PlayersManager";
-import { RoomManager } from "./managers/RoomManager";
+import { BounceManager, DataManager, ItemsManager, LocationsManager, RoomManager, SessionManager } from "./managers";
+import { SessionStatus } from "./enums/SessionStatus";
 
 export class ArchipelagoSession {
     readonly #uri: string;
     #client = new WebSocketClient();
-    #socket?: connection;
+    #socket?: Connection;
     #status = SessionStatus.DISCONNECTED;
 
-    #connectionManager: ConnectionManager;
+    #bounceManager: BounceManager;
     #dataManager: DataManager;
-    #deathLinkManager: DeathLinkManager;
     #itemsManager: ItemsManager;
     #locationsManager: LocationsManager;
-    #playersManager: PlayersManager;
     #roomManager: RoomManager;
+    #sessionManager: SessionManager;
 
     private constructor(address: string) {
         // TODO: Do validation on this, to ensure it matches what we expect hostnames to look like.
         this.#uri = `ws://${address}/`;
 
         // Instantiate our managers. TODO: Move to connection logic?
-        this.#connectionManager = new ConnectionManager();
+        this.#bounceManager = new BounceManager();
         this.#dataManager = new DataManager();
-        this.#deathLinkManager = new DeathLinkManager();
         this.#itemsManager = new ItemsManager();
         this.#locationsManager = new LocationsManager();
-        this.#playersManager = new PlayersManager();
         this.#roomManager = new RoomManager();
+        this.#sessionManager = new SessionManager();
     }
 
     public get status(): SessionStatus {
         return this.#status;
     }
 
-    public get connectionManager(): ConnectionManager {
-        return this.#connectionManager;
+    public get bounceManager(): BounceManager {
+        return this.#bounceManager;
     }
 
     public get dataManager(): DataManager {
         return this.#dataManager;
-    }
-
-    public get deathLinkManager(): DeathLinkManager {
-        return this.#deathLinkManager;
     }
 
     public get itemsManager(): ItemsManager {
@@ -63,12 +50,12 @@ export class ArchipelagoSession {
         return this.#locationsManager;
     }
 
-    public get playersManager(): PlayersManager {
-        return this.#playersManager;
-    }
-
     public get roomManager(): RoomManager {
         return this.#roomManager;
+    }
+
+    public get sessionManager(): SessionManager {
+        return this.#sessionManager;
     }
 
     /**
@@ -99,7 +86,7 @@ export class ArchipelagoSession {
     ): Promise<void> {
         // First establish the initial connection.
         this.#status = SessionStatus.CONNECTING;
-        this.#socket = await new Promise<connection>((resolve, reject) => {
+        this.#socket = await new Promise<Connection>((resolve, reject) => {
             // On successful connection.
             this.#client.on("connect", (socket) => {
                 this.#status = SessionStatus.CONNECTED;
@@ -120,7 +107,7 @@ export class ArchipelagoSession {
         });
 
         // We should be connected at this point, so let's go ahead and attempt to connect to the AP server.
-        this.send(new ConnectPacket(game, name, password, version, tags, itemsHandling));
+        this.send(new Packet.ConnectPacket(game, name, password, version, tags, itemsHandling));
     }
 
     /**
@@ -138,49 +125,63 @@ export class ArchipelagoSession {
         // Ignore binary messages.
         if (message.type !== "utf8") return;
 
-        // Process message as JSON packet array.
+        // Parse the server data as a list of packets.
         const packets: APBasePacket[] = JSON.parse(message.utf8Data);
+
+        // Delegate the processing of each type of packet to their equivalent manager.
         for (const packet of packets) {
             switch (packet.cmd) {
-                case "RoomInfo":
-                    console.log(packet as Packet.RoomInfoPacket);
+                // Bounce Manager (+ Death Links)
+                case "Bounced":
+                    this.bounceManager.onBounced(packet as Packet.BouncedPacket);
                     break;
+
+                // Session Manager
                 case "ConnectionRefused":
-                    console.log(packet as Packet.ConnectionRefusedPacket);
+                    this.sessionManager.onConnectionRefused(packet as Packet.ConnectionRefusedPacket);
                     break;
                 case "Connected":
-                    console.log(packet as Packet.ConnectedPacket);
-                    break;
-                case "ReceivedItems":
-                    console.log(packet as Packet.ReceivedItemsPacket);
-                    break;
-                case "LocationInfo":
-                    console.log(packet as Packet.LocationInfoPacket);
-                    break;
-                case "RoomUpdate":
-                    console.log(packet as Packet.RoomInfoPacket);
+                    this.sessionManager.onConnected(packet as Packet.ConnectedPacket);
                     break;
                 case "Print":
-                    console.log(packet as Packet.PrintPacket);
+                    this.sessionManager.onPrint(packet as Packet.PrintPacket);
                     break;
                 case "PrintJSON":
-                    console.log(packet as Packet.PrintJSONPacket);
+                    this.sessionManager.onPrintJSON(packet as Packet.PrintJSONPacket);
                     break;
                 case "DataPackage":
-                    console.log(packet as Packet.DataPackagePacket);
-                    break;
-                case "Bounced":
-                    console.log(packet as Packet.BouncedPacket);
+                    this.sessionManager.onDataPackage(packet as Packet.DataPackagePacket);
                     break;
                 case "InvalidPacket":
-                    console.log(packet as Packet.InvalidPacketPacket);
+                    this.sessionManager.onInvalidPacket(packet as Packet.InvalidPacketPacket);
                     break;
+
+                // Data Manager
                 case "Retrieved":
-                    console.log(packet as Packet.RetrievedPacket);
+                    this.dataManager.onReterieved(packet as Packet.RetrievedPacket);
                     break;
                 case "SetReply":
-                    console.log(packet as Packet.SetReplyPacket);
+                    this.dataManager.onSetReply(packet as Packet.SetReplyPacket);
                     break;
+
+                // Items Manager
+                case "ReceivedItems":
+                    this.itemsManager.onReceivedItems(packet as Packet.ReceivedItemsPacket);
+                    break;
+
+                // Locations Manager
+                case "LocationInfo":
+                    this.locationsManager.onLocationInfo(packet as Packet.LocationInfoPacket);
+                    break;
+
+                // Room Manager
+                case "RoomInfo":
+                    this.roomManager.onRoomInfo(packet as Packet.RoomInfoPacket);
+                    break;
+                case "RoomUpdate":
+                    this.roomManager.onRoomUpdate(packet as Packet.RoomInfoPacket);
+                    break;
+
                 default:
                     console.warn(`Unsupported packet sent to client: ${packet.cmd}.`);
                     console.warn(packet);
