@@ -17,9 +17,6 @@
   "bugs": {
     "url": "https://github.com/ThePhar/archipelago.js/issues"
   },
-  "publishConfig": {
-    "@thephar:registry": "https://npm.pkg.github.com/"
-  },
   "devDependencies": {
     "@types/node": "^17.0.42",
     "@types/websocket": "^1.0.5",
