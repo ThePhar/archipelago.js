@@ -1,6 +1,6 @@
 {
   "name": "archipelago",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A general-purpose library for communicating with Archipelago game servers written in Node.js.",
   "license": "MIT",
   "author": {
