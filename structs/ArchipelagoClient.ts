@@ -8,7 +8,6 @@ import { NetworkVersion } from "@structs";
 export class ArchipelagoClient {
     readonly #uri: string;
     readonly #version: NetworkVersion;
-
     #socket = new WebSocket();
     #connection?: Connection;
     #status = SessionStatus.DISCONNECTED;
@@ -20,12 +19,13 @@ export class ArchipelagoClient {
      * @param version The version of the Archipelago protocol this client supports.
      */
     public constructor(address: string, version: NetworkVersion) {
-        // TODO: Do validation on this, to ensure it matches what we expect hostnames to look like.
+        // There is probably a better regex than this, but make sure it looks like a valid address.
+        if (!/^[^:]+:[0-9]{2,5}$/.test(address)) {
+            throw new Error(`Inputted address: '${address} does not appear to be a valid address:port`);
+        }
+
         this.#uri = `ws://${address}/`;
         this.#version = version;
-
-        // For debugging purposes, let's log all packets as they come in.
-        this.addListener("packetReceived", (packet) => console.log(packet));
     }
 
     /**

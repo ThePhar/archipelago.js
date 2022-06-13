@@ -1,3 +1,10 @@
+## 0.1.4
+
+Bug Fixes
+
+- Added basic validation for server address.
+- Removed debug console.log that got forgotten about.
+
 ## 0.1.3
 
 Bug Fixes

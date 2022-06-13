@@ -2,6 +2,7 @@
 export * from "./bounce";
 
 // All other exports.
+export * from "./ArchipelagoClient";
 export * from "./DataOperations";
 export * from "./DataPackageObject";
 export * from "./bounce/DeathLinkData";
