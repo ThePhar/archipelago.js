@@ -1,1 +1,16 @@
+.github/
+__tests__/
+.eslintignore
+.eslintrc.yaml
+.gitignore
+.npmrc
+.prettierrc
+changelog.md
+readme.md
+tsconfig.json
+debug.js
+
+# Ignore TypeScript files, we'll package the .d.ts
+*.ts
+!*.d.ts
 *.d.ts.map
