@@ -224,3 +224,7 @@ fabric.properties
 ### Archipelago ###
 # Ignore debug testing file.
 debug.ts
+
+# Ignore compiled JavaScript
+*.js
+*.jsx
