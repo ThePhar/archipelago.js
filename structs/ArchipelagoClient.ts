@@ -74,7 +74,7 @@ export class ArchipelagoClient {
      * @param packets A list of packets to send to the AP server. They are processed in the order they are defined in
      * this list.
      */
-    public send(...packets: Packet.BasePacket[]): void {
+    public send(...packets: Packet.ArchipelagoClientPacket[]): void {
         if (this.#connection !== undefined && this.status === SessionStatus.CONNECTED) {
             this.#connection.send(JSON.stringify(packets));
         }
@@ -97,7 +97,7 @@ export class ArchipelagoClient {
      * @param event The event to listen for.
      * @param listener The listener callback function to run when a packet is received.
      */
-    public addListener(event: "packetReceived", listener: (packet: Packet.BasePacket) => void): void {
+    public addListener(event: "packetReceived", listener: (packet: Packet.ArchipelagoServerPacket) => void): void {
         if (event !== "packetReceived") return;
 
         this.#emitter.addListener("packetReceived", listener);
@@ -118,7 +118,7 @@ export class ArchipelagoClient {
         if (buffer.type !== "utf8") return;
 
         // Parse packets and fire our packetReceived event for each packet.
-        const packets = JSON.parse(buffer.utf8Data) as Packet.BasePacket[];
+        const packets = JSON.parse(buffer.utf8Data) as Packet.ArchipelagoServerPacket[];
         for (const packet of packets) {
             this.#emitter.emit("packetReceived", packet);
         }
