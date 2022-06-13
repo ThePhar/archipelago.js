@@ -6,20 +6,16 @@ A general purpose library for communicating with Archipelago servers via Node.js
 ## Getting Started
 
 ```javascript
-import { ArchipelagoClient, NetworkVersion } from "archipelago.js";
+import { ArchipelagoClient, NetworkVersion, SayPacket } from "archipelago.js";
 
 // Set up our client.
 const version = new NetworkVersion(0, 3, 2);
-const client = new ArchipelagoClient("localhost:38281", version);
+const client = new ArchipelagoClient("10.0.0.92:38281", version);
 
 // Connect to the AP server and log in.
-client.connect("Archipelago", "Test", "")
-    .then(() => {
-        console.log("Connected!");
-
-        // Send packets!
-        client.send({ cmd: "Say", text: "Hello, world!" });
-    })
+client.connect("CC", "Phar")
+    // Send packets!
+    .then(() => client.send(new SayPacket("Hello, world!")))
     .catch(console.error);
 
 // Listen for packets.

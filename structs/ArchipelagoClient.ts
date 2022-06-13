@@ -44,7 +44,7 @@ export class ArchipelagoClient {
      * @param itemsHandling Tells the server which ReceivedItems packets to listen for. If omitted, game is considered
      * fully remote.
      */
-    public async connect(game: string, name: string, password: string, tags?: string[], itemsHandling?: number) {
+    public async connect(game: string, name: string, password = "", tags?: string[], itemsHandling?: number) {
         // First establish the initial connection.
         this._status = SessionStatus.CONNECTING;
         this._connection = await new Promise<Connection>((resolve, reject) => {

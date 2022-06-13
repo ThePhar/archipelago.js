@@ -1,3 +1,9 @@
+## 0.1.6
+
+Features:
+
+- Made `password` optional argument when connecting via `ArchipelagoClient.connect()`.
+
 ## 0.1.5
 
 Features:

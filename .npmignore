@@ -8,7 +8,7 @@ __tests__/
 changelog.md
 readme.md
 tsconfig.json
-debug.js
+debug.*
 
 # Ignore TypeScript files, we'll package the .d.ts
 *.ts
