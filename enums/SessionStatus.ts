@@ -1,5 +1,5 @@
 export enum SessionStatus {
-    DISCONNECTED,
-    CONNECTING,
-    CONNECTED,
+    DISCONNECTED = "Disconnected",
+    CONNECTING = "Connecting",
+    CONNECTED = "Connected",
 }
