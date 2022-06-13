@@ -1,8 +1,5 @@
 # Archipelago.js
-![GitHub](https://img.shields.io/github/license/thephar/archipelago.js?style=flat-square)
-![GitHub package.json version](https://img.shields.io/github/package-json/v/thephar/archipelago.js?style=flat-square)
-![GitHub repo size](https://img.shields.io/github/repo-size/thephar/archipelago.js?style=flat-square)
-![Discord](https://img.shields.io/discord/731205301247803413?label=discord&style=flat-square)
+![GitHub](https://img.shields.io/github/license/thephar/archipelago.js?style=flat-square) ![GitHub package.json version](https://img.shields.io/github/package-json/v/thephar/archipelago.js?style=flat-square) ![GitHub repo size](https://img.shields.io/github/repo-size/thephar/archipelago.js?style=flat-square) ![Discord](https://img.shields.io/discord/731205301247803413?label=discord&style=flat-square)
 
 A general purpose library for communicating with Archipelago servers via Node.js.
 
