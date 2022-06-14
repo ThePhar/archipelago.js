@@ -4,7 +4,7 @@ import { client as WebSocket, connection as Connection, Message } from "websocke
 
 import * as Packet from "@packets";
 import { CommandPacketType, ItemsHandlingFlags, SessionStatus } from "@enums";
-import { DataManager, NetworkVersion } from "@structs";
+import { DataManager, ItemsManager, LocationsManager, NetworkVersion } from "@structs";
 
 export class ArchipelagoClient {
     private readonly _uri: string;
@@ -15,6 +15,8 @@ export class ArchipelagoClient {
     private _emitter = new EventEmitter();
 
     private _dataManager = new DataManager(this);
+    private _locationsManager = new LocationsManager(this);
+    private _itemsManager = new ItemsManager(this);
 
     /**
      * Create a new client for connecting to Archipelago servers.
