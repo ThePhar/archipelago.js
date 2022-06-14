@@ -1,7 +1,8 @@
 # Archipelago.js
 ![GitHub](https://img.shields.io/github/license/thephar/archipelago.js?style=flat-square)
-![npm](https://img.shields.io/npm/v/archipelago.js?style=flat-square)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/thephar/archipelago.js/Lint%20and%20Build?style=flat-square)
 ![npm type definitions](https://img.shields.io/npm/types/archipelago.js?style=flat-square)
+![npm](https://img.shields.io/npm/v/archipelago.js?style=flat-square)
 ![npm](https://img.shields.io/npm/dm/archipelago.js?style=flat-square)
 
 A general purpose library for communicating with Archipelago servers via Node.js.

@@ -1,11 +1,13 @@
 # This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
 # For more information see: https://help.github.com/actions/language-and-framework-guides/publishing-nodejs-packages
 
-name: Publish Release to NPM
+name: Lint and Build
 
 on:
-  release:
-    types: [ "created" ]
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -21,22 +23,3 @@ jobs:
         run: npm run lint
       - name: �️ Building package to check for compile errors...
         run: npm run build
-
-
-  publish-npm:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          registry-url: https://registry.npmjs.org/
-      - name: Installing dependancies...
-        run: npm install
-      - name: �️ Building package for NPM...
-        run: npm run build
-      - name: � Publishing to NPM registry...
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
