@@ -12,8 +12,7 @@
   "scripts": {
     "clean": "rimraf -rf dist && rimraf -rf types",
     "build": "npm run clean && tsc",
-    "lint": "eslint src/",
-    "deploy": "rpm run build & npm publish"
+    "lint": "eslint src/"
   },
   "types": "types/index.d.ts",
   "repository": "https://github.com/ThePhar/archipelago.js.git",
