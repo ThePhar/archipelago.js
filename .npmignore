@@ -1,4 +1,5 @@
 # Ignore the following directories.
+.idea/
 .github/
 src/
 
@@ -7,3 +8,7 @@ src/
 .eslintrc
 .prettierrc
 tsconfig.json
+
+# Ignore any root level typescript files used to testing.
+*.ts
+!*.d.ts

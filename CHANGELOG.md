@@ -1,3 +1,9 @@
+## 0.2.1
+
+Misc Changes:
+
+- Changes to .npmignore to ignore development files.
+
 ## 0.2.0
 
 Features:
