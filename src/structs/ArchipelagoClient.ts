@@ -15,8 +15,8 @@ export class ArchipelagoClient {
     private _emitter = new EventEmitter();
 
     private _dataManager = new DataManager(this);
-    private _locationsManager = new LocationsManager(this);
     private _itemsManager = new ItemsManager(this);
+    private _locationsManager = new LocationsManager(this);
 
     /**
      * Create a new client for connecting to Archipelago servers.
@@ -45,6 +45,20 @@ export class ArchipelagoClient {
      */
     public get data(): DataManager {
         return this._dataManager;
+    }
+
+    /**
+     * Get the Item Manager helper object.
+     */
+    public get items(): ItemsManager {
+        return this._itemsManager;
+    }
+
+    /**
+     * Get the Location Manager helper object.
+     */
+    public get locations(): LocationsManager {
+        return this._locationsManager;
     }
 
     /**
