@@ -1,14 +1,9 @@
+# Ignore the following directories.
 .github/
-__tests__/
+src/
+
+# Ignore the following config files.
 .eslintignore
-.eslintrc.yaml
-.gitignore
-.npmrc
+.eslintrc
 .prettierrc
 tsconfig.json
-debug.*
-
-# Ignore TypeScript files, but we'll package the .d.ts
-*.ts
-!*.d.ts
-*.d.ts.map
