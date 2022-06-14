@@ -57,7 +57,7 @@ export class ArchipelagoClient {
     /**
      * Get the Data Manager helper object.
      */
-    public get dataManager(): DataManager {
+    public get data(): DataManager {
         return this._dataManager;
     }
 
