@@ -5,12 +5,10 @@ __tests__/
 .gitignore
 .npmrc
 .prettierrc
-changelog.md
-readme.md
 tsconfig.json
 debug.*
 
-# Ignore TypeScript files, we'll package the .d.ts
+# Ignore TypeScript files, but we'll package the .d.ts
 *.ts
 !*.d.ts
 *.d.ts.map

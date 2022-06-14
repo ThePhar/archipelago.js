@@ -255,13 +255,11 @@ fabric.properties
 
 ### Archipelago ###
 # Ignore debug testing file.
-debug.ts
+__debug__/
 
-# Ignore compiled JavaScript and TypeScript definition files.
-*.js
-*.jsx
-*.d.ts
-*.d.ts.map
+# Ignore build output.
+types/
+dist/
 
 # Ignore .npmrc
 .npmrc

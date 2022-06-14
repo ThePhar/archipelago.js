@@ -48,7 +48,7 @@ rules:
   indent:               ["error", 4, { "SwitchCase": 1 }]
   linebreak-style:      ["error", "unix"]
   max-len:              ["warn", 120]
-  no-console:           ["off"]
+  no-console:           ["warn"]
   no-case-declarations: ["off"]
   object-curly-spacing: ["error", "always"]
   quotes:               ["error", "double"]
