@@ -1,15 +1,18 @@
-import { DataPackagePacket } from "@packets";
-import { ArchipelagoClient, GameData } from "@structs";
+import { DataPackagePacket, RoomInfoPacket, RoomUpdatePacket } from "@packets";
+import { ArchipelagoClient, GameData, NetworkPlayer } from "@structs";
 
 export class DataManager {
     private _client: ArchipelagoClient;
     private _dataPackage = new Map<string, GameData>();
     private _locations = new Map<number, string>();
     private _items = new Map<number, string>();
+    private _players = new Map<number, NetworkPlayer>();
 
     public constructor(client: ArchipelagoClient) {
         this._client = client;
         this._client.addListener("dataPackage", this.onDataPackage.bind(this));
+        this._client.addListener("roomInfo", this.onRoomInfo.bind(this));
+        this._client.addListener("roomUpdate", this.onRoomUpdate.bind(this));
     }
 
     /**
@@ -33,6 +36,13 @@ export class DataManager {
         return this._items;
     }
 
+    /**
+     * Returns a map of all players mapped to their slot id.
+     */
+    public get players(): ReadonlyMap<number, NetworkPlayer> {
+        return this._players;
+    }
+
     private onDataPackage(packet: DataPackagePacket): void {
         // TODO: Cache results.
         for (const game in packet.data.games) {
@@ -48,6 +58,20 @@ export class DataManager {
             for (const item in data.item_name_to_id) {
                 this._items.set(data.item_name_to_id[item], item);
             }
+        }
+    }
+
+    private onRoomInfo(packet: RoomInfoPacket): void {
+        for (const player of packet.players) {
+            this._players.set(player.slot, player);
+        }
+    }
+
+    private onRoomUpdate(packet: RoomUpdatePacket): void {
+        if (!packet.players) return;
+
+        for (const player of packet.players) {
+            this._players.set(player.slot, player);
         }
     }
 }
