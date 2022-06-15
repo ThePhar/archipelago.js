@@ -48,14 +48,14 @@ export class LocationsManager {
     /**
      * An array of all checked locations.
      */
-    public checked(): ReadonlyArray<number> {
+    public get checked(): ReadonlyArray<number> {
         return this._checked;
     }
 
     /**
      * An array of all locations that are not checked.
      */
-    public missing(): ReadonlyArray<number> {
+    public get missing(): ReadonlyArray<number> {
         return this._missing;
     }
 
