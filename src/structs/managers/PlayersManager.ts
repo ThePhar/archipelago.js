@@ -1,6 +1,6 @@
 import { ArchipelagoClient } from "@structs";
 
-export class ItemsManager {
+export class PlayersManager {
     private _client: ArchipelagoClient;
 
     public constructor(client: ArchipelagoClient) {
@@ -20,7 +20,7 @@ export class ItemsManager {
      * @param playerId
      */
     public alias(playerId: number): string {
-        return this._client.data.players.get(playerId)?.name ?? `Unknown Player ${playerId}`;
+        return this._client.data.players.get(playerId)?.alias ?? `Unknown Player ${playerId}`;
     }
 
     /**

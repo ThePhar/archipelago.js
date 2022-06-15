@@ -4,7 +4,7 @@ import { client as WebSocket, connection as Connection, Message } from "websocke
 
 import * as Packet from "@packets";
 import { CommandPacketType, ItemsHandlingFlags, SessionStatus } from "@enums";
-import { DataManager, ItemsManager, LocationsManager, NetworkVersion } from "@structs";
+import { DataManager, ItemsManager, LocationsManager, NetworkVersion, PlayersManager } from "@structs";
 
 export class ArchipelagoClient {
     private readonly _uri: string;
@@ -17,6 +17,7 @@ export class ArchipelagoClient {
     private _dataManager = new DataManager(this);
     private _itemsManager = new ItemsManager(this);
     private _locationsManager = new LocationsManager(this);
+    private _playersManager = new PlayersManager(this);
 
     /**
      * Create a new client for connecting to Archipelago servers.
@@ -59,6 +60,13 @@ export class ArchipelagoClient {
      */
     public get locations(): LocationsManager {
         return this._locationsManager;
+    }
+
+    /**
+     * Get the Players Manager helper object.
+     */
+    public get players(): PlayersManager {
+        return this._playersManager;
     }
 
     /**
@@ -152,6 +160,9 @@ export class ArchipelagoClient {
 
         // Reinitialize our Managers.
         this._dataManager = new DataManager(this);
+        this._itemsManager = new ItemsManager(this);
+        this._locationsManager = new LocationsManager(this);
+        this._playersManager = new PlayersManager(this);
     }
 
     /**

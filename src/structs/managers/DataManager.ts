@@ -1,4 +1,4 @@
-import { DataPackagePacket, RoomInfoPacket, RoomUpdatePacket } from "@packets";
+import { ConnectedPacket, DataPackagePacket, RoomUpdatePacket } from "@packets";
 import { ArchipelagoClient, GameData, NetworkPlayer } from "@structs";
 
 export class DataManager {
@@ -11,7 +11,7 @@ export class DataManager {
     public constructor(client: ArchipelagoClient) {
         this._client = client;
         this._client.addListener("dataPackage", this.onDataPackage.bind(this));
-        this._client.addListener("roomInfo", this.onRoomInfo.bind(this));
+        this._client.addListener("connected", this.onConnected.bind(this));
         this._client.addListener("roomUpdate", this.onRoomUpdate.bind(this));
     }
 
@@ -61,7 +61,7 @@ export class DataManager {
         }
     }
 
-    private onRoomInfo(packet: RoomInfoPacket): void {
+    private onConnected(packet: ConnectedPacket): void {
         for (const player of packet.players) {
             this._players.set(player.slot, player);
         }
