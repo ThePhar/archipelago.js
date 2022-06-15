@@ -11,3 +11,7 @@ moduleAlias.addAliases({
 export * from "./enums";
 export * from "./packets";
 export * from "./structs";
+
+// Set default export.
+import { ArchipelagoClient } from "@structs";
+export default ArchipelagoClient;
