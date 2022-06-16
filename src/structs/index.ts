@@ -1,11 +1,7 @@
 // Bounce Data
 export * from "./bounce";
 
-// Managers
-export * from "./managers";
-
 // All other exports.
-export * from "./ArchipelagoClient";
 export * from "./DataOperations";
 export * from "./DataPackageObject";
 export * from "./GameData";

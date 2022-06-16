@@ -1,5 +1,6 @@
+import { ArchipelagoClient } from "@core";
 import { ConnectedPacket, DataPackagePacket, RoomUpdatePacket } from "@packets";
-import { ArchipelagoClient, GameData, NetworkPlayer } from "@structs";
+import { GameData, NetworkPlayer } from "@structs";
 
 export class DataManager {
     private _client: ArchipelagoClient;
@@ -46,17 +47,17 @@ export class DataManager {
     private onDataPackage(packet: DataPackagePacket): void {
         // TODO: Cache results.
         for (const game in packet.data.games) {
-            const data = packet.data.games[game];
+            const data = packet.data.games[game] as GameData;
             this._dataPackage.set(game, data);
 
             // Fill locations map.
             for (const location in data.location_name_to_id) {
-                this._locations.set(data.location_name_to_id[location], location);
+                this._locations.set(data.location_name_to_id[location] as number, location);
             }
 
             // Fill items map.
             for (const item in data.item_name_to_id) {
-                this._items.set(data.item_name_to_id[item], item);
+                this._items.set(data.item_name_to_id[item] as number, item);
             }
         }
     }

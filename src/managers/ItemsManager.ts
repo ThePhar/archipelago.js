@@ -1,4 +1,4 @@
-import { ArchipelagoClient } from "@structs";
+import { ArchipelagoClient } from "@core";
 
 export class ItemsManager {
     private _client: ArchipelagoClient;
