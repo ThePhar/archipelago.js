@@ -1,6 +1,6 @@
-import { CommandPacketType } from "@enums";
-import { BasePacket } from "@packets";
-import { NetworkVersion, SlotCredentials } from "@structs";
+import { CommandPacketType } from "../../enums";
+import { NetworkVersion, SlotCredentials } from "../../structs";
+import { BasePacket } from "../index";
 
 /**
  * Sent by the client to initiate a connection to an Archipelago game session. Sent automatically during

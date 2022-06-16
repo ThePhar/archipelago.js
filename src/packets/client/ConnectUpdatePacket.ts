@@ -1,5 +1,5 @@
-import { CommandPacketType } from "@enums";
-import { BasePacket } from "@packets";
+import { CommandPacketType } from "../../enums";
+import { BasePacket } from "../index";
 
 /**
  * Update arguments from the Connect packet, currently only updating `tags` and `items_handling` is supported.

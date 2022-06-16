@@ -1,5 +1,5 @@
-import * as Packets from "@packets";
-import { CommandPacketType } from "@enums";
+import * as Packets from "./index";
+import { CommandPacketType } from "../enums";
 
 /**
  * The base packet structure for all packets.

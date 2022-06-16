@@ -1,6 +1,6 @@
-import { ArchipelagoClient } from "@core";
-import { CommandPacketType } from "@enums";
-import { ConnectedPacket, RoomUpdatePacket } from "@packets";
+import { CommandPacketType } from "../enums";
+import { ArchipelagoClient } from "../index";
+import { ConnectedPacket, RoomUpdatePacket } from "../packets";
 
 /**
  * Managers and watches for events regarding location data and provides helper functions to make checking, scouting, or

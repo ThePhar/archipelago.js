@@ -1,10 +1,10 @@
 import { EventEmitter } from "events";
 import { connection as Connection, Message, client as WebSocket } from "websocket";
 
-import * as Packet from "@packets";
-import { CommandPacketType, SessionStatus } from "@enums";
-import { DataManager, ItemsManager, LocationsManager, PlayersManager } from "@managers";
-import { SlotCredentials } from "@structs";
+import * as Packet from "./packets";
+import { CommandPacketType, SessionStatus } from "./enums";
+import { DataManager, ItemsManager, LocationsManager, PlayersManager } from "./managers";
+import { SlotCredentials } from "./structs";
 
 /**
  * The client that connects to an Archipelago server and facilitates communication, listens for events, and manages
@@ -145,7 +145,7 @@ export class ArchipelagoClient {
      * Disconnect from the server and re-initialize all managers.
      */
     public disconnect(): void {
-        this._connection?.close(0, "Disconnecting");
+        this._connection?.close();
         this._connection = undefined;
         this._status = SessionStatus.DISCONNECTED;
         this._emitter.removeAllListeners();

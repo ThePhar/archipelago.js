@@ -1,5 +1,5 @@
-import { CommandPacketType, ConnectionError } from "@enums";
-import { BasePacket } from "@packets";
+import { CommandPacketType, ConnectionError } from "../../enums";
+import { BasePacket } from "../index";
 
 /**
  * Sent to clients when the server refuses connection. This is sent during the initial connection handshake.

@@ -1,6 +1,6 @@
-import { CommandPacketType } from "@enums";
-import { BasePacket } from "@packets";
-import { APType } from "@structs";
+import { CommandPacketType } from "../../enums";
+import { APType } from "../../structs";
+import { BasePacket } from "../index";
 
 /**
  * Sent to clients in response to a {@link SetPacket} if `want_reply` was set to true, or if the client has registered

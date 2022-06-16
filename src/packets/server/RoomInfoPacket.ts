@@ -1,6 +1,6 @@
-import { CommandPacketType, Permission } from "@enums";
-import { BasePacket } from "@packets";
-import { NetworkPlayer, NetworkVersion } from "@structs";
+import { CommandPacketType, Permission } from "../../enums";
+import { NetworkPlayer, NetworkVersion } from "../../structs";
+import { BasePacket } from "../index";
 
 /**
  * Sent to clients when they connect to an Archipelago server.

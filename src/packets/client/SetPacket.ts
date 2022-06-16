@@ -1,6 +1,6 @@
-import { CommandPacketType } from "@enums";
-import { BasePacket } from "@packets";
-import { APType, DataStorageOperation } from "@structs";
+import { CommandPacketType } from "../../enums";
+import { APType, DataStorageOperation } from "../../structs";
+import { BasePacket } from "../index";
 
 /**
  * Sent by the client to write data to the server's data storage, that data can then be shared across worlds or just

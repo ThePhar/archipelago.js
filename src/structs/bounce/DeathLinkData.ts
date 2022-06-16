@@ -1,4 +1,4 @@
-import { APBaseObject } from "@structs";
+import { APBaseObject } from "../index";
 
 /**
  * The data for a special kind of {@link BouncePacket} that can be supported by any Archipelago game. It targets the tag

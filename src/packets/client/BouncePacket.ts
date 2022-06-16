@@ -1,6 +1,6 @@
-import { CommandPacketType } from "@enums";
-import { BasePacket } from "@packets";
-import { APBaseObject } from "@structs";
+import { CommandPacketType } from "../../enums";
+import { APBaseObject } from "../../structs";
+import { BasePacket } from "../index";
 
 /**
  * Sent by the client to have the server forward data to to all clients that satisfy any given search criteria.

@@ -1,6 +1,6 @@
-import { CommandPacketType, PrintJSONType } from "@enums";
-import { BasePacket } from "@packets";
-import { JSONMessagePart, NetworkItem } from "@structs";
+import { CommandPacketType, PrintJSONType } from "../../enums";
+import { JSONMessagePart, NetworkItem } from "../../structs";
+import { BasePacket } from "../index";
 
 /**
  * Sent to clients purely to display a message to the player. This packet differs from a {@link PrintPacket} in that the

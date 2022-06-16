@@ -1,5 +1,5 @@
-import { CommandPacketType } from "@enums";
-import { BasePacket } from "@packets";
+import { CommandPacketType } from "../../enums";
+import { BasePacket } from "../index";
 
 /**
  * Used to register your current session for receiving all {@link SetReplyPacket}s of certain keys to allow your client

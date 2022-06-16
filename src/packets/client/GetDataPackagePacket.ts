@@ -1,5 +1,5 @@
-import { CommandPacketType } from "@enums";
-import { BasePacket } from "@packets";
+import { CommandPacketType } from "../../enums";
+import { BasePacket } from "../index";
 
 /**
  * Sent by the client to request the data package from the server. Does not require client authentication. Sent

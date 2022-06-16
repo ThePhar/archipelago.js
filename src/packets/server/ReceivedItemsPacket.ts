@@ -1,6 +1,6 @@
-import { CommandPacketType } from "@enums";
-import { BasePacket } from "@packets";
-import { NetworkItem } from "@structs";
+import { CommandPacketType } from "../../enums";
+import { NetworkItem } from "../../structs";
+import { BasePacket } from "../index";
 
 /**
  * Sent to clients when they receive an item.

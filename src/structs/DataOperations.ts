@@ -1,4 +1,4 @@
-import { APBaseObject, APType } from "@structs";
+import { APBaseObject, APType } from "./index";
 
 /**
  * A {@link DataStorageOperation} manipulates or alters the value of a key in the data storage. If the operation

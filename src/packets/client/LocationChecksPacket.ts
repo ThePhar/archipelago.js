@@ -1,5 +1,5 @@
-import { CommandPacketType } from "@enums";
-import { BasePacket } from "@packets";
+import { CommandPacketType } from "../../enums";
+import { BasePacket } from "../index";
 
 /**
  * Sent by the client to inform the server of locations that the client has checked. Used to inform the server of new

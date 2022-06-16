@@ -1,4 +1,4 @@
-import { APBaseObject, GameData } from "@structs";
+import { APBaseObject, GameData } from "./index";
 
 /**
  * A {@link DataPackageObject} is an object which contains arbitrary metadata to enable a client to interact with the

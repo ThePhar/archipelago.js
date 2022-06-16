@@ -3,7 +3,7 @@
   "version": "0.4.0",
   "description": "A general-purpose client library for communicating with Archipelago game servers, written for Node.js.",
   "license": "MIT",
-  "main": "dist/index.min.js",
+  "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "author": {
     "email": "zach@alliware.com",
@@ -13,9 +13,7 @@
   "scripts": {
     "clean": "rimraf -rf dist",
     "docs": "rimraf -rf docs && typedoc --options typedoc.json",
-    "build:compile": "babel src -d dist --extensions \".ts,.js\" --out-file-extension \".min.js\" --presets=minify --no-comments",
-    "build:types": "tsc && tsconfig-replace-paths -p tsconfig.json",
-    "build": "npm run clean && npm run build:compile && npm run build:types",
+    "build": "npm run clean && tsc",
     "lint": "eslint src",
     "pack": "npm run build && npm pack --pack-destination packs"
   },
@@ -25,23 +23,16 @@
     "websocket": "^1.0.34"
   },
   "devDependencies": {
-    "@babel/cli": "^7.17.10",
-    "@babel/core": "^7.18.5",
-    "@babel/preset-env": "^7.18.2",
-    "@babel/preset-typescript": "^7.17.12",
     "@trivago/prettier-plugin-sort-imports": "^3.2.0",
     "@types/node": "^17.0.42",
     "@types/websocket": "^1.0.5",
     "@typescript-eslint/eslint-plugin": "^5.27.1",
     "@typescript-eslint/parser": "^5.27.1",
-    "babel-plugin-module-resolver": "^4.1.0",
-    "babel-preset-minify": "^0.5.2",
     "eslint": "^8.17.0",
     "eslint-config-prettier": "^8.5.0",
     "prettier": "^2.6.2",
     "rimraf": "^3.0.2",
     "ts-node": "^10.8.1",
-    "tsconfig-replace-paths": "^0.0.11",
     "typedoc": "^0.22.17",
     "typescript": "^4.7.3"
   }

@@ -1,6 +1,6 @@
-import { CommandPacketType } from "@enums";
-import { BasePacket } from "@packets";
-import { APBaseObject, NetworkPlayer, NetworkSlot } from "@structs";
+import { CommandPacketType } from "../../enums";
+import { APBaseObject, NetworkPlayer, NetworkSlot } from "../../structs";
+import { BasePacket } from "../index";
 
 /**
  * Sent to clients when the connection handshake is successfully completed.

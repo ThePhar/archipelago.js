@@ -1,5 +1,5 @@
-import { CommandPacketType } from "@enums";
-import { BasePacket } from "@packets";
+import { CommandPacketType } from "../../enums";
+import { BasePacket } from "../index";
 
 /**
  * Sent to clients purely to display a message to the player.

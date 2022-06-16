@@ -1,6 +1,6 @@
-import { CommandPacketType } from "@enums";
-import { BasePacket } from "@packets";
-import { NetworkItem } from "@structs";
+import { CommandPacketType } from "../../enums";
+import { NetworkItem } from "../../structs";
+import { BasePacket } from "../index";
 
 /**
  * Sent to clients to acknowledge a received {@link LocationScoutsPacket} and responds with the item in each location

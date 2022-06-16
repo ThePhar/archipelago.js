@@ -1,4 +1,4 @@
-import { APBaseObject } from "@structs";
+import { APBaseObject } from "./index";
 
 /**
  * An object representing software versioning. Used in the {@link ConnectPacket} to allow the client to inform the

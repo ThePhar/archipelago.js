@@ -1,5 +1,5 @@
-import { ItemFlags } from "@enums";
-import { APBaseObject } from "@structs";
+import { ItemFlags } from "../enums";
+import { APBaseObject } from "./index";
 
 /**
  * Message nodes sent along with {@link PrintJSONPacket} to be reconstructed into a legible message. The nodes are

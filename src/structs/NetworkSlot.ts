@@ -1,5 +1,5 @@
-import { SlotType } from "@enums";
-import { APBaseObject } from "@structs";
+import { SlotType } from "../enums";
+import { APBaseObject } from "./index";
 
 /**
  * An object representing static information about a slot.

@@ -1,4 +1,4 @@
-import { ArchipelagoClient } from "@core";
+import { ArchipelagoClient } from "../index";
 
 /**
  * Managers and watches for events regarding item data and provides helper functions to make working with items easier.

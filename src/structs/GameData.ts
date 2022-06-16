@@ -1,4 +1,4 @@
-import { APBaseObject } from "@structs";
+import { APBaseObject } from "./index";
 
 /**
  * {@link GameData} is a dict but contains these keys and values. It's broken out into another "type" for ease of

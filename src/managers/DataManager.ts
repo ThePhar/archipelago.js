@@ -1,6 +1,6 @@
-import { ArchipelagoClient } from "@core";
-import { ConnectedPacket, DataPackagePacket, RoomUpdatePacket } from "@packets";
-import { GameData, NetworkPlayer } from "@structs";
+import { ArchipelagoClient } from "../index";
+import { ConnectedPacket, DataPackagePacket, RoomUpdatePacket } from "../packets";
+import { GameData, NetworkPlayer } from "../structs";
 
 /**
  * Manages and watches for events regarding session data and the data package. Most other mangers use this information

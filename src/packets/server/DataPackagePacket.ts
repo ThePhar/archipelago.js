@@ -1,6 +1,6 @@
-import { CommandPacketType } from "@enums";
-import { BasePacket } from "@packets";
-import { DataPackageObject } from "@structs";
+import { CommandPacketType } from "../../enums";
+import { DataPackageObject } from "../../structs";
+import { BasePacket } from "../index";
 
 /**
  * Sent to clients to provide what is known as a 'data package' which contains information to enable a client to most

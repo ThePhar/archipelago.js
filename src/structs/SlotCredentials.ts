@@ -1,4 +1,4 @@
-import { ItemsHandlingFlags } from "@enums";
+import { ItemsHandlingFlags } from "../enums";
 
 /** An object that holds credential information for a slot. */
 export interface SlotCredentials {

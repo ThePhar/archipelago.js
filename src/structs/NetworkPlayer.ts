@@ -1,4 +1,4 @@
-import { APBaseObject } from "@structs";
+import { APBaseObject } from "./index";
 
 /**
  * An object that contains information about a player on the network.

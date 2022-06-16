@@ -1,5 +1,5 @@
-import { ItemFlags } from "@enums";
-import { APBaseObject } from "@structs";
+import { ItemFlags } from "../enums";
+import { APBaseObject } from "./index";
 
 /**
  * Items that are sent over the network.

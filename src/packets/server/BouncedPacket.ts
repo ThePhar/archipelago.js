@@ -1,6 +1,6 @@
-import { CommandPacketType } from "@enums";
-import { BasePacket } from "@packets";
-import { APBaseObject } from "@structs";
+import { CommandPacketType } from "../../enums";
+import { APBaseObject } from "../../structs";
+import { BasePacket } from "../index";
 
 /**
  * Sent to clients after a client requested this message be sent to them, more info in the {@link BouncePacket}.
