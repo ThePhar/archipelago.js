@@ -1,5 +1,5 @@
+import { ArchipelagoClient } from "@core";
 import { CommandPacketType } from "@enums";
-import { ArchipelagoClient } from "@structs";
 import { ConnectedPacket, RoomUpdatePacket } from "@packets";
 
 export class LocationsManager {

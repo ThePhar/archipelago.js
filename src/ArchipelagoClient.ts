@@ -1,10 +1,11 @@
-import EventEmitter from "events";
 import { randomUUID } from "crypto";
-import { client as WebSocket, connection as Connection, Message } from "websocket";
+import { EventEmitter } from "events";
+import { connection as Connection, Message, client as WebSocket } from "websocket";
 
 import * as Packet from "@packets";
 import { CommandPacketType, ItemsHandlingFlags, SessionStatus } from "@enums";
-import { DataManager, ItemsManager, LocationsManager, NetworkVersion, PlayersManager } from "@structs";
+import { DataManager, ItemsManager, LocationsManager, PlayersManager } from "@managers";
+import { NetworkVersion } from "@structs";
 
 export class ArchipelagoClient {
     private readonly _uri: string;
@@ -125,7 +126,9 @@ export class ArchipelagoClient {
 
             // Get the data package and connect to room.
             this.send(
-                { cmd: CommandPacketType.GET_DATA_PACKAGE },
+                {
+                    cmd: CommandPacketType.GET_DATA_PACKAGE,
+                },
                 {
                     cmd: CommandPacketType.CONNECT,
                     uuid: randomUUID(),

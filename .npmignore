@@ -1,14 +1,6 @@
-# Ignore the following directories.
-.idea/
-.github/
-src/
+# Ignore everything except those we manually allow
+*
 
-# Ignore the following config files.
-.eslintignore
-.eslintrc
-.prettierrc
-tsconfig.json
-
-# Ignore any root level typescript files used to testing.
-*.ts
-!*.d.ts
+# JavaScript and Type Definitions
+!dist/**/*.d.ts
+!dist/**/*.js
