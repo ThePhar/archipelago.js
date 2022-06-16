@@ -1,9 +1,10 @@
 {
   "name": "archipelago.js",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "A general-purpose client library for communicating with Archipelago game servers, written for Node.js.",
   "license": "MIT",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "author": {
     "email": "zach@alliware.com",
     "name": "Zach Parks",
@@ -11,12 +12,11 @@
   },
   "scripts": {
     "clean": "rimraf -rf dist",
-    "build:compile": "babel src -d dist --extensions \".ts\" --no-comments --out-file-extension \".min.js\"",
+    "build:compile": "babel src -d dist --extensions \".ts,.js\" --no-comments",
     "build:types": "tsc && tsconfig-replace-paths -p tsconfig.json",
     "build": "npm run clean && npm run build:compile && npm run build:types",
     "lint": "eslint src"
   },
-  "types": "types/index.d.ts",
   "repository": "https://github.com/ThePhar/archipelago.js.git",
   "bugs": "https://github.com/ThePhar/archipelago.js/issues",
   "dependencies": {
