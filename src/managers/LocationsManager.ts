@@ -2,11 +2,21 @@ import { ArchipelagoClient } from "@core";
 import { CommandPacketType } from "@enums";
 import { ConnectedPacket, RoomUpdatePacket } from "@packets";
 
+/**
+ * Managers and watches for events regarding location data and provides helper functions to make checking, scouting, or
+ * working with locations in general easier.
+ */
 export class LocationsManager {
     private _client: ArchipelagoClient;
     private _checked: number[] = [];
     private _missing: number[] = [];
 
+    /**
+     * Creates a new {@link LocationsManager} and sets up events on the {@link ArchipelagoClient} to listen for to start
+     * updating it's internal state.
+     *
+     * @param client The {@link ArchipelagoClient} that should be managing this manager.
+     */
     public constructor(client: ArchipelagoClient) {
         this._client = client;
         this._client.addListener("connected", this.onConnected.bind(this));
@@ -14,8 +24,9 @@ export class LocationsManager {
     }
 
     /**
-     * Check a list of locations.
-     * @param locationIds
+     * Check a list of locations and mark the locations as found.
+     *
+     * @param locationIds A list of location ids.
      */
     public check(...locationIds: number[]): void {
         this._client.send({
@@ -25,9 +36,10 @@ export class LocationsManager {
     }
 
     /**
-     * Scout a list of locations.
+     * Scout a list of locations without marking the locations as found.
+     *
      * @param hint Create a hint for these locations.
-     * @param locationIds
+     * @param locationIds A list of location ids.
      */
     public scout(hint = false, ...locationIds: number[]): void {
         this._client.send({
@@ -38,11 +50,24 @@ export class LocationsManager {
     }
 
     /**
-     * Returns the name of a given location id.
-     * @param locationId
+     * Returns the `name` of a given location `id`.
+     *
+     * Special cases:
+     * - If location id is `-1`, returns `Cheat Console`.
+     * - If location id is `-2`, returns `Server`.
+     *
+     * @param locationId The `id` of a location. Returns "Unknown Location #" if the location does not exist in the data
+     * package.
      */
     public name(locationId: number): string {
-        return this._client.data.locations.get(locationId) ?? `Unknown Location ${locationId}`;
+        switch (locationId) {
+            case -1:
+                return "Cheat Console";
+            case -2:
+                return "Server";
+            default:
+                return this._client.data.locations.get(locationId) ?? `Unknown Location ${locationId}`;
+        }
     }
 
     /**

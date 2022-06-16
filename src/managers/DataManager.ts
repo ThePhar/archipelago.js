@@ -2,6 +2,10 @@ import { ArchipelagoClient } from "@core";
 import { ConnectedPacket, DataPackagePacket, RoomUpdatePacket } from "@packets";
 import { GameData, NetworkPlayer } from "@structs";
 
+/**
+ * Manages and watches for events regarding session data and the data package. Most other mangers use this information
+ * to create helper functions and track other information.
+ */
 export class DataManager {
     private _client: ArchipelagoClient;
     private _dataPackage = new Map<string, GameData>();
@@ -9,6 +13,11 @@ export class DataManager {
     private _items = new Map<number, string>();
     private _players = new Map<number, NetworkPlayer>();
 
+    /**
+     * Creates a new {@link DataManager} and sets up events on the {@link ArchipelagoClient} to listen for to start
+     * updating it's internal state.
+     * @param client The {@link ArchipelagoClient} that should be managing this manager.
+     */
     public constructor(client: ArchipelagoClient) {
         this._client = client;
         this._client.addListener("dataPackage", this.onDataPackage.bind(this));
@@ -17,28 +26,28 @@ export class DataManager {
     }
 
     /**
-     * Returns a map of all game data mapped to their game name.
+     * Returns a map of all {@link GameData} mapped to their game `name`.
      */
     public get package(): ReadonlyMap<string, GameData> {
         return this._dataPackage;
     }
 
     /**
-     * Returns a map of all location names mapped to their id.
+     * Returns a map of all location `names` mapped to their `id`.
      */
     public get locations(): ReadonlyMap<number, string> {
         return this._locations;
     }
 
     /**
-     * Returns a map of all item names mapped to their id.
+     * Returns a map of all item `names` mapped to their `id`.
      */
     public get items(): ReadonlyMap<number, string> {
         return this._items;
     }
 
     /**
-     * Returns a map of all players mapped to their slot id.
+     * Returns a map of all `players` mapped to their slot `id`.
      */
     public get players(): ReadonlyMap<number, NetworkPlayer> {
         return this._players;

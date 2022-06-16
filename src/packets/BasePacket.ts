@@ -1,10 +1,20 @@
 import * as Packets from "@packets";
 import { CommandPacketType } from "@enums";
 
+/**
+ * The base packet structure for all packets.
+ *
+ * @category Server Packets
+ * @category Client Packets
+ */
 export interface BasePacket {
+    /** The type of packet this is. */
     readonly cmd: CommandPacketType;
 }
 
+/**
+ * A type union of all known and supported Archipelago client packets.
+ */
 export type ArchipelagoClientPacket =
     | Packets.BouncePacket
     | Packets.ConnectPacket
@@ -19,6 +29,9 @@ export type ArchipelagoClientPacket =
     | Packets.StatusUpdatePacket
     | Packets.SyncPacket;
 
+/**
+ * A type union of all known and supported Archipelago server packets.
+ */
 export type ArchipelagoServerPacket =
     | Packets.BouncedPacket
     | Packets.ConnectionRefusedPacket
@@ -34,4 +47,7 @@ export type ArchipelagoServerPacket =
     | Packets.RoomUpdatePacket
     | Packets.SetReplyPacket;
 
+/**
+ * A type union of all known and supported Archipelago packets.
+ */
 export type ArchipelagoPacket = ArchipelagoClientPacket | ArchipelagoServerPacket;

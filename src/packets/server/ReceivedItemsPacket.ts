@@ -2,8 +2,17 @@ import { CommandPacketType } from "@enums";
 import { BasePacket } from "@packets";
 import { NetworkItem } from "@structs";
 
+/**
+ * Sent to clients when they receive an item.
+ *
+ * @category Server Packets
+ */
 export interface ReceivedItemsPacket extends BasePacket {
-    readonly cmd: CommandPacketType.RECEIVED_ITEMS;
-    readonly index: number;
-    readonly items: NetworkItem[];
+    cmd: CommandPacketType.RECEIVED_ITEMS;
+
+    /** The next empty slot in the list of items for the receiving client. */
+    index: number;
+
+    /** The items which the client is receiving. */
+    items: NetworkItem[];
 }

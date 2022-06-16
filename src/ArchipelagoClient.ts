@@ -1,42 +1,33 @@
-import { randomUUID } from "crypto";
 import { EventEmitter } from "events";
 import { connection as Connection, Message, client as WebSocket } from "websocket";
 
 import * as Packet from "@packets";
-import { CommandPacketType, ItemsHandlingFlags, SessionStatus } from "@enums";
+import { CommandPacketType, SessionStatus } from "@enums";
 import { DataManager, ItemsManager, LocationsManager, PlayersManager } from "@managers";
-import { NetworkVersion } from "@structs";
+import { SlotCredentials } from "@structs";
 
 /**
- * The archipelago class.
- * @class
+ * The client that connects to an Archipelago server and facilitates communication, listens for events, and manages
+ * data.
  */
 export class ArchipelagoClient {
     private readonly _uri: string;
-    private readonly _version: NetworkVersion;
     private _socket = new WebSocket();
     private _connection?: Connection;
     private _status = SessionStatus.DISCONNECTED;
     private _emitter = new EventEmitter();
-
     private _dataManager = new DataManager(this);
     private _itemsManager = new ItemsManager(this);
     private _locationsManager = new LocationsManager(this);
     private _playersManager = new PlayersManager(this);
 
     /**
-     * Create a new client for connecting to Archipelago servers.
-     * @param address The hostname and port to connect to.
-     * @param version The version of the Archipelago protocol this client supports.
+     * Creates a new client that is programmed to connect to a specific Archipelago server address.
+     *
+     * @param socketAddress The socket address to connect to. Examples: `127.0.0.1:50000` or `archipelago.gg:38281`.
      */
-    public constructor(address: string, version: NetworkVersion) {
-        // There is probably a better regex than this, but make sure it looks like a valid address.
-        if (!/^[^:]+:[0-9]{2,5}$/.test(address)) {
-            throw new Error(`Inputted address: '${address} does not appear to be a valid address:port`);
-        }
-
-        this._uri = `ws://${address}/`;
-        this._version = version;
+    public constructor(socketAddress: string) {
+        this._uri = `ws://${socketAddress}/`;
     }
 
     /**
@@ -47,28 +38,28 @@ export class ArchipelagoClient {
     }
 
     /**
-     * Get the Data Manager helper object.
+     * Get the {@link DataManager} helper object. See {@link DataManager} for additional information.
      */
     public get data(): DataManager {
         return this._dataManager;
     }
 
     /**
-     * Get the Item Manager helper object.
+     * Get the {@link ItemsManager} helper object. See {@link ItemsManager} for additional information.
      */
     public get items(): ItemsManager {
         return this._itemsManager;
     }
 
     /**
-     * Get the Location Manager helper object.
+     * Get the {@link LocationsManager} helper object. See {@link LocationsManager} for additional information.
      */
     public get locations(): LocationsManager {
         return this._locationsManager;
     }
 
     /**
-     * Get the Players Manager helper object.
+     * Get the {@link PlayersManager} helper object. See {@link PlayersManager} for additional information.
      */
     public get players(): PlayersManager {
         return this._playersManager;
@@ -76,20 +67,13 @@ export class ArchipelagoClient {
 
     /**
      * Connects to the given address with given connection information.
-     * @param game The name of the game this client is connecting from.
-     * @param name The name of the player for this client.
-     * @param password The password for the room.
-     * @param tags Tells the server which tags to subscribe to for bounce packets. If omitted, sends an empty tag list.
-     * @param itemsHandling Tells the server which ReceivedItems packets to listen for. If omitted, game is considered
-     * fully remote.
+     *
+     * @param credentials An object with all the credential information to connect to the slot.
+     * @resolves On successful connection and authentication to the room.
+     * @rejects If web socket connection failed to establish connection or server refused connection, promise will
+     * return a `string[]` of error messages.
      */
-    public async connect(
-        game: string,
-        name: string,
-        password = "",
-        tags: string[] = [],
-        itemsHandling: number = ItemsHandlingFlags.NON_REMOTE,
-    ): Promise<void> {
+    public async connect(credentials: SlotCredentials): Promise<void> {
         // First establish the initial connection.
         this._status = SessionStatus.CONNECTING;
         this._connection = await new Promise<Connection>((resolve, reject) => {
@@ -135,29 +119,30 @@ export class ArchipelagoClient {
                 },
                 {
                     cmd: CommandPacketType.CONNECT,
-                    uuid: randomUUID(),
-                    game,
-                    name,
-                    password,
-                    tags,
-                    items_handling: itemsHandling,
-                    version: this._version,
+                    game: credentials.game,
+                    uuid: credentials.uuid,
+                    name: credentials.name,
+                    password: credentials.password ?? "",
+                    version: { ...credentials.version, class: "Version" },
+                    tags: credentials.tags ?? [],
+                    items_handling: credentials.items_handling,
                 },
             );
         });
     }
 
     /**
-     * Send a list of packets to the Archipelago server in the order they are defined.
-     * @param packets A list of packets to send to the AP server. They are processed in the order they are defined in
-     * this list.
+     * Send a list of raw packets to the Archipelago server in the order they are listed as arguments.
+     *
+     * @param packets An array of raw {@link ArchipelagoClientPacket}s to send to the AP server. They are processed in
+     * the order they are listed as arguments.
      */
     public send(...packets: Packet.ArchipelagoClientPacket[]): void {
         this._connection?.send(JSON.stringify(packets));
     }
 
     /**
-     * Disconnect from the server and re-initialize any managers.
+     * Disconnect from the server and re-initialize all managers.
      */
     public disconnect(): void {
         this._connection?.close(0, "Disconnecting");
@@ -172,11 +157,6 @@ export class ArchipelagoClient {
         this._playersManager = new PlayersManager(this);
     }
 
-    /**
-     * Add an eventListener to fire depending on an event from the Archipelago server.
-     * @param event The packet event to listen for.
-     * @param listener The listener callback function to run when a packet is received.
-     */
     public addListener(event: "bounced", listener: (packet: Packet.BouncedPacket) => void): void;
     public addListener(event: "connected", listener: (packet: Packet.ConnectedPacket) => void): void;
     public addListener(event: "connectionRefused", listener: (packet: Packet.ConnectionRefusedPacket) => void): void;
@@ -191,15 +171,17 @@ export class ArchipelagoClient {
     public addListener(event: "roomUpdate", listener: (packet: Packet.RoomUpdatePacket) => void): void;
     public addListener(event: "setReply", listener: (packet: Packet.SetReplyPacket) => void): void;
     public addListener(event: "packetReceived", listener: (packet: Packet.ArchipelagoServerPacket) => void): void;
+
+    /**
+     * Add an eventListener to fire depending on an event from the Archipelago server or the client.
+     *
+     * @param event The event to listen for.
+     * @param listener The listener callback function to run when an event is fired.
+     */
     public addListener(event: ClientEvents, listener: (packet: never) => void): void {
         this._emitter.addListener(event, listener as (packet: Packet.ArchipelagoServerPacket) => void);
     }
 
-    /**
-     * Remove an eventListener from this client's event emitter.
-     * @param event The packet event to stop listening for.
-     * @param listener The listener callback function to remove.
-     */
     public removeListener(event: "bounced", listener: (packet: Packet.BouncedPacket) => void): void;
     public removeListener(event: "connected", listener: (packet: Packet.ConnectedPacket) => void): void;
     public removeListener(event: "connectionRefused", listener: (packet: Packet.ConnectionRefusedPacket) => void): void;
@@ -214,10 +196,24 @@ export class ArchipelagoClient {
     public removeListener(event: "roomUpdate", listener: (packet: Packet.RoomUpdatePacket) => void): void;
     public removeListener(event: "setReply", listener: (packet: Packet.SetReplyPacket) => void): void;
     public removeListener(event: "packetReceived", listener: (packet: Packet.ArchipelagoServerPacket) => void): void;
+
+    /**
+     * Remove an eventListener from this client's event emitter.
+     *
+     * @param event The event to stop listening for.
+     * @param listener The listener callback function to remove.
+     */
     public removeListener(event: ClientEvents, listener: (packet: never) => void): void {
         this._emitter.removeListener(event, listener as (packet: Packet.ArchipelagoServerPacket) => void);
     }
 
+    /**
+     * Take the raw JSON from the server and convert it into a list of {@link ArchipelagoServerPacket} and then fire the
+     * appropriate events that were waiting for those packets.
+     *
+     * @param buffer The JSON string of the packet data.
+     * @private
+     */
     private parsePackets(buffer: Message): void {
         // Ignore binary data from the server. It shouldn't happen, but you never know.
         if (buffer.type !== "utf8") return;
@@ -273,6 +269,9 @@ export class ArchipelagoClient {
     }
 }
 
+/**
+ * A type union of events the {@link ArchipelagoClient} can allow subscriptions for.
+ */
 export type ClientEvents =
     | "packetReceived"
     | "bounced"

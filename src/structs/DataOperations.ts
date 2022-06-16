@@ -1,111 +1,170 @@
 import { APBaseObject, APType } from "@structs";
 
 /**
- * @category Data Operations
+ * A {@link DataStorageOperation} manipulates or alters the value of a key in the data storage. If the operation
+ * transforms the value from one state to another then the current value of the key is used as the starting point
+ * otherwise the {@link SetPacket}'s default is used if the key does not exist on the server already.
+ * {@link DataStorageOperation}s consist of an object containing both the operation to be applied, provided in the
+ * form of a string, as well as the value to be used for that operation,
+ *
+ * Example:
+ * ```js
+ * { operation: "add", value: 12 }
+ * ```
+ *
+ * @category Data Storage Operations
  */
-export interface DataOperation extends APBaseObject {
-    readonly operation: string;
-    readonly value: APType;
+export interface BaseDataStorageOperation extends APBaseObject {
+    /** The operation to apply to a given data storage key. */
+    operation: string;
+
+    /** A value for the operation to apply against the current data storage value. */
+    value: APType;
 }
 
 /**
- * @category Data Operations
+ * @category Data Storage Operations
  */
-export interface ReplaceOperation extends DataOperation {
-    readonly operation: "replace";
+export interface ReplaceDataStorageOperation extends BaseDataStorageOperation {
+    /** Sets the current value of the key to `value`. */
+    operation: "replace";
 }
 
 /**
- * @category Data Operations
+ * If the key has no value yet, sets the current value of the key to `default` of the {@link SetPacket}'s (`value`
+ * is ignored).
+ *
+ * @category Data Storage Operations
  */
-export interface DefaultOperation extends DataOperation {
-    readonly operation: "default";
+export interface DefaultDataStorageOperation extends BaseDataStorageOperation {
+    operation: "default";
 }
 
 /**
- * @category Data Operations
+ * Adds `value` to the current value of the key, if both the current value and `value` are arrays then `value` will
+ * be appended to the current value.
+ *
+ * @category Data Storage Operations
  */
-export interface AddOperation extends DataOperation {
-    readonly operation: "add";
-    readonly value: number;
+export interface AddDataStorageOperation extends BaseDataStorageOperation {
+    operation: "add";
+    value: number | number[];
 }
 
 /**
- * @category Data Operations
+ * Multiplies the current value of the key by `value`.
+ *
+ * @category Data Storage Operations
  */
-export interface MultiplyOperation extends DataOperation {
-    readonly operation: "mul";
-    readonly value: number;
+export interface MultiplyDataStorageOperation extends BaseDataStorageOperation {
+    operation: "mul";
+    value: number;
 }
 
 /**
- * @category Data Operations
+ * Multiplies the current value of the key to the power of `value`.
+ *
+ * @category Data Storage Operations
  */
-export interface PowerOperation extends DataOperation {
-    readonly operation: "pow";
-    readonly value: number;
+export interface PowerDataStorageOperation extends BaseDataStorageOperation {
+    operation: "pow";
+    value: number;
 }
 
 /**
- * @category Data Operations
+ * Sets the current value of the key to the remainder after division by `value`.
+ *
+ * @category Data Storage Operations
  */
-export interface ModuloOperation extends DataOperation {
-    readonly operation: "mod";
-    readonly value: number;
+export interface ModuloDataStorageOperation extends BaseDataStorageOperation {
+    operation: "mod";
+    value: number;
 }
 
 /**
- * @category Data Operations
+ * Sets the current value of the key to `value` if `value` is bigger.
+ *
+ * @category Data Storage Operations
  */
-export interface MaxOperation extends DataOperation {
-    readonly operation: "max";
-    readonly value: number;
+export interface MaxDataStorageOperation extends BaseDataStorageOperation {
+    operation: "max";
+    value: number;
 }
 
 /**
- * @category Data Operations
+ * Sets the current value of the key to `value` if `value` is lower.
+ *
+ * @category Data Storage Operations
  */
-export interface MinOperation extends DataOperation {
-    readonly operation: "min";
-    readonly value: number;
+export interface MinDataStorageOperation extends BaseDataStorageOperation {
+    operation: "min";
+    value: number;
 }
 
 /**
- * @category Data Operations
+ * Applies a bitwise **AND** to the current value of the key with `value`.
+ *
+ * @category Data Storage Operations
  */
-export interface AndOperation extends DataOperation {
-    readonly operation: "and";
-    readonly value: number;
+export interface AndDataStorageOperation extends BaseDataStorageOperation {
+    operation: "and";
+    value: number;
 }
 
 /**
- * @category Data Operations
+ * Applies a bitwise **OR** to the current value of the key with value.
+ *
+ * @category Data Storage Operations
  */
-export interface OrOperation extends DataOperation {
-    readonly operation: "or";
-    readonly value: number;
+export interface OrDataStorageOperation extends BaseDataStorageOperation {
+    operation: "or";
+    value: number;
 }
 
 /**
- * @category Data Operations
+ * Applies a bitwise **XOR** to the current value of the key with `value`.
+ *
+ * @category Data Storage Operations
  */
-export interface XorOperation extends DataOperation {
-    readonly operation: "xor";
-    readonly value: number;
+export interface XorDataStorageOperation extends BaseDataStorageOperation {
+    operation: "xor";
+    value: number;
 }
 
 /**
- * @category Data Operations
+ * Applies a bitwise left-shift to the current value of the key by `value`.
+ *
+ * @category Data Storage Operations
  */
-export interface LeftShiftOperation extends DataOperation {
-    readonly operation: "left_shift";
-    readonly value: number;
+export interface LeftShiftDataStorageOperation extends BaseDataStorageOperation {
+    operation: "left_shift";
+    value: number;
 }
 
 /**
- * @category Data Operations
+ * Applies a bitwise right-shift to the current value of the key by `value`.
+ *
+ * @category Data Storage Operations
  */
-export interface RightShiftOperation extends DataOperation {
-    readonly operation: "right_shift";
-    readonly value: number;
+export interface RightShiftDataStorageOperation extends BaseDataStorageOperation {
+    operation: "right_shift";
+    value: number;
 }
+
+/**
+ * A type union of all supported {@link BaseDataStorageOperation}s on the Archipelago server.
+ */
+export type DataStorageOperation =
+    | ReplaceDataStorageOperation
+    | DefaultDataStorageOperation
+    | AddDataStorageOperation
+    | MultiplyDataStorageOperation
+    | PowerDataStorageOperation
+    | ModuloDataStorageOperation
+    | MaxDataStorageOperation
+    | MinDataStorageOperation
+    | AndDataStorageOperation
+    | OrDataStorageOperation
+    | XorDataStorageOperation
+    | LeftShiftDataStorageOperation
+    | RightShiftDataStorageOperation;

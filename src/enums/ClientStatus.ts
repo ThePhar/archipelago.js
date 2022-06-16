@@ -1,7 +1,17 @@
-// prettier-ignore
+/**
+ *  An enumeration containing the possible client states that may be used to inform the server in
+ * {@link StatusUpdatePacket}.
+ */
 export enum ClientStatus {
+    /** Client is in an unknown state. */
     UNKNOWN = 0,
-    READY   = 10,
+
+    /** Client is current ready to start. */
+    READY = 10,
+
+    /** Client is currently playing. */
     PLAYING = 20,
-    GOAL    = 30,
+
+    /** Client has completed their goal. */
+    GOAL = 30,
 }
