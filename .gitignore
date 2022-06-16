@@ -302,4 +302,8 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+### Documentation ###
+# typedoc output
+docs
+
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,linux,intellij+all,node

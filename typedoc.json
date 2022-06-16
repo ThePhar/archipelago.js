@@ -1,0 +1,12 @@
+{
+  "name": "archipelago.js",
+  "cleanOutputDir": true,
+  "excludePrivate": true,
+  "excludeInternal": true,
+  "tsconfig": ["tsconfig.json"],
+  "entryPoints": ["src/index.ts"],
+  "out": "docs",
+  "categorizeByGroup": true,
+  "gitRemote": "origin",
+  "includeVersion": true
+}

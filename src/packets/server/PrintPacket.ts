@@ -1,7 +1,14 @@
-import { CommandPacketType } from "@enums";
-import { BasePacket } from "@packets";
+import { CommandPacketType } from "../../enums";
+import { BasePacket } from "../index";
 
+/**
+ * Sent to clients purely to display a message to the player.
+ *
+ * @category Server Packets
+ */
 export interface PrintPacket extends BasePacket {
-    readonly cmd: CommandPacketType.PRINT;
-    readonly text: string;
+    cmd: CommandPacketType.PRINT;
+
+    /** Message to display to player. */
+    text: string;
 }

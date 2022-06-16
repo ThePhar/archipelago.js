@@ -1,7 +1,15 @@
-import { CommandPacketType } from "@enums";
-import { BasePacket } from "@packets";
+import { CommandPacketType } from "../../enums";
+import { BasePacket } from "../index";
 
+/**
+ * Used to register your current session for receiving all {@link SetReplyPacket}s of certain keys to allow your client
+ * to keep track of changes.
+ *
+ * @category Client Packets
+ */
 export interface SetNotifyPacket extends BasePacket {
-    readonly cmd: CommandPacketType.SET_NOTIFY;
-    readonly keys: ReadonlyArray<string>;
+    cmd: CommandPacketType.SET_NOTIFY;
+
+    /** Keys to receive all {@link SetReplyPacket}s for. */
+    keys: string[];
 }

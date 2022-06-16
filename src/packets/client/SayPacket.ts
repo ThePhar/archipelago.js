@@ -1,7 +1,14 @@
-import { CommandPacketType } from "@enums";
-import { BasePacket } from "@packets";
+import { CommandPacketType } from "../../enums";
+import { BasePacket } from "../index";
 
+/**
+ * Basic chat-type packet which sends text to the server to be distributed to other clients.
+ *
+ * @category Client Packets
+ */
 export interface SayPacket extends BasePacket {
-    readonly cmd: CommandPacketType.SAY;
-    readonly text: string;
+    cmd: CommandPacketType.SAY;
+
+    /** Text to send to others. */
+    text: string;
 }
