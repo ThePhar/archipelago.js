@@ -7,6 +7,10 @@ import { CommandPacketType, ItemsHandlingFlags, SessionStatus } from "@enums";
 import { DataManager, ItemsManager, LocationsManager, PlayersManager } from "@managers";
 import { NetworkVersion } from "@structs";
 
+/**
+ * The archipelago class.
+ * @class
+ */
 export class ArchipelagoClient {
     private readonly _uri: string;
     private readonly _version: NetworkVersion;
