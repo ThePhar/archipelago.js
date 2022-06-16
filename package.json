@@ -3,7 +3,7 @@
   "version": "0.4.0",
   "description": "A general-purpose client library for communicating with Archipelago game servers, written for Node.js.",
   "license": "MIT",
-  "main": "dist/index.js",
+  "main": "dist/index.min.js",
   "types": "dist/index.d.ts",
   "author": {
     "email": "zach@alliware.com",
@@ -12,10 +12,11 @@
   },
   "scripts": {
     "clean": "rimraf -rf dist",
-    "build:compile": "babel src -d dist --extensions \".ts,.js\" --no-comments",
+    "build:compile": "babel src -d dist --extensions \".ts,.js\" --out-file-extension \".min.js\" --no-comments",
     "build:types": "tsc && tsconfig-replace-paths -p tsconfig.json",
     "build": "npm run clean && npm run build:compile && npm run build:types",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "pack": "npm run build && npm pack --pack-destination packs"
   },
   "repository": "https://github.com/ThePhar/archipelago.js.git",
   "bugs": "https://github.com/ThePhar/archipelago.js/issues",
@@ -25,7 +26,6 @@
   "devDependencies": {
     "@babel/cli": "^7.17.10",
     "@babel/core": "^7.18.5",
-    "@babel/plugin-transform-typescript": "^7.18.4",
     "@babel/preset-env": "^7.18.2",
     "@babel/preset-typescript": "^7.17.12",
     "@trivago/prettier-plugin-sort-imports": "^3.2.0",
