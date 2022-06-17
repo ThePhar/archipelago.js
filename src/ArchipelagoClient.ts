@@ -1,5 +1,5 @@
 import { EventEmitter } from "events";
-import { connection as Connection, Message, client as WebSocket } from "websocket";
+import WebSocket, { MessageEvent } from "isomorphic-ws";
 
 import * as Packet from "./packets";
 import { CommandPacketType, SessionStatus } from "./enums";
@@ -12,8 +12,7 @@ import { SlotCredentials } from "./structs";
  */
 export class ArchipelagoClient {
     private readonly _uri: string;
-    private _socket = new WebSocket();
-    private _connection?: Connection;
+    private _socket?: WebSocket;
     private _status = SessionStatus.DISCONNECTED;
     private _emitter = new EventEmitter();
     private _dataManager = new DataManager(this);
@@ -76,24 +75,26 @@ export class ArchipelagoClient {
     public async connect(credentials: SlotCredentials): Promise<void> {
         // First establish the initial connection.
         this._status = SessionStatus.CONNECTING;
-        this._connection = await new Promise<Connection>((resolve, reject) => {
-            // On successful connection.
-            this._socket.on("connect", (connection) => {
-                this._status = SessionStatus.WAITING_FOR_AUTH;
-                connection.on("message", this.parsePackets.bind(this));
+        await new Promise<void>((resolve, reject) => {
+            this._socket = new WebSocket(this._uri);
 
-                // Basic event listeners for Connection events from AP server.
-                resolve(connection);
-            });
+            // On successful connection.
+            this._socket.onopen = () => {
+                this._status = SessionStatus.WAITING_FOR_AUTH;
+
+                if (this._socket) {
+                    this._socket.onmessage = this.parsePackets.bind(this);
+                    resolve();
+                } else {
+                    reject(["Socket was closed unexpectedly."]);
+                }
+            };
 
             // On unsuccessful connection.
-            this._socket.on("connectFailed", (error) => {
+            this._socket.onerror = (event) => {
                 this._status = SessionStatus.DISCONNECTED;
-                reject([error.message]);
-            });
-
-            // Connect.
-            this._socket.connect(this._uri);
+                reject([event.message]);
+            };
         });
 
         // Attempt to log into the room.
@@ -138,15 +139,15 @@ export class ArchipelagoClient {
      * the order they are listed as arguments.
      */
     public send(...packets: Packet.ArchipelagoClientPacket[]): void {
-        this._connection?.send(JSON.stringify(packets));
+        this._socket?.send(JSON.stringify(packets));
     }
 
     /**
      * Disconnect from the server and re-initialize all managers.
      */
     public disconnect(): void {
-        this._connection?.close();
-        this._connection = undefined;
+        this._socket?.close();
+        this._socket = undefined;
         this._status = SessionStatus.DISCONNECTED;
         this._emitter.removeAllListeners();
 
@@ -207,19 +208,9 @@ export class ArchipelagoClient {
         this._emitter.removeListener(event, listener as (packet: Packet.ArchipelagoServerPacket) => void);
     }
 
-    /**
-     * Take the raw JSON from the server and convert it into a list of {@link ArchipelagoServerPacket} and then fire the
-     * appropriate events that were waiting for those packets.
-     *
-     * @param buffer The JSON string of the packet data.
-     * @private
-     */
-    private parsePackets(buffer: Message): void {
-        // Ignore binary data from the server. It shouldn't happen, but you never know.
-        if (buffer.type !== "utf8") return;
-
+    private parsePackets(event: MessageEvent): void {
         // Parse packets and fire our packetReceived event for each packet.
-        const packets = JSON.parse(buffer.utf8Data) as Packet.ArchipelagoServerPacket[];
+        const packets = JSON.parse(event.data.toString()) as Packet.ArchipelagoServerPacket[];
         for (const packet of packets) {
             // Regardless of what type of event this is, we always emit the packetReceived event.
             this._emitter.emit("packetReceived", packet);
