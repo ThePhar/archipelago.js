@@ -1,1 +1,0 @@
-{"version":3,"file":"SayPacket.d.ts","sourceRoot":"","sources":["../../../src/packets/client/SayPacket.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,iBAAiB,EAAE,MAAM,aAAa,CAAC;AAChD,OAAO,EAAE,UAAU,EAAE,MAAM,UAAU,CAAC;AAEtC;;;;GAIG;AACH,MAAM,WAAW,SAAU,SAAQ,UAAU;IACzC,GAAG,EAAE,iBAAiB,CAAC,GAAG,CAAC;IAE3B,8BAA8B;IAC9B,IAAI,EAAE,MAAM,CAAC;CAChB"}

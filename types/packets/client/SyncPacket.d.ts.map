@@ -1,1 +1,0 @@
-{"version":3,"file":"SyncPacket.d.ts","sourceRoot":"","sources":["../../../src/packets/client/SyncPacket.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,iBAAiB,EAAE,MAAM,aAAa,CAAC;AAChD,OAAO,EAAE,UAAU,EAAE,MAAM,UAAU,CAAC;AAEtC;;;;GAIG;AACH,MAAM,WAAW,UAAW,SAAQ,UAAU;IAC1C,GAAG,EAAE,iBAAiB,CAAC,IAAI,CAAC;CAC/B"}

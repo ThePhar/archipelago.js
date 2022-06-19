@@ -1,1 +1,0 @@
-{"version":3,"file":"InvalidPacketPacket.d.ts","sourceRoot":"","sources":["../../../src/packets/server/InvalidPacketPacket.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,iBAAiB,EAAE,MAAM,aAAa,CAAC;AAChD,OAAO,EAAE,UAAU,EAAE,MAAM,UAAU,CAAC;AAEtC;;;;;GAKG;AACH,MAAM,WAAW,mBAAoB,SAAQ,UAAU;IACnD,GAAG,EAAE,iBAAiB,CAAC,cAAc,CAAC;CACzC"}

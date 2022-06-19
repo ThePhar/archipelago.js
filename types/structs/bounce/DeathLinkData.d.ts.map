@@ -1,1 +1,0 @@
-{"version":3,"file":"DeathLinkData.d.ts","sourceRoot":"","sources":["../../../src/structs/bounce/DeathLinkData.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,YAAY,EAAE,MAAM,UAAU,CAAC;AAExC;;;GAGG;AACH,MAAM,WAAW,aAAc,SAAQ,YAAY;IAC/C,wCAAwC;IACxC,IAAI,EAAE,MAAM,CAAC;IAEb,oHAAoH;IACpH,MAAM,EAAE,MAAM,CAAC;IAEf,kGAAkG;IAClG,KAAK,CAAC,EAAE,MAAM,CAAC;CAClB"}

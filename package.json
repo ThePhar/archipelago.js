@@ -25,7 +25,7 @@
     "build:web": "rimraf -rf web && webpack",
     "build": "npm run build:module && npm run build:web && npm run build:docs",
     "lint": "eslint src && eslint tests",
-    "prepack": "npm test && npm lint && npm run build",
+    "prepack": "npm test && npm run lint && npm run build",
     "prepare": "husky install",
     "test": "mocha -r ts-node/register tests/**/*.test.ts"
   },

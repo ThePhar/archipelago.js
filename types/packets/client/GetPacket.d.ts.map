@@ -1,1 +1,0 @@
-{"version":3,"file":"GetPacket.d.ts","sourceRoot":"","sources":["../../../src/packets/client/GetPacket.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,iBAAiB,EAAE,MAAM,aAAa,CAAC;AAChD,OAAO,EAAE,UAAU,EAAE,MAAM,UAAU,CAAC;AAEtC;;;;;;;GAOG;AACH,MAAM,WAAW,SAAU,SAAQ,UAAU;IACzC,GAAG,EAAE,iBAAiB,CAAC,GAAG,CAAC;IAE3B,uCAAuC;IACvC,IAAI,EAAE,MAAM,EAAE,CAAC;CAClB"}

@@ -1,1 +1,0 @@
-{"version":3,"file":"LocationChecksPacket.d.ts","sourceRoot":"","sources":["../../../src/packets/client/LocationChecksPacket.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,iBAAiB,EAAE,MAAM,aAAa,CAAC;AAChD,OAAO,EAAE,UAAU,EAAE,MAAM,UAAU,CAAC;AAEtC;;;;;GAKG;AACH,MAAM,WAAW,oBAAqB,SAAQ,UAAU;IACpD,GAAG,EAAE,iBAAiB,CAAC,eAAe,CAAC;IAEvC;;;OAGG;IACH,SAAS,EAAE,MAAM,EAAE,CAAC;CACvB"}

@@ -306,7 +306,8 @@ $RECYCLE.BIN/
 # typedoc output
 docs
 
-# web-build
+# build
 web
+types
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,linux,intellij+all,node
