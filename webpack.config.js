@@ -5,8 +5,9 @@ module.exports = {
     target: "web",
     entry: "./src/index.ts",
     resolve: {
-        extensions: [".js", ".ts"],
+        extensions: [".ts"],
     },
+
     module: {
         rules: [
             {
@@ -16,12 +17,13 @@ module.exports = {
             },
         ],
     },
+
     output: {
-        path: path.resolve(__dirname, "./dist"),
+        path: path.join(__dirname, "web"),
         filename: "archipelago.min.js",
         library: {
-            type: "umd",
             name: "archipelagoJS",
+            type: "umd",
         },
         globalObject: "this",
         umdNamedDefine: true,

@@ -1,0 +1,1 @@
+{"version":3,"file":"SetNotifyPacket.d.ts","sourceRoot":"","sources":["../../../src/packets/client/SetNotifyPacket.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,iBAAiB,EAAE,MAAM,aAAa,CAAC;AAChD,OAAO,EAAE,UAAU,EAAE,MAAM,UAAU,CAAC;AAEtC;;;;;GAKG;AACH,MAAM,WAAW,eAAgB,SAAQ,UAAU;IAC/C,GAAG,EAAE,iBAAiB,CAAC,UAAU,CAAC;IAElC,uDAAuD;IACvD,IAAI,EAAE,MAAM,EAAE,CAAC;CAClB"}

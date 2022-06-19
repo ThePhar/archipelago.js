@@ -1,18 +1,19 @@
-import { ArchipelagoClient } from "../index";
+import { Client } from "../index";
 
 /**
- * Managers and watches for events regarding item data and provides helper functions to make working with items easier.
+ * Managers and watches for events regarding item data and provides helper functions to make working with
+ * items easier.
  */
 export class ItemsManager {
-    private _client: ArchipelagoClient;
+    private _client: Client;
 
     /**
-     * Creates a new {@link ItemsManager} and sets up events on the {@link ArchipelagoClient} to listen for to start
+     * Creates a new {@link ItemsManager} and sets up events on the {@link Client} to listen for to start
      * updating it's internal state.
      *
-     * @param client The {@link ArchipelagoClient} that should be managing this manager.
+     * @param client The {@link Client} that should be managing this manager.
      */
-    public constructor(client: ArchipelagoClient) {
+    public constructor(client: Client) {
         this._client = client;
     }
 

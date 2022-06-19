@@ -1,0 +1,1 @@
+{"version":3,"file":"DataPackageObject.d.ts","sourceRoot":"","sources":["../../src/structs/DataPackageObject.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,YAAY,EAAE,QAAQ,EAAE,MAAM,SAAS,CAAC;AAEjD;;;;;;;;;;GAUG;AACH,MAAM,WAAW,iBAAkB,SAAQ,YAAY;IACnD,gGAAgG;IAChG,KAAK,EAAE;QAAE,CAAC,IAAI,EAAE,MAAM,GAAG,QAAQ,CAAA;KAAE,CAAC;CACvC"}

@@ -1,6 +1,8 @@
 # Ignore everything except those we manually allow
 *
 
-# JavaScript and Type Definitions
-!dist/**/*.d.ts
+# JavaScript Output
 !dist/**/*.js
+
+# Type Definitions
+!types/**/*.d.ts

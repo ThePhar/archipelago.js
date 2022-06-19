@@ -1,0 +1,1 @@
+{"version":3,"file":"PrintPacket.d.ts","sourceRoot":"","sources":["../../../src/packets/server/PrintPacket.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,iBAAiB,EAAE,MAAM,aAAa,CAAC;AAChD,OAAO,EAAE,UAAU,EAAE,MAAM,UAAU,CAAC;AAEtC;;;;GAIG;AACH,MAAM,WAAW,WAAY,SAAQ,UAAU;IAC3C,GAAG,EAAE,iBAAiB,CAAC,KAAK,CAAC;IAE7B,oCAAoC;IACpC,IAAI,EAAE,MAAM,CAAC;CAChB"}

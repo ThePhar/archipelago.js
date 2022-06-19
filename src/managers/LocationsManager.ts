@@ -1,23 +1,23 @@
 import { CommandPacketType } from "../enums";
-import { ArchipelagoClient } from "../index";
+import { Client } from "../index";
 import { ConnectedPacket, RoomUpdatePacket } from "../packets";
 
 /**
- * Managers and watches for events regarding location data and provides helper functions to make checking, scouting, or
- * working with locations in general easier.
+ * Managers and watches for events regarding location data and provides helper functions to make checking,
+ * scouting, or working with locations in general easier.
  */
 export class LocationsManager {
-    private _client: ArchipelagoClient;
+    private _client: Client;
     private _checked: number[] = [];
     private _missing: number[] = [];
 
     /**
-     * Creates a new {@link LocationsManager} and sets up events on the {@link ArchipelagoClient} to listen for to start
+     * Creates a new {@link LocationsManager} and sets up events on the {@link Client} to listen for to start
      * updating it's internal state.
      *
-     * @param client The {@link ArchipelagoClient} that should be managing this manager.
+     * @param client The {@link Client} that should be managing this manager.
      */
-    public constructor(client: ArchipelagoClient) {
+    public constructor(client: Client) {
         this._client = client;
         this._client.addListener("connected", this.onConnected.bind(this));
         this._client.addListener("roomUpdate", this.onRoomUpdate.bind(this));
@@ -53,11 +53,12 @@ export class LocationsManager {
      * Returns the `name` of a given location `id`.
      *
      * Special cases:
+     *
      * - If location id is `-1`, returns `Cheat Console`.
      * - If location id is `-2`, returns `Server`.
      *
-     * @param locationId The `id` of a location. Returns "Unknown Location #" if the location does not exist in the data
-     * package.
+     * @param locationId The `id` of a location. Returns "Unknown Location #" if the location does not exist
+     *   in the data package.
      */
     public name(locationId: number): string {
         switch (locationId) {

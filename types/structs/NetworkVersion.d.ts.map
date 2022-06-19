@@ -1,0 +1,1 @@
+{"version":3,"file":"NetworkVersion.d.ts","sourceRoot":"","sources":["../../src/structs/NetworkVersion.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,YAAY,EAAE,MAAM,SAAS,CAAC;AAEvC;;;GAGG;AACH,MAAM,WAAW,cAAe,SAAQ,YAAY;IAChD,KAAK,EAAE,SAAS,CAAC;IACjB,KAAK,EAAE,MAAM,CAAC;IACd,KAAK,EAAE,MAAM,CAAC;IACd,KAAK,EAAE,MAAM,CAAC;CACjB"}

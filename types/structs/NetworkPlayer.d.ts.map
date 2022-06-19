@@ -1,0 +1,1 @@
+{"version":3,"file":"NetworkPlayer.d.ts","sourceRoot":"","sources":["../../src/structs/NetworkPlayer.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,YAAY,EAAE,MAAM,SAAS,CAAC;AAEvC;;GAEG;AACH,MAAM,WAAW,aAAc,SAAQ,YAAY;IAC/C,qGAAqG;IACrG,IAAI,EAAE,MAAM,CAAC;IAEb;;;OAGG;IACH,IAAI,EAAE,MAAM,CAAC;IAEb;;;OAGG;IACH,KAAK,EAAE,MAAM,CAAC;IAEd;;OAEG;IACH,IAAI,EAAE,MAAM,CAAC;CAChB"}

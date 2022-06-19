@@ -1,0 +1,1 @@
+{"version":3,"file":"StatusUpdatePacket.d.ts","sourceRoot":"","sources":["../../../src/packets/client/StatusUpdatePacket.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,YAAY,EAAE,iBAAiB,EAAE,MAAM,aAAa,CAAC;AAC9D,OAAO,EAAE,UAAU,EAAE,MAAM,UAAU,CAAC;AAEtC;;;;;GAKG;AACH,MAAM,WAAW,kBAAmB,SAAQ,UAAU;IAClD,GAAG,EAAE,iBAAiB,CAAC,aAAa,CAAC;IAErC,+EAA+E;IAC/E,MAAM,EAAE,YAAY,CAAC;CACxB"}

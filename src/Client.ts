@@ -1,5 +1,5 @@
 import { EventEmitter } from "events";
-import WebSocket, { MessageEvent } from "isomorphic-ws";
+import { MessageEvent, WebSocket } from "isomorphic-ws";
 
 import * as Packet from "./packets";
 import { CommandPacketType, SessionStatus } from "./enums";
@@ -7,10 +7,10 @@ import { DataManager, ItemsManager, LocationsManager, PlayersManager } from "./m
 import { SlotCredentials } from "./structs";
 
 /**
- * The client that connects to an Archipelago server and facilitates communication, listens for events, and manages
- * data.
+ * The client that connects to an Archipelago server and facilitates communication, listens for events, and
+ * manages data.
  */
-export class ArchipelagoClient {
+export class Client {
     private readonly _uri: string;
     private _socket?: WebSocket;
     private _status = SessionStatus.DISCONNECTED;
@@ -23,7 +23,7 @@ export class ArchipelagoClient {
     /**
      * Creates a new client that is programmed to connect to a specific Archipelago server address.
      *
-     * @param socketAddress The socket address to connect to. Examples: `127.0.0.1:50000` or `archipelago.gg:38281`.
+     * @param socketAddress - The socket address to connect to. Examples: `127.0.0.1:50000` or `archipelago.gg:38281`.
      */
     public constructor(socketAddress: string) {
         this._uri = `ws://${socketAddress}/`;
@@ -67,7 +67,7 @@ export class ArchipelagoClient {
     /**
      * Connects to the given address with given connection information.
      *
-     * @param credentials An object with all the credential information to connect to the slot.
+     * @param credentials - An object with all the credential information to connect to the slot.
      * @resolves On successful connection and authentication to the room.
      * @rejects If web socket connection failed to establish connection or server refused connection, promise will
      * return a `string[]` of error messages.
@@ -135,8 +135,8 @@ export class ArchipelagoClient {
     /**
      * Send a list of raw packets to the Archipelago server in the order they are listed as arguments.
      *
-     * @param packets An array of raw {@link ArchipelagoClientPacket}s to send to the AP server. They are processed in
-     * the order they are listed as arguments.
+     * @param packets An array of raw {@link ArchipelagoClientPacket}s to send to the AP server. They are
+     *   processed in the order they are listed as arguments.
      */
     public send(...packets: Packet.ArchipelagoClientPacket[]): void {
         this._socket?.send(JSON.stringify(packets));
@@ -261,7 +261,14 @@ export class ArchipelagoClient {
 }
 
 /**
- * A type union of events the {@link ArchipelagoClient} can allow subscriptions for.
+ * {@inheritDoc Client}
+ *
+ * @deprecated Use {@link Client} instead.
+ */
+export const ArchipelagoClient = Client;
+
+/**
+ * A type union of events the {@link Client} can allow subscriptions for.
  */
 export type ClientEvents =
     | "packetReceived"

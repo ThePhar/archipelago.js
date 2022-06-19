@@ -1,24 +1,25 @@
-import { ArchipelagoClient } from "../index";
+import { Client } from "../index";
 import { ConnectedPacket, DataPackagePacket, RoomUpdatePacket } from "../packets";
 import { GameData, NetworkPlayer } from "../structs";
 
 /**
- * Manages and watches for events regarding session data and the data package. Most other mangers use this information
- * to create helper functions and track other information.
+ * Manages and watches for events regarding session data and the data package. Most other mangers use this
+ * information to create helper functions and track other information.
  */
 export class DataManager {
-    private _client: ArchipelagoClient;
+    private _client: Client;
     private _dataPackage = new Map<string, GameData>();
     private _locations = new Map<number, string>();
     private _items = new Map<number, string>();
     private _players = new Map<number, NetworkPlayer>();
 
     /**
-     * Creates a new {@link DataManager} and sets up events on the {@link ArchipelagoClient} to listen for to start
+     * Creates a new {@link DataManager} and sets up events on the {@link Client} to listen for to start
      * updating it's internal state.
-     * @param client The {@link ArchipelagoClient} that should be managing this manager.
+     *
+     * @param client The {@link Client} that should be managing this manager.
      */
-    public constructor(client: ArchipelagoClient) {
+    public constructor(client: Client) {
         this._client = client;
         this._client.addListener("dataPackage", this.onDataPackage.bind(this));
         this._client.addListener("connected", this.onConnected.bind(this));

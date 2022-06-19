@@ -1,0 +1,1 @@
+{"version":3,"file":"ItemsManager.d.ts","sourceRoot":"","sources":["../../src/managers/ItemsManager.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,MAAM,EAAE,MAAM,UAAU,CAAC;AAElC;;;GAGG;AACH,qBAAa,YAAY;IACrB,OAAO,CAAC,OAAO,CAAS;IAExB;;;;;OAKG;gBACgB,MAAM,EAAE,MAAM;IAIjC;;;;OAIG;IACI,IAAI,CAAC,MAAM,EAAE,MAAM,GAAG,MAAM;CAGtC"}
