@@ -46,7 +46,6 @@ rules:
   comma-dangle:         ["error", "always-multiline"]
   eol-last:             ["error"]
   indent:               ["error", 4, { "SwitchCase": 1 }]
-  linebreak-style:      ["error", "unix"]
   max-len:              ["warn", 120]
   no-console:           ["warn"]
   no-case-declarations: ["off"]
