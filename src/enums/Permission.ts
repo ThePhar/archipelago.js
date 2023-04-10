@@ -1,7 +1,7 @@
 /**
  * An enumeration containing the possible command permissions, for commands that may be restricted.
  */
-export const enum Permission {
+export enum Permission {
     /** Prevents players from using this command at any time. */
     DISABLED = 0,
 

@@ -1,7 +1,7 @@
 /**
  * Tags are represented as a list of strings, these are some of the most common tags.
  */
-export const enum CommonTags {
+export enum CommonTags {
     /**
      * Signifies that this client is a reference client, its usefulness is mostly in debugging to compare client
      * behaviours more easily.
