@@ -33,4 +33,7 @@ export interface ConnectedPacket extends BasePacket {
 
     /** Object of each slot with their {@link NetworkSlot} information. */
     slot_info: { [slot: number]: NetworkSlot };
+
+    /** Number of hint points that the current player has. */
+    hint_points: number;
 }

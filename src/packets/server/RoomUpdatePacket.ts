@@ -13,7 +13,7 @@ import { BasePacket } from "../index";
 export interface RoomUpdatePacket extends BasePacket {
     cmd: CommandPacketType.ROOM_UPDATE;
 
-    /** The client's current hint points. */
+    /** Number of hint points that the current player has. */
     hint_points?: number;
 
     /** Information on the players, whether connected or not. */
