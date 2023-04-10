@@ -23,12 +23,12 @@ message comes in.
 const { ArchipelagoClient, CommandPacketType, ItemsHandlingFlags } = require("archipelago.js");
 
 // Set up the AP client.
-const client = new ArchipelagoClient("localhost:38281");
+const client = new ArchipelagoClient("archipelago.gg:38281");
 const credentials = {
-    game: "Rogue Legacy",
+    game: "Clique",
     name: "Phar",
     uuid: "8da62081-7213-4543-97f6-b54d40e2fe52",
-    version: { major: 0, minor: 3, build: 2 },
+    version: { major: 0, minor: 4, build: 0 },
     items_handling: ItemsHandlingFlags.REMOTE_ALL,
 };
 
@@ -43,10 +43,8 @@ client
     })
     .catch(console.error);
 
-// Listen for events, like `print` packets.
-client.addListener("print", (packet) => {
-    console.log(packet.text);
-});
+// Listen for events, like `printJSON` packets.
+client.addListener("printJSON", (_, message) => console.log(message));
 ```
 
 ### TypeScript
@@ -60,12 +58,12 @@ Here's the same client example code as above, but note the ES-style import synta
 import { ArchipelagoClient, CommandPacketType, ItemsHandlingFlags } from "archipelago.js";
 
 // Set up the AP client.
-const client = new ArchipelagoClient("localhost:38281");
+const client = new ArchipelagoClient("archipelago.gg:38281");
 const credentials = {
-    game: "Rogue Legacy",
+    game: "Clique",
     name: "Phar",
     uuid: "8da62081-7213-4543-97f6-b54d40e2fe52",
-    version: { major: 0, minor: 3, build: 2 },
+    version: { major: 0, minor: 4, build: 0 },
     items_handling: ItemsHandlingFlags.REMOTE_ALL,
 };
 
@@ -81,7 +79,7 @@ client
     .catch(console.error);
 
 // Listen for packet events.
-client.addListener("print", (packet) => packet.text);
+client.addListener("printJSON", (_, message) => console.log(message));
 
 ```
 
@@ -106,12 +104,12 @@ variable.
         const { ArchipelagoClient, CommandPacketType, ItemsHandlingFlags } = archipelagoJS;
 
         // Set up the AP client.
-        const client = new ArchipelagoClient("10.0.0.92:38281");
+        const client = new ArchipelagoClient("archipelago.gg:38281");
         const credentials = {
-            game: "ChecksFinder",
+            game: "Clique",
             name: "Phar",
             uuid: "8da62081-7213-4543-97f6-b54d40e2fe52",
-            version: { major: 0, minor: 3, build: 2 },
+            version: { major: 0, minor: 4, build: 0 },
             items_handling: ItemsHandlingFlags.REMOTE_ALL,
         };
 
@@ -127,7 +125,7 @@ variable.
             .catch(console.error);
 
         // Listen for packet events.
-        client.addListener("print", (packet) => packet.text);
+        client.addListener("printJSON", (_, message) => console.log(message));
     </script>
 </body>
 </html>
@@ -154,8 +152,8 @@ client.addListener("locationInfo", (packet) => {
 client.locations.check(90000, 90001, 90002); // As many ids as you want.
 
 // Scout locations without checking them. Data will return on "locationInfo" event.
-client.locations.scout(false, 90003, 90004); // Do not hint.
-client.locations.scout(true, 90005) // Hint this location.
+client.locations.scout(CreateAsHint.NO_HINT, 90003, 90004); // Do not hint.
+client.locations.scout(CreateAsHint.HINT_ONLY_NEW, 90005) // Hint this location, if new!
 
 // Get the name of a location by its id.
 console.log(client.locations.name(90010));

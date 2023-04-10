@@ -164,7 +164,8 @@ export class ArchipelagoClient {
     public addListener(event: "dataPackage", listener: (packet: Packet.DataPackagePacket) => void): void;
     public addListener(event: "invalidPacket", listener: (packet: Packet.InvalidPacketPacket) => void): void;
     public addListener(event: "locationInfo", listener: (packet: Packet.LocationInfoPacket) => void): void;
-    public addListener(event: "printJSON", listener: (packet: Packet.PrintJSONPacket) => void): void;
+    public addListener(event: "printJSON", listener: (packet: Packet.PrintJSONPacket, plainMessage: string) => void):
+        void;
     public addListener(event: "receivedItems", listener: (packet: Packet.ReceivedItemsPacket) => void): void;
     public addListener(event: "retrieved", listener: (packet: Packet.RetrievedPacket) => void): void;
     public addListener(event: "roomInfo", listener: (packet: Packet.RoomInfoPacket) => void): void;
@@ -178,7 +179,7 @@ export class ArchipelagoClient {
      * @param event The event to listen for.
      * @param listener The listener callback function to run when an event is fired.
      */
-    public addListener(event: ClientEvents, listener: (packet: never) => void): void {
+    public addListener(event: ClientEvents, listener: (packet: never, plainMessage: never) => void): void {
         this._emitter.addListener(event, listener as (packet: Packet.ArchipelagoServerPacket) => void);
     }
 
@@ -188,7 +189,8 @@ export class ArchipelagoClient {
     public removeListener(event: "dataPackage", listener: (packet: Packet.DataPackagePacket) => void): void;
     public removeListener(event: "invalidPacket", listener: (packet: Packet.InvalidPacketPacket) => void): void;
     public removeListener(event: "locationInfo", listener: (packet: Packet.LocationInfoPacket) => void): void;
-    public removeListener(event: "printJSON", listener: (packet: Packet.PrintJSONPacket) => void): void;
+    public removeListener(event: "printJSON", listener: (packet: Packet.PrintJSONPacket, plainMessage: string) => void):
+        void;
     public removeListener(event: "receivedItems", listener: (packet: Packet.ReceivedItemsPacket) => void): void;
     public removeListener(event: "retrieved", listener: (packet: Packet.RetrievedPacket) => void): void;
     public removeListener(event: "roomInfo", listener: (packet: Packet.RoomInfoPacket) => void): void;
@@ -202,7 +204,7 @@ export class ArchipelagoClient {
      * @param event The event to stop listening for.
      * @param listener The listener callback function to remove.
      */
-    public removeListener(event: ClientEvents, listener: (packet: never) => void): void {
+    public removeListener(event: ClientEvents, listener: (packet: never, plainMessage: never) => void): void {
         this._emitter.removeListener(event, listener as (packet: Packet.ArchipelagoServerPacket) => void);
     }
 
@@ -232,9 +234,6 @@ export class ArchipelagoClient {
                 case CommandPacketType.LOCATION_INFO:
                     this._emitter.emit("locationInfo", packet);
                     break;
-                case CommandPacketType.PRINT_JSON:
-                    this._emitter.emit("printJSON", packet);
-                    break;
                 case CommandPacketType.RECEIVED_ITEMS:
                     this._emitter.emit("receivedItems", packet);
                     break;
@@ -250,6 +249,16 @@ export class ArchipelagoClient {
                 case CommandPacketType.SET_REPLY:
                     this._emitter.emit("setReply", packet);
                     break;
+                case CommandPacketType.PRINT_JSON: {
+                    // Add the plain text for easy access.
+                    let message = "";
+                    for (const text of packet.data) {
+                        message += text;
+                    }
+
+                    this._emitter.emit("printJSON", packet, message);
+                    break;
+                }
             }
         }
     }
@@ -267,7 +276,6 @@ export type ClientEvents =
     | "invalidPacket"
     | "locationInfo"
     | "printJSON"
-    | "print"
     | "receivedItems"
     | "retrieved"
     | "roomInfo"
