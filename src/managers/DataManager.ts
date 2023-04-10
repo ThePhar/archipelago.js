@@ -12,6 +12,7 @@ export class DataManager {
     private _locations = new Map<number, string>();
     private _items = new Map<number, string>();
     private _players = new Map<number, NetworkPlayer>();
+    private _hintPoints = 0;
 
     /**
      * Creates a new {@link DataManager} and sets up events on the {@link ArchipelagoClient} to listen for to start
@@ -53,6 +54,13 @@ export class DataManager {
         return this._players;
     }
 
+    /**
+     * Returns how many hint points a player has.
+     */
+    public get hintPoints(): number {
+        return this._hintPoints;
+    }
+
     private onDataPackage(packet: DataPackagePacket): void {
         // TODO: Cache results.
         for (const game in packet.data.games) {
@@ -75,13 +83,19 @@ export class DataManager {
         for (const player of packet.players) {
             this._players.set(player.slot, player);
         }
+
+        this._hintPoints = packet.hint_points ?? 0;
     }
 
     private onRoomUpdate(packet: RoomUpdatePacket): void {
-        if (!packet.players) return;
+        if (packet.hint_points) {
+            this._hintPoints = packet.hint_points;
+        }
 
-        for (const player of packet.players) {
-            this._players.set(player.slot, player);
+        if (packet.players) {
+            for (const player of packet.players) {
+                this._players.set(player.slot, player);
+            }
         }
     }
 }
