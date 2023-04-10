@@ -24,9 +24,19 @@ export class ArchipelagoClient {
      * Creates a new client that is programmed to connect to a specific Archipelago server address.
      *
      * @param socketAddress The socket address to connect to. Examples: `127.0.0.1:50000` or `archipelago.gg:38281`.
+     * @param secure Whether to attempt to connect with wss:// instead of ws://.
      */
-    public constructor(socketAddress: string) {
-        this._uri = `ws://${socketAddress}/`;
+    public constructor(socketAddress: string, secure = false) {
+        // For those who attempt to copy and paste the `/connect` part of the AP connection string.
+        if (socketAddress.trim().startsWith("/connect ")) {
+            socketAddress = socketAddress.trim().replace("/connect ", "");
+        }
+
+        if (secure) {
+            this._uri = `wss://${socketAddress}/`;
+        } else {
+            this._uri = `ws://${socketAddress}/`;
+        }
     }
 
     /**
