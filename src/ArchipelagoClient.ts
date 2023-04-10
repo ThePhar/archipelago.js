@@ -27,6 +27,11 @@ export class ArchipelagoClient {
      * @param secure Whether to attempt to connect with wss:// instead of ws://.
      */
     public constructor(socketAddress: string, secure = false) {
+        // For those who attempt to copy and paste the `/connect` part of the AP connection string.
+        if (socketAddress.trim().startsWith("/connect ")) {
+            socketAddress = socketAddress.trim().replace("/connect ", "");
+        }
+
         if (secure) {
             this._uri = `wss://${socketAddress}/`;
         } else {
