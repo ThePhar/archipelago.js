@@ -124,7 +124,7 @@ export class ArchipelagoClient {
                     uuid: credentials.uuid,
                     name: credentials.name,
                     password: credentials.password ?? "",
-                    version: { ...credentials.version, class: "Version" },
+                    version: credentials.version,
                     tags: credentials.tags ?? [],
                     items_handling: credentials.items_handling,
                 },
@@ -165,7 +165,6 @@ export class ArchipelagoClient {
     public addListener(event: "invalidPacket", listener: (packet: Packet.InvalidPacketPacket) => void): void;
     public addListener(event: "locationInfo", listener: (packet: Packet.LocationInfoPacket) => void): void;
     public addListener(event: "printJSON", listener: (packet: Packet.PrintJSONPacket) => void): void;
-    public addListener(event: "print", listener: (packet: Packet.PrintPacket) => void): void;
     public addListener(event: "receivedItems", listener: (packet: Packet.ReceivedItemsPacket) => void): void;
     public addListener(event: "retrieved", listener: (packet: Packet.RetrievedPacket) => void): void;
     public addListener(event: "roomInfo", listener: (packet: Packet.RoomInfoPacket) => void): void;
@@ -190,7 +189,6 @@ export class ArchipelagoClient {
     public removeListener(event: "invalidPacket", listener: (packet: Packet.InvalidPacketPacket) => void): void;
     public removeListener(event: "locationInfo", listener: (packet: Packet.LocationInfoPacket) => void): void;
     public removeListener(event: "printJSON", listener: (packet: Packet.PrintJSONPacket) => void): void;
-    public removeListener(event: "print", listener: (packet: Packet.PrintPacket) => void): void;
     public removeListener(event: "receivedItems", listener: (packet: Packet.ReceivedItemsPacket) => void): void;
     public removeListener(event: "retrieved", listener: (packet: Packet.RetrievedPacket) => void): void;
     public removeListener(event: "roomInfo", listener: (packet: Packet.RoomInfoPacket) => void): void;
@@ -236,9 +234,6 @@ export class ArchipelagoClient {
                     break;
                 case CommandPacketType.PRINT_JSON:
                     this._emitter.emit("printJSON", packet);
-                    break;
-                case CommandPacketType.PRINT:
-                    this._emitter.emit("print", packet);
                     break;
                 case CommandPacketType.RECEIVED_ITEMS:
                     this._emitter.emit("receivedItems", packet);

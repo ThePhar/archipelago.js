@@ -1,9 +1,9 @@
 /**
  * Bit flags configuring which items should be sent by the server.
  */
-export enum ItemsHandlingFlags {
+export const enum ItemsHandlingFlags {
     /** No ReceivedItems is sent to you, ever. */
-    REMOTE_NONE = 0b000,
+    LOCAL_ONLY = 0b000,
 
     /** Indicates you get items sent from other worlds. */
     REMOTE_DIFFERENT_WORLDS = 0b001,

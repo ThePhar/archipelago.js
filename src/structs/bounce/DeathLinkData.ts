@@ -1,10 +1,8 @@
-import { APBaseObject } from "../index";
-
 /**
  * The data for a special kind of {@link BouncePacket} that can be supported by any Archipelago game. It targets the tag
  * {@link CommonTags.DEATH_LINK} and carries the following data:
  */
-export interface DeathLinkData extends APBaseObject {
+export interface DeathLinkData {
     /** Unix Time Stamp of time of death. */
     time: number;
 

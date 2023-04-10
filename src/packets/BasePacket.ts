@@ -40,7 +40,6 @@ export type ArchipelagoServerPacket =
     | Packets.InvalidPacketPacket
     | Packets.LocationInfoPacket
     | Packets.PrintJSONPacket
-    | Packets.PrintPacket
     | Packets.ReceivedItemsPacket
     | Packets.RetrievedPacket
     | Packets.RoomInfoPacket

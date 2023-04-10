@@ -1,5 +1,4 @@
 import { CommandPacketType } from "../../enums";
-import { APBaseObject } from "../../structs";
 import { BasePacket } from "../index";
 
 /**
@@ -20,5 +19,5 @@ export interface BouncedPacket extends BasePacket {
     tags?: string[];
 
     /** The data in the {@link BouncePacket} package copied */
-    data: APBaseObject;
+    data: object;
 }
