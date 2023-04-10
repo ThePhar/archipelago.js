@@ -93,20 +93,15 @@ export class LocationsManager {
         // Update our checked/missing arrays.
         if (packet.checked_locations) {
             for (const location of packet.checked_locations) {
-                if (!this._checked.includes(location)) this._checked.push(location);
+                if (!this._checked.includes(location)) {
+                    this._checked.push(location);
 
-                // Remove from missing locations array as well.
-                const index = this._missing.indexOf(location);
-                if (index !== -1) {
-                    this._missing = this._missing.splice(index, 1);
+                    // Remove from missing locations array as well.
+                    const index = this._missing.indexOf(location);
+                    if (index !== -1) {
+                        this._missing.splice(index, 1);
+                    }
                 }
-            }
-        }
-
-        // TODO: Does AP actually send missing locations?
-        if (packet.missing_locations) {
-            for (const location of packet.missing_locations) {
-                this._missing.filter((missing) => missing !== location);
             }
         }
     }
