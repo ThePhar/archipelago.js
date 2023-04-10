@@ -1,4 +1,4 @@
-import { APBaseObject, GameData } from "./index";
+import { GameData } from "./index";
 
 /**
  * A {@link DataPackageObject} is an object which contains arbitrary metadata to enable a client to interact with the
@@ -11,7 +11,7 @@ import { APBaseObject, GameData } from "./index";
  * - The IDs from the game `Archipelago` may be used in any other game. Especially Location ID `-1`: `Cheat Console` and
  * `-2`: `Server` (typically Remote Start Inventory)
  */
-export interface DataPackageObject extends APBaseObject {
+export interface DataPackageObject {
     /** Mapping of all Games and their respective data. See {@link GameData} for additional info. */
     games: { [game: string]: GameData };
 }

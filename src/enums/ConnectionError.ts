@@ -2,8 +2,8 @@
  * An enumeration of known errors the Archipelago can send back to the client when they receive a
  * {@link ConnectionRefusedPacket}.
  */
-export enum ConnectionError {
-    /** Indicates that the sent `name` field did not match any auth entry on the server. */
+export const enum ConnectionError {
+    /** Indicates that the `name` field did not match any auth entry on the server. */
     INVALID_SLOT = "InvalidSlot",
 
     /** Indicates that a correctly named slot was found, but the game for it mismatched. */

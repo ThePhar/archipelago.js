@@ -1,10 +1,9 @@
 import { ItemFlags } from "../enums";
-import { APBaseObject } from "./index";
 
 /**
  * Items that are sent over the network.
  */
-export interface NetworkItem extends APBaseObject {
+export interface NetworkItem {
     /** The item ID of the item. Item IDs are in the range of ± 2^53-1. */
     item: number;
 

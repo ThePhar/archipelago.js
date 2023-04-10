@@ -1,4 +1,4 @@
-import { CommandPacketType } from "../enums";
+import { CommandPacketType, CreateAsHintMode } from "../enums";
 import { ArchipelagoClient } from "../index";
 import { ConnectedPacket, RoomUpdatePacket } from "../packets";
 
@@ -13,7 +13,7 @@ export class LocationsManager {
 
     /**
      * Creates a new {@link LocationsManager} and sets up events on the {@link ArchipelagoClient} to listen for to start
-     * updating it's internal state.
+     * updating its internal state.
      *
      * @param client The {@link ArchipelagoClient} that should be managing this manager.
      */
@@ -41,7 +41,7 @@ export class LocationsManager {
      * @param hint Create a hint for these locations.
      * @param locationIds A list of location ids.
      */
-    public scout(hint = false, ...locationIds: number[]): void {
+    public scout(hint = CreateAsHintMode.NO_HINT, ...locationIds: number[]): void {
         this._client.send({
             cmd: CommandPacketType.LOCATION_SCOUTS,
             locations: locationIds,
@@ -94,9 +94,16 @@ export class LocationsManager {
         if (packet.checked_locations) {
             for (const location of packet.checked_locations) {
                 if (!this._checked.includes(location)) this._checked.push(location);
+
+                // Remove from missing locations array as well.
+                const index = this._missing.indexOf(location);
+                if (index !== -1) {
+                    this._missing = this._missing.splice(index, 1);
+                }
             }
         }
 
+        // TODO: Does AP actually send missing locations?
         if (packet.missing_locations) {
             for (const location of packet.missing_locations) {
                 this._missing.filter((missing) => missing !== location);

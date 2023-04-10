@@ -1,5 +1,5 @@
 import { CommandPacketType } from "../../enums";
-import { APBaseObject, NetworkPlayer, NetworkSlot } from "../../structs";
+import { NetworkPlayer, NetworkSlot } from "../../structs";
 import { BasePacket } from "../index";
 
 /**
@@ -29,7 +29,7 @@ export interface ConnectedPacket extends BasePacket {
     checked_locations: number[];
 
     /** Contains a json object for slot related data, differs per game. Empty if not required. */
-    slot_data: APBaseObject;
+    slot_data: object;
 
     /** Object of each slot with their {@link NetworkSlot} information. */
     slot_info: { [slot: number]: NetworkSlot };

@@ -7,6 +7,8 @@ import { BasePacket } from "../index";
  *
  * Additional properties sent in this package will also be added to the {@link RetrievedPacket} it triggers.
  *
+ * Some special keys exist with specific return data, all of them have the prefix `_read_`.
+ *
  * @category Client Packets
  */
 export interface GetPacket extends BasePacket {

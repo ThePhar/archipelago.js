@@ -1,7 +1,7 @@
 /**
  * An enumeration containing the possible command permissions, for commands that may be restricted.
  */
-export enum Permission {
+export const enum Permission {
     /** Prevents players from using this command at any time. */
     DISABLED = 0,
 
@@ -12,7 +12,7 @@ export enum Permission {
     GOAL = 0b010,
 
     /**
-     * Forces players to use this command after they have completed their goal. Only works for `!forfeit` and `!collect`
+     * Forces players to use this command after they have completed their goal. Only works for `!release` and `!collect`
      */
     AUTO = 0b110,
 

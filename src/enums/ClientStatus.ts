@@ -2,9 +2,12 @@
  *  An enumeration containing the possible client states that may be used to inform the server in
  * {@link StatusUpdatePacket}.
  */
-export enum ClientStatus {
+export const enum ClientStatus {
     /** Client is in an unknown state. */
     UNKNOWN = 0,
+
+    /** Client is currently connected. */
+    CONNECTED = 5,
 
     /** Client is current ready to start. */
     READY = 10,

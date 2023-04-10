@@ -8,7 +8,7 @@ export class ItemsManager {
 
     /**
      * Creates a new {@link ItemsManager} and sets up events on the {@link ArchipelagoClient} to listen for to start
-     * updating it's internal state.
+     * updating its internal state.
      *
      * @param client The {@link ArchipelagoClient} that should be managing this manager.
      */

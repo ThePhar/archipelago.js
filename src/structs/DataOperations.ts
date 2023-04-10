@@ -1,11 +1,11 @@
-import { APBaseObject, APType } from "./index";
+import { APType } from "./index";
 
 /**
  * A {@link DataStorageOperation} manipulates or alters the value of a key in the data storage. If the operation
  * transforms the value from one state to another then the current value of the key is used as the starting point
  * otherwise the {@link SetPacket}'s default is used if the key does not exist on the server already.
  * {@link DataStorageOperation}s consist of an object containing both the operation to be applied, provided in the
- * form of a string, as well as the value to be used for that operation,
+ * form of a string, and the value to be used for that operation,
  *
  * Example:
  * ```js
@@ -14,7 +14,7 @@ import { APBaseObject, APType } from "./index";
  *
  * @category Data Storage Operations
  */
-export interface BaseDataStorageOperation extends APBaseObject {
+export interface BaseDataStorageOperation {
     /** The operation to apply to a given data storage key. */
     operation: string;
 
@@ -152,6 +152,38 @@ export interface RightShiftDataStorageOperation extends BaseDataStorageOperation
 }
 
 /**
+ * List only: removes the first instance of `value` found in the list.
+ *
+ * @category Data Storage Operations
+ */
+export interface RemoveDataStorageOperation extends BaseDataStorageOperation {
+    operation: "remove";
+    value: APType;
+}
+
+/**
+ * List or Dict only: for `lists` it will remove the index of the `value` given. For `dicts` it removes the element with
+ * the specified key of `value`.
+ *
+ * @category Data Storage Operations
+ */
+export interface PopDataStorageOperation extends BaseDataStorageOperation {
+    operation: "pop";
+    value: APType;
+}
+
+/**
+ * Dict only: Updates the dictionary with the specified elements given in `value` creating new keys, or updating old
+ * ones if they previously existed.
+ *
+ * @category Data Storage Operations
+ */
+export interface UpdateDataStorageOperation extends BaseDataStorageOperation {
+    operation: "update";
+    value: APType;
+}
+
+/**
  * A type union of all supported {@link BaseDataStorageOperation}s on the Archipelago server.
  */
 export type DataStorageOperation =
@@ -167,4 +199,7 @@ export type DataStorageOperation =
     | OrDataStorageOperation
     | XorDataStorageOperation
     | LeftShiftDataStorageOperation
-    | RightShiftDataStorageOperation;
+    | RightShiftDataStorageOperation
+    | RemoveDataStorageOperation
+    | PopDataStorageOperation
+    | UpdateDataStorageOperation;

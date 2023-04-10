@@ -1,11 +1,10 @@
 import { ItemFlags } from "../enums";
-import { APBaseObject } from "./index";
 
 /**
  * Message nodes sent along with {@link PrintJSONPacket} to be reconstructed into a legible message. The nodes are
  * intended to be read in the order they are listed in the packet.
  */
-export interface JSONMessagePart extends APBaseObject {
+export interface JSONMessagePart {
     /** Used to denote the intent of the message part. */
     type?: ValidJSONMessageTypes;
 
