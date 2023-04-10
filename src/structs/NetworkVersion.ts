@@ -3,6 +3,7 @@
  * server the minimum Archipelago version it supports.
  */
 export interface NetworkVersion {
+    class: "Version";
     major: number;
     minor: number;
     build: number;

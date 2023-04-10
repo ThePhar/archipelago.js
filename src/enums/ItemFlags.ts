@@ -1,7 +1,7 @@
 /**
  * Bit flags that determine if an item is progression, nice to have, filler, or a trap.
  */
-export const enum ItemFlags {
+export enum ItemFlags {
     /** Nothing special about this item. */
     FILLER = 0,
 

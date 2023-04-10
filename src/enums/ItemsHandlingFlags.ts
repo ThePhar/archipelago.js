@@ -1,7 +1,7 @@
 /**
  * Bit flags configuring which items should be sent by the server.
  */
-export const enum ItemsHandlingFlags {
+export enum ItemsHandlingFlags {
     /** No ReceivedItems is sent to you, ever. */
     LOCAL_ONLY = 0b000,
 

@@ -134,7 +134,7 @@ export class ArchipelagoClient {
                     uuid: credentials.uuid,
                     name: credentials.name,
                     password: credentials.password ?? "",
-                    version: credentials.version,
+                    version: { ...credentials.version, class: "Version" },
                     tags: credentials.tags ?? [],
                     items_handling: credentials.items_handling,
                 },

@@ -2,7 +2,7 @@
  * An enumeration of all possible packet types the server and client can send back and forth. See each packet's
  * interface page for additional information on each packet type.
  */
-export const enum CommandPacketType {
+export enum CommandPacketType {
     // Client Packets
     BOUNCE = "Bounce",
     CONNECT = "Connect",

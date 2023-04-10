@@ -1,7 +1,7 @@
 /**
  * An enumeration of known {@link PrintJSONPacket} types.
  */
-export const enum PrintJSONType {
+export enum PrintJSONType {
     /** A player received an item. */
     ITEM_SEND = "ItemSend",
 

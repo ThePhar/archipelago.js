@@ -2,7 +2,7 @@
  *  An enumeration containing the possible client states that may be used to inform the server in
  * {@link StatusUpdatePacket}.
  */
-export const enum ClientStatus {
+export enum ClientStatus {
     /** Client is in an unknown state. */
     UNKNOWN = 0,
 
