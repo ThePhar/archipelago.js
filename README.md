@@ -43,10 +43,8 @@ client
     })
     .catch(console.error);
 
-// Listen for events, like `print` packets.
-client.addListener("print", (packet) => {
-    console.log(packet.text);
-});
+// Listen for events, like `printJSON` packets.
+client.addListener("printJSON", (_, message) => console.log(message));
 ```
 
 ### TypeScript
@@ -81,7 +79,7 @@ client
     .catch(console.error);
 
 // Listen for packet events.
-client.addListener("print", (packet) => packet.text);
+client.addListener("printJSON", (_, message) => console.log(message));
 
 ```
 
@@ -127,7 +125,7 @@ variable.
             .catch(console.error);
 
         // Listen for packet events.
-        client.addListener("print", (packet) => packet.text);
+        client.addListener("printJSON", (_, message) => console.log(message));
     </script>
 </body>
 </html>
