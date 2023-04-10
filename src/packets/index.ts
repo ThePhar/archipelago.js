@@ -23,7 +23,6 @@ export * from "./server/DataPackagePacket";
 export * from "./server/InvalidPacketPacket";
 export * from "./server/LocationInfoPacket";
 export * from "./server/PrintJSONPacket";
-export * from "./server/PrintPacket";
 export * from "./server/ReceivedItemsPacket";
 export * from "./server/RetrievedPacket";
 export * from "./server/RoomInfoPacket";

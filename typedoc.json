@@ -3,7 +3,7 @@
   "cleanOutputDir": true,
   "excludePrivate": true,
   "excludeInternal": true,
-  "tsconfig": ["tsconfig.json"],
+  "tsconfig": "tsconfig.json",
   "entryPoints": ["src/index.ts"],
   "out": "docs",
   "categorizeByGroup": true,

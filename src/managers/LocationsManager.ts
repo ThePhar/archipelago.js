@@ -1,4 +1,4 @@
-import { CommandPacketType } from "../enums";
+import { CommandPacketType, CreateAsHintMode } from "../enums";
 import { ArchipelagoClient } from "../index";
 import { ConnectedPacket, RoomUpdatePacket } from "../packets";
 
@@ -41,7 +41,7 @@ export class LocationsManager {
      * @param hint Create a hint for these locations.
      * @param locationIds A list of location ids.
      */
-    public scout(hint = false, ...locationIds: number[]): void {
+    public scout(hint = CreateAsHintMode.NO_HINT, ...locationIds: number[]): void {
         this._client.send({
             cmd: CommandPacketType.LOCATION_SCOUTS,
             locations: locationIds,

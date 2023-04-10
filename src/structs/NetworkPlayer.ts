@@ -1,9 +1,7 @@
-import { APBaseObject } from "./index";
-
 /**
  * An object that contains information about a player on the network.
  */
-export interface NetworkPlayer extends APBaseObject {
+export interface NetworkPlayer {
     /** Determines the team the player is on. Useful for competitive seeds. Team numbers start at `0`. */
     team: number;
 

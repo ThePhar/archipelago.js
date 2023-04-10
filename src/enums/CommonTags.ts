@@ -1,20 +1,12 @@
 /**
  * Tags are represented as a list of strings, these are some of the most common tags.
  */
-export enum CommonTags {
+export const enum CommonTags {
     /**
      * Signifies that this client is a reference client, its usefulness is mostly in debugging to compare client
      * behaviours more easily.
      */
     REFERENCE_CLIENT = "AP",
-
-    /**
-     * Deprecated. See {@link CommonTags.TRACKER} and {@link CommonTags.TEXT_ONLY}. Tells the server to ignore the
-     * `game` attribute in the {@link ConnectPacket}.
-     *
-     * @deprecated
-     */
-    IGNORE_GAME = "IgnoreGame",
 
     /**
      * Client participates in the DeathLink mechanic, therefore will send and receive DeathLink {@link BouncePacket}s.

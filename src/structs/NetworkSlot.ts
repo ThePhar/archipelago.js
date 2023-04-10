@@ -1,10 +1,9 @@
 import { SlotType } from "../enums";
-import { APBaseObject } from "./index";
 
 /**
  * An object representing static information about a slot.
  */
-export interface NetworkSlot extends APBaseObject {
+export interface NetworkSlot {
     /**
      * The original slot name as defined by the player's configuration file. Individual names are unique among players.
      */

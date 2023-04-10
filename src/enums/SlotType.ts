@@ -1,7 +1,7 @@
 /**
  * An enumeration representing the nature of the slot.
  */
-export enum SlotType {
+export const enum SlotType {
     /** This client is a spectator and not participating in the current game. */
     SPECTATOR = 0b00,
 

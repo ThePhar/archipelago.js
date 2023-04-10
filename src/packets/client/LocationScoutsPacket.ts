@@ -1,4 +1,4 @@
-import { CommandPacketType } from "../../enums";
+import { CommandPacketType, CreateAsHintMode } from "../../enums";
 import { BasePacket } from "../index";
 
 /**
@@ -17,6 +17,9 @@ export interface LocationScoutsPacket extends BasePacket {
      */
     locations: number[];
 
-    /** If `true`, the scouted locations get created and broadcast as a player-visible hint. */
-    create_as_hint: boolean;
+    /**
+     * If non-zero, the scouted locations get created and broadcast as a player-visible hint. If `HINT_ONLY_NEW`, only
+     * new hints are broadcast, however this does not remove them from the LocationInfo reply.
+     */
+    create_as_hint: CreateAsHintMode;
 }
