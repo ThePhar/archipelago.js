@@ -23,7 +23,7 @@ export class DataManager<TSlotData> {
         collect: Permission.DISABLED,
         remaining: Permission.DISABLED,
     };
-    private _awaitingSetReplies: AwaitSetItem[] = [];
+    private _awaitingSetReplies: AwaitItem[] = [];
 
     /**
      * Creates a new {@link DataManager} and sets up events on the {@link ArchipelagoClient} to listen for to start
@@ -130,11 +130,11 @@ export class DataManager<TSlotData> {
     private onSetReply(packet: SetReplyPacket) {
         const replyIndex = this._awaitingSetReplies.findIndex((s) => s.key === packet.key);
         if (replyIndex !== -1) {
-            const { resolve } = this._awaitingSetReplies[replyIndex] as AwaitSetItem;
+            const { resolve } = this._awaitingSetReplies[replyIndex] as AwaitItem;
 
             // Remove the "await".
             this._awaitingSetReplies.splice(replyIndex, 1);
-            resolve(packet);
+            resolve(packet as SetReplyPacket);
         }
     }
 
@@ -199,7 +199,7 @@ export type Permissions = {
     readonly remaining: Permission;
 }
 
-export type AwaitSetItem = {
+export type AwaitItem = {
     key: string,
     resolve: (value: (PromiseLike<SetReplyPacket> | SetReplyPacket)) => void,
 };

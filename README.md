@@ -20,26 +20,25 @@ Here is an example client that connects and sends a hello message on connection.
 message comes in.
 
 ```javascript
-const { ArchipelagoClient, CommandPacketType, ItemsHandlingFlags } = require("archipelago.js");
+const { ArchipelagoClient, ItemsHandlingFlags } = require("archipelago.js");
 
 // Set up the AP client.
-const client = new ArchipelagoClient("archipelago.gg:38281");
+const client = new ArchipelagoClient();
 const credentials = {
     game: "Clique",
     name: "Phar",
-    uuid: "8da62081-7213-4543-97f6-b54d40e2fe52",
     version: { major: 0, minor: 4, build: 0 },
     items_handling: ItemsHandlingFlags.REMOTE_ALL,
 };
 
 // Connect to the Archipelago server.
 client
-    .connect(credentials)
+    .connect(credentials, "archipelago.gg", 38281)
     .then(() => {
         console.log(`Connected to room with ${client.data.players.size} players.`);
 
-        // Send a raw packet to the server!
-        client.send({ cmd: CommandPacketType.SAY, text: "Hello, everybody!" });
+        // Say something!
+        client.say("Hello, everyone!");
     })
     .catch(console.error);
 
@@ -50,37 +49,42 @@ client.addListener("printJSON", (_, message) => console.log(message));
 ### TypeScript
 
 It's easy to also import **Archipelago.JS** into your TypeScript projects, as it contains full type definitions. Run 
-`npm install archipelago.js` to include it in your TypeScript file.
+`npm install archipelago.js` to include it in your TypeScript file. You can even include the structure of the slot data
+for additional typing assistance.
 
 Here's the same client example code as above, but note the ES-style import syntax.
 
 ```typescript
-import { ArchipelagoClient, CommandPacketType, ItemsHandlingFlags } from "archipelago.js";
+import { ArchipelagoClient, SlotCredentials, ItemsHandlingFlags } from ".";
+
+// Define the structure of your slot data and you can have typing information on `client.data.slotData`.
+type CliqueSlotData = {
+    hard_mode: boolean;
+}
 
 // Set up the AP client.
-const client = new ArchipelagoClient("archipelago.gg:38281");
-const credentials = {
+const client = new ArchipelagoClient<CliqueSlotData>();
+const credentials: SlotCredentials = {
     game: "Clique",
     name: "Phar",
-    uuid: "8da62081-7213-4543-97f6-b54d40e2fe52",
     version: { major: 0, minor: 4, build: 0 },
     items_handling: ItemsHandlingFlags.REMOTE_ALL,
 };
 
 // Connect to the Archipelago server.
 client
-    .connect(credentials)
+    .connect(credentials, "archipelago.gg", 38281)
     .then(() => {
         console.log(`Connected to room with ${client.data.players.size} players.`);
+        console.log(`You're ${client.data.slotData.hard_mode ? "" : "not"} playing on hard mode!`);
 
-        // Send a raw packet to the server!
-        client.send({ cmd: CommandPacketType.SAY, text: "Hello, everybody!" });
+        // Say something!
+        client.say("Hello, everyone!");
     })
     .catch(console.error);
 
 // Listen for packet events.
 client.addListener("printJSON", (_, message) => console.log(message));
-
 ```
 
 ### In the Browser
@@ -101,30 +105,28 @@ variable.
 
     <script src="archipelago.min.js"></script>
     <script>
-        const { ArchipelagoClient, CommandPacketType, ItemsHandlingFlags } = archipelagoJS;
+        const { ArchipelagoClient, ItemsHandlingFlags } = archipelagoJS;
 
         // Set up the AP client.
-        const client = new ArchipelagoClient("archipelago.gg:38281");
+        const client = new ArchipelagoClient();
         const credentials = {
             game: "Clique",
             name: "Phar",
-            uuid: "8da62081-7213-4543-97f6-b54d40e2fe52",
             version: { major: 0, minor: 4, build: 0 },
             items_handling: ItemsHandlingFlags.REMOTE_ALL,
         };
 
         // Connect to the Archipelago server.
-        client
-            .connect(credentials)
+        client.connect(credentials, "archipelago.gg", 38281)
             .then(() => {
                 console.log(`Connected to room with ${client.data.players.size} players.`);
 
-                // Send a raw packet to the server!
-                client.send({ cmd: CommandPacketType.SAY, text: "Hello, everybody!" });
+                // Say something!
+                client.say("Hello, everyone!");
             })
             .catch(console.error);
 
-        // Listen for packet events.
+        // Listen for events, like `printJSON` packets.
         client.addListener("printJSON", (_, message) => console.log(message));
     </script>
 </body>
@@ -135,7 +137,7 @@ variable.
 
 ### LocationsManager
 
-The `locations` property on a `ArchipelagoClient` can be used to look up the name of a location from the data package,
+The `locations` property on an `ArchipelagoClient` can be used to look up the name of a location from the data package,
 check or scout locations, or view a list of all locations checked or missing.
 
 ```javascript
@@ -161,7 +163,7 @@ console.log(client.locations.name(90010));
 
 ### ItemsManager
 
-The `items` property on a `ArchipelagoClient` can be used to look up the name of an item from the data package.
+The `items` property on an `ArchipelagoClient` can be used to look up the name of an item from the data package.
 
 ```javascript
 // Get the name of a item by its id.
@@ -170,7 +172,7 @@ console.log(client.items.name(90001));
 
 ### PlayersManager
 
-The `players` property on a `ArchipelagoClient` can be used to look up the name or alias of a player from the data 
+The `players` property on an `ArchipelagoClient` can be used to look up the name or alias of a player from the data 
 package.
 
 ```javascript
@@ -178,6 +180,35 @@ package.
 console.log(client.players.name(1)); // Always their slot name.
 console.log(client.players.alias(2)); // Their current alias.
 ```
+
+### DataManager
+
+The `data` property on an `ArchipelagoClient` can be used for seeing current data about the room or to send `Set`
+operations to the server.
+
+```javascript
+// Get data package contents.
+console.log(client.data.package);
+
+// Get some basic server information.
+console.log(client.data.hintCost);
+console.log(client.data.hintPoints);
+console.log(client.data.slot);
+console.log(client.data.seed);
+
+// Get slot data information from connection.
+console.log(client.data.slotData);
+
+// Send set operations to the server, and listen for responses if `want_reply`.
+const setOperation = SetOperationsBuilder("pharcoins", 0, true)
+    .add(5)
+    .multiply(2)
+    .shiftLeft(1);
+
+const reply = await client.data.set(setOperation);
+console.log(reply);
+```
+
 
 ## Contributing / Development
 

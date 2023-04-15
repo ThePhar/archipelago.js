@@ -4,8 +4,8 @@ import { ArchipelagoClient } from "../index";
  * Managers and watches for events regarding player data and provides helper functions to make working with players
  * easier.
  */
-export class PlayersManager<TSlotData> {
-    private _client: ArchipelagoClient<TSlotData>;
+export class PlayersManager {
+    private _client: ArchipelagoClient<unknown>;
 
     /**
      * Creates a new {@link PlayersManager} and sets up events on the {@link ArchipelagoClient} to listen for to start
@@ -13,7 +13,7 @@ export class PlayersManager<TSlotData> {
      *
      * @param client The {@link ArchipelagoClient} that should be managing this manager.
      */
-    public constructor(client: ArchipelagoClient<TSlotData>) {
+    public constructor(client: ArchipelagoClient<unknown>) {
         this._client = client;
     }
 

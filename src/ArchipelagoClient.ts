@@ -16,9 +16,9 @@ export class ArchipelagoClient<TSlotData = BaseSlotData> {
     private _status = SessionStatus.DISCONNECTED;
     private _emitter = new EventEmitter();
     private _dataManager: DataManager<TSlotData> = new DataManager<TSlotData>(this);
-    private _itemsManager: ItemsManager<TSlotData> = new ItemsManager(this);
-    private _locationsManager: LocationsManager<TSlotData> = new LocationsManager(this);
-    private _playersManager: PlayersManager<TSlotData> = new PlayersManager(this);
+    private _itemsManager: ItemsManager = new ItemsManager(this);
+    private _locationsManager: LocationsManager = new LocationsManager(this);
+    private _playersManager: PlayersManager = new PlayersManager(this);
 
     /**
      * Get the current WebSocket connection status to the Archipelago server.
@@ -37,21 +37,21 @@ export class ArchipelagoClient<TSlotData = BaseSlotData> {
     /**
      * Get the {@link ItemsManager} helper object. See {@link ItemsManager} for additional information.
      */
-    public get items(): ItemsManager<TSlotData> {
+    public get items(): ItemsManager {
         return this._itemsManager;
     }
 
     /**
      * Get the {@link LocationsManager} helper object. See {@link LocationsManager} for additional information.
      */
-    public get locations(): LocationsManager<TSlotData> {
+    public get locations(): LocationsManager {
         return this._locationsManager;
     }
 
     /**
      * Get the {@link PlayersManager} helper object. See {@link PlayersManager} for additional information.
      */
-    public get players(): PlayersManager<TSlotData> {
+    public get players(): PlayersManager {
         return this._playersManager;
     }
 
