@@ -1,5 +1,6 @@
 import { EventEmitter } from "events";
 import WebSocket, { MessageEvent } from "isomorphic-ws";
+import { v4 as generateUUIDv4 } from "uuid";
 
 import * as Packet from "./packets";
 import { CommandPacketType, SessionStatus } from "./enums";
@@ -11,7 +12,6 @@ import { SlotCredentials } from "./structs";
  * data.
  */
 export class ArchipelagoClient {
-    private readonly _uri: string;
     private _socket?: WebSocket;
     private _status = SessionStatus.DISCONNECTED;
     private _emitter = new EventEmitter();
@@ -19,25 +19,6 @@ export class ArchipelagoClient {
     private _itemsManager = new ItemsManager(this);
     private _locationsManager = new LocationsManager(this);
     private _playersManager = new PlayersManager(this);
-
-    /**
-     * Creates a new client that is programmed to connect to a specific Archipelago server address.
-     *
-     * @param socketAddress The socket address to connect to. Examples: `127.0.0.1:50000` or `archipelago.gg:38281`.
-     * @param secure Whether to attempt to connect with wss:// instead of ws://.
-     */
-    public constructor(socketAddress: string, secure = false) {
-        // For those who attempt to copy and paste the `/connect` part of the AP connection string.
-        if (socketAddress.trim().startsWith("/connect ")) {
-            socketAddress = socketAddress.trim().replace("/connect ", "");
-        }
-
-        if (secure) {
-            this._uri = `wss://${socketAddress}/`;
-        } else {
-            this._uri = `ws://${socketAddress}/`;
-        }
-    }
 
     /**
      * Get the current WebSocket connection status to the Archipelago server.
@@ -77,35 +58,27 @@ export class ArchipelagoClient {
     /**
      * Connects to the given address with given connection information.
      *
+     * @param hostname The IP address or domain of the server you are attempting to connect to.
+     * @param port The port of the server you are attempting to connect to.
      * @param credentials An object with all the credential information to connect to the slot.
      * @resolves On successful connection and authentication to the room.
      * @rejects If web socket connection failed to establish connection or server refused connection, promise will
      * return a `string[]` of error messages.
      */
-    public async connect(credentials: SlotCredentials): Promise<void> {
+    public async connect(credentials: SlotCredentials, hostname: string, port = 38281): Promise<void> {
+        // Confirm a valid port was given.
+        if (port < 1 || port > 65535 || !Number.isInteger(port))
+            throw new Error(`Port must be an integer between 1 and 65535. Received: ${port}`);
+
         // First establish the initial connection.
         this._status = SessionStatus.CONNECTING;
-        await new Promise<void>((resolve, reject) => {
-            this._socket = new WebSocket(this._uri);
-
-            // On successful connection.
-            this._socket.onopen = () => {
-                this._status = SessionStatus.WAITING_FOR_AUTH;
-
-                if (this._socket) {
-                    this._socket.onmessage = this.parsePackets.bind(this);
-                    resolve();
-                } else {
-                    reject(["Socket was closed unexpectedly."]);
-                }
-            };
-
-            // On unsuccessful connection.
-            this._socket.onerror = (event) => {
-                this._status = SessionStatus.DISCONNECTED;
-                reject([event.message]);
-            };
-        });
+        try {
+            // Attempt a secure connection first.
+            await this.connectSocket(`wss://${hostname}:${port}/`);
+        } catch {
+            // Failing that, attempt to connect to normal websocket.
+            await this.connectSocket(`ws://${hostname}:${port}/`);
+        }
 
         // Attempt to log into the room.
         await new Promise<void>((resolve, reject) => {
@@ -131,12 +104,12 @@ export class ArchipelagoClient {
                 {
                     cmd: CommandPacketType.CONNECT,
                     game: credentials.game,
-                    uuid: credentials.uuid,
                     name: credentials.name,
-                    password: credentials.password ?? "",
                     version: { ...credentials.version, class: "Version" },
-                    tags: credentials.tags ?? [],
                     items_handling: credentials.items_handling,
+                    uuid: credentials.uuid ?? generateUUIDv4(),
+                    tags: credentials.tags ?? [],
+                    password: credentials.password ?? "",
                 },
             );
         });
@@ -214,6 +187,30 @@ export class ArchipelagoClient {
      */
     public removeListener(event: ClientEvents, listener: (packet: never, message: never) => void): void {
         this._emitter.removeListener(event, listener as (packet: Packet.ArchipelagoServerPacket) => void);
+    }
+
+    private connectSocket(uri: string): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            this._socket = new WebSocket(uri);
+
+            // On successful connection.
+            this._socket.onopen = () => {
+                this._status = SessionStatus.WAITING_FOR_AUTH;
+
+                if (this._socket) {
+                    this._socket.onmessage = this.parsePackets.bind(this);
+                    resolve();
+                } else {
+                    reject(["Socket was closed unexpectedly."]);
+                }
+            };
+
+            // On unsuccessful connection.
+            this._socket.onerror = (event) => {
+                this._status = SessionStatus.DISCONNECTED;
+                reject([event]);
+            };
+        });
     }
 
     private parsePackets(event: MessageEvent): void {

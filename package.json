@@ -1,6 +1,6 @@
 {
   "name": "archipelago.js",
-  "version": "0.5.3",
+  "version": "0.6.0",
   "description": "A general-purpose client library for communicating with Archipelago game servers, written for Node.js.",
   "license": "MIT",
   "main": "dist/index.js",
@@ -40,11 +40,13 @@
   ],
   "dependencies": {
     "isomorphic-ws": "^5.0.0",
+    "uuid": "^9.0.0",
     "ws": "^8.13.0"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.1.1",
     "@types/node": "^18.15.11",
+    "@types/uuid": "^9.0.1",
     "@types/ws": "^8.5.4",
     "@typescript-eslint/eslint-plugin": "^5.57.1",
     "@typescript-eslint/parser": "^5.57.1",

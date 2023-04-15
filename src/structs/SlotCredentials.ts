@@ -2,11 +2,11 @@ import { ItemsHandlingFlags } from "../enums";
 
 /** An object that holds credential information for a slot. */
 export interface SlotCredentials {
-    /** The name of the game the client is playing. Example: `A Link to the Past` */
-    game: string;
+    /** The name of the game the client is playing. If text only, can be null. Example: `A Link to the Past` */
+    game: string | null;
 
-    /** Unique identifier for player client. */
-    uuid: string;
+    /** Unique identifier for player client. If not specified, lib will generate one automatically. */
+    uuid?: string;
 
     /** The slot/player name for this client. */
     name: string;
