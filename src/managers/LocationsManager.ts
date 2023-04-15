@@ -71,6 +71,16 @@ export class LocationsManager<TSlotData> {
     }
 
     /**
+     * Sends out all missing locations as checked.
+     */
+    public auto_release(): void {
+        this._client.send({
+            cmd: CommandPacketType.LOCATION_CHECKS,
+            locations: this._missing,
+        });
+    }
+
+    /**
      * An array of all checked locations.
      */
     public get checked(): ReadonlyArray<number> {
