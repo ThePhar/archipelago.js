@@ -99,6 +99,9 @@ export class DataManager<TSlotData> {
         return this._seed;
     }
 
+    /**
+     * Get the current permissions for the room.
+     */
     public get permissions(): Permissions {
         return this._permissions;
     }
