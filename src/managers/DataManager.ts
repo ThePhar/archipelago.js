@@ -1,6 +1,7 @@
-import { ArchipelagoClient, Permission, RoomInfoPacket } from "../index";
+import { ArchipelagoClient, Permission, RoomInfoPacket, SetReplyPacket } from "../index";
 import { ConnectedPacket, DataPackagePacket, RoomUpdatePacket } from "../packets";
 import { GameData, NetworkPlayer } from "../structs";
+import { SetOperationsBuilder } from "../structs/SetOperationsBuilder";
 
 /**
  * Manages and watches for events regarding session data and the data package. Most other mangers use this information
@@ -22,6 +23,7 @@ export class DataManager<TSlotData> {
         collect: Permission.DISABLED,
         remaining: Permission.DISABLED,
     };
+    private _awaitingSetReplies: AwaitSetItem[] = [];
 
     /**
      * Creates a new {@link DataManager} and sets up events on the {@link ArchipelagoClient} to listen for to start
@@ -34,6 +36,7 @@ export class DataManager<TSlotData> {
         this._client.addListener("connected", this.onConnected.bind(this));
         this._client.addListener("roomInfo", this.onRoomInfo.bind(this));
         this._client.addListener("roomUpdate", this.onRoomUpdate.bind(this));
+        this._client.addListener("setReply", this.onSetReply.bind(this));
     }
 
     /**
@@ -106,6 +109,34 @@ export class DataManager<TSlotData> {
         return this._permissions;
     }
 
+    /**
+     * Send a series of set operations to the server.
+     * @param setOperations
+     */
+    public async set(setOperations: SetOperationsBuilder): Promise<SetReplyPacket | void> {
+        const packet = setOperations.build();
+
+        if (packet.want_reply) {
+            return new Promise<SetReplyPacket>((resolve) => {
+                this._awaitingSetReplies.push({ key: packet.key, resolve });
+                this._client.send(packet);
+            });
+        } else {
+            this._client.send(packet);
+        }
+    }
+
+    private onSetReply(packet: SetReplyPacket) {
+        const replyIndex = this._awaitingSetReplies.findIndex((s) => s.key === packet.key);
+        if (replyIndex !== -1) {
+            const { resolve } = this._awaitingSetReplies[replyIndex] as AwaitSetItem;
+
+            // Remove the "await".
+            this._awaitingSetReplies.splice(replyIndex, 1);
+            resolve(packet);
+        }
+    }
+
     private onDataPackage(packet: DataPackagePacket): void {
         // TODO: Cache results.
         for (const game in packet.data.games) {
@@ -166,3 +197,8 @@ export type Permissions = {
     readonly collect: Permission;
     readonly remaining: Permission;
 }
+
+export type AwaitSetItem = {
+    key: string,
+    resolve: (value: (PromiseLike<SetReplyPacket> | SetReplyPacket)) => void,
+};
