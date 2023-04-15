@@ -6,8 +6,8 @@ import { ConnectedPacket, RoomUpdatePacket } from "../packets";
  * Managers and watches for events regarding location data and provides helper functions to make checking, scouting, or
  * working with locations in general easier.
  */
-export class LocationsManager {
-    private _client: ArchipelagoClient;
+export class LocationsManager<TSlotData> {
+    private _client: ArchipelagoClient<TSlotData>;
     private _checked: number[] = [];
     private _missing: number[] = [];
 
@@ -17,7 +17,7 @@ export class LocationsManager {
      *
      * @param client The {@link ArchipelagoClient} that should be managing this manager.
      */
-    public constructor(client: ArchipelagoClient) {
+    public constructor(client: ArchipelagoClient<TSlotData>) {
         this._client = client;
         this._client.addListener("connected", this.onConnected.bind(this));
         this._client.addListener("roomUpdate", this.onRoomUpdate.bind(this));

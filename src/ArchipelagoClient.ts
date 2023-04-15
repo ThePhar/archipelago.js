@@ -3,7 +3,7 @@ import WebSocket, { MessageEvent } from "isomorphic-ws";
 import { v4 as generateUUIDv4 } from "uuid";
 
 import * as Packet from "./packets";
-import { CommandPacketType, SessionStatus } from "./enums";
+import { ClientStatus, CommandPacketType, SessionStatus } from "./enums";
 import { DataManager, ItemsManager, LocationsManager, PlayersManager } from "./managers";
 import { SlotCredentials } from "./structs";
 
@@ -11,14 +11,14 @@ import { SlotCredentials } from "./structs";
  * The client that connects to an Archipelago server and facilitates communication, listens for events, and manages
  * data.
  */
-export class ArchipelagoClient {
+export class ArchipelagoClient<TSlotData = BaseSlotData> {
     private _socket?: WebSocket;
     private _status = SessionStatus.DISCONNECTED;
     private _emitter = new EventEmitter();
-    private _dataManager = new DataManager(this);
-    private _itemsManager = new ItemsManager(this);
-    private _locationsManager = new LocationsManager(this);
-    private _playersManager = new PlayersManager(this);
+    private _dataManager: DataManager<TSlotData> = new DataManager<TSlotData>(this);
+    private _itemsManager: ItemsManager<TSlotData> = new ItemsManager(this);
+    private _locationsManager: LocationsManager<TSlotData> = new LocationsManager(this);
+    private _playersManager: PlayersManager<TSlotData> = new PlayersManager(this);
 
     /**
      * Get the current WebSocket connection status to the Archipelago server.
@@ -30,29 +30,39 @@ export class ArchipelagoClient {
     /**
      * Get the {@link DataManager} helper object. See {@link DataManager} for additional information.
      */
-    public get data(): DataManager {
+    public get data(): DataManager<TSlotData> {
         return this._dataManager;
     }
 
     /**
      * Get the {@link ItemsManager} helper object. See {@link ItemsManager} for additional information.
      */
-    public get items(): ItemsManager {
+    public get items(): ItemsManager<TSlotData> {
         return this._itemsManager;
     }
 
     /**
      * Get the {@link LocationsManager} helper object. See {@link LocationsManager} for additional information.
      */
-    public get locations(): LocationsManager {
+    public get locations(): LocationsManager<TSlotData> {
         return this._locationsManager;
     }
 
     /**
      * Get the {@link PlayersManager} helper object. See {@link PlayersManager} for additional information.
      */
-    public get players(): PlayersManager {
+    public get players(): PlayersManager<TSlotData> {
         return this._playersManager;
+    }
+
+    /**
+     * Get the URI of the current connection, including protocol.
+     */
+    public get uri(): string | undefined {
+        if (this._socket)
+            return this._socket.url;
+
+        return;
     }
 
     /**
@@ -61,58 +71,78 @@ export class ArchipelagoClient {
      * @param hostname The IP address or domain of the server you are attempting to connect to.
      * @param port The port of the server you are attempting to connect to.
      * @param credentials An object with all the credential information to connect to the slot.
+     * @param explicitProtocol If not `null`, will attempt a specific protocol and prevent fallback to another protocol
+     * if connection fails to establish.
+     *
      * @resolves On successful connection and authentication to the room.
      * @rejects If web socket connection failed to establish connection or server refused connection, promise will
      * return a `string[]` of error messages.
      */
-    public async connect(credentials: SlotCredentials, hostname: string, port = 38281): Promise<void> {
+    public async connect(
+        credentials: SlotCredentials,
+        hostname: string,
+        port = 38281,
+        explicitProtocol: "ws" | "wss" | null = null): Promise<void>
+    {
         // Confirm a valid port was given.
         if (port < 1 || port > 65535 || !Number.isInteger(port))
             throw new Error(`Port must be an integer between 1 and 65535. Received: ${port}`);
 
-        // First establish the initial connection.
-        this._status = SessionStatus.CONNECTING;
         try {
-            // Attempt a secure connection first.
-            await this.connectSocket(`wss://${hostname}:${port}/`);
-        } catch {
-            // Failing that, attempt to connect to normal websocket.
-            await this.connectSocket(`ws://${hostname}:${port}/`);
+            // First establish the initial connection.
+            this._status = SessionStatus.CONNECTING;
+
+            if (explicitProtocol === "ws") {
+                await this.connectSocket(`ws://${hostname}:${port}/`);
+            } else if (explicitProtocol === "wss") {
+                await this.connectSocket(`wss://${hostname}:${port}/`);
+            } else {
+                try {
+                    // Attempt a secure connection first.
+                    await this.connectSocket(`wss://${hostname}:${port}/`);
+                } catch {
+                    // Failing that, attempt to connect to normal websocket.
+                    await this.connectSocket(`ws://${hostname}:${port}/`);
+                }
+            }
+
+            // Attempt to log into the room.
+            await new Promise<void>((resolve, reject) => {
+                const onConnectedListener = () => {
+                    this._status = SessionStatus.CONNECTED;
+                    this.removeListener("connected", onConnectedListener);
+                    resolve();
+                };
+
+                const onConnectionRefusedListener = (packet: Packet.ConnectionRefusedPacket) => {
+                    this.disconnect();
+                    reject(packet.errors);
+                };
+
+                this.addListener("connected", onConnectedListener);
+                this.addListener("connectionRefused", onConnectionRefusedListener);
+
+                // Get the data package and connect to room.
+                this.send(
+                    {
+                        cmd: CommandPacketType.GET_DATA_PACKAGE,
+                    },
+                    {
+                        cmd: CommandPacketType.CONNECT,
+                        game: credentials.game,
+                        name: credentials.name,
+                        version: { ...credentials.version, class: "Version" },
+                        items_handling: credentials.items_handling,
+                        uuid: credentials.uuid ?? generateUUIDv4(),
+                        tags: credentials.tags ?? [],
+                        password: credentials.password ?? "",
+                    },
+                );
+            });
+        } catch (error) {
+            this.disconnect();
+            throw error;
         }
-
-        // Attempt to log into the room.
-        await new Promise<void>((resolve, reject) => {
-            const onConnectedListener = () => {
-                this._status = SessionStatus.CONNECTED;
-                this.removeListener("connected", onConnectedListener);
-                resolve();
-            };
-
-            const onConnectionRefusedListener = (packet: Packet.ConnectionRefusedPacket) => {
-                this.disconnect();
-                reject(packet.errors);
-            };
-
-            this.addListener("connected", onConnectedListener);
-            this.addListener("connectionRefused", onConnectionRefusedListener);
-
-            // Get the data package and connect to room.
-            this.send(
-                {
-                    cmd: CommandPacketType.GET_DATA_PACKAGE,
-                },
-                {
-                    cmd: CommandPacketType.CONNECT,
-                    game: credentials.game,
-                    name: credentials.name,
-                    version: { ...credentials.version, class: "Version" },
-                    items_handling: credentials.items_handling,
-                    uuid: credentials.uuid ?? generateUUIDv4(),
-                    tags: credentials.tags ?? [],
-                    password: credentials.password ?? "",
-                },
-            );
-        });
     }
 
     /**
@@ -123,6 +153,22 @@ export class ArchipelagoClient {
      */
     public send(...packets: Packet.ArchipelagoClientPacket[]): void {
         this._socket?.send(JSON.stringify(packets));
+    }
+
+    /**
+     * Send a normal chat message to the server.
+     * @param message The message to send.
+     */
+    public say(message: string): void {
+        this.send({ cmd: CommandPacketType.SAY, text: message });
+    }
+
+    /**
+     * Update the status for this client.
+     * @param status The status code to send.
+     */
+    public updateStatus(status: ClientStatus): void {
+        this.send({ cmd: CommandPacketType.STATUS_UPDATE, status });
     }
 
     /**
@@ -257,9 +303,13 @@ export class ArchipelagoClient {
                 case CommandPacketType.PRINT_JSON: {
                     // Add the plain text for easy access.
                     let message = "";
-                    for (const data of packet.data) {
-                        if (data.text)
-                            message += data.text;
+                    if (packet.message) {
+                        message = packet.message;
+                    } else {
+                        // Join each data piece together.
+                        for (const data of packet.data) {
+                            if (data.text) message += data.text;
+                        }
                     }
 
                     this._emitter.emit("printJSON", packet, message);
@@ -268,6 +318,10 @@ export class ArchipelagoClient {
             }
         }
     }
+}
+
+export interface BaseSlotData {
+    [arg: string]: unknown;
 }
 
 /**

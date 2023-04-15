@@ -3,8 +3,8 @@ import { ArchipelagoClient } from "../index";
 /**
  * Managers and watches for events regarding item data and provides helper functions to make working with items easier.
  */
-export class ItemsManager {
-    private _client: ArchipelagoClient;
+export class ItemsManager<TSlotData> {
+    private _client: ArchipelagoClient<TSlotData>;
 
     /**
      * Creates a new {@link ItemsManager} and sets up events on the {@link ArchipelagoClient} to listen for to start
@@ -12,7 +12,7 @@ export class ItemsManager {
      *
      * @param client The {@link ArchipelagoClient} that should be managing this manager.
      */
-    public constructor(client: ArchipelagoClient) {
+    public constructor(client: ArchipelagoClient<TSlotData>) {
         this._client = client;
     }
 
