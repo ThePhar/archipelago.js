@@ -105,6 +105,7 @@ variable.
 
     <script src="archipelago.min.js"></script>
     <script>
+        // Pull objects from the `archipelagoJS` global.
         const { ArchipelagoClient, ItemsHandlingFlags } = archipelagoJS;
 
         // Set up the AP client.
