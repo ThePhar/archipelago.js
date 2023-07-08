@@ -76,6 +76,69 @@ Then just run your client script using `node client.js` or if you're using TypeS
 That's it! You have now set up a client and connected to an Archipelago server using archipelago.js. You can start
 sending packets, handling server events, and building your multiplayer experience.
 
+### Running in Browser
+
+Archipelago.js can also run in the browser. Here's an example that works in most major browsers:
+
+```html
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Archipelago.js Client Example</title>
+    </head>
+    <body>
+        <script type="module">
+            import {
+                Client,
+                ITEMS_HANDLING_FLAGS,
+                SERVER_PACKET_TYPE,
+            } from "https://unpkg.com/archipelago.js/dist/archipelago.js";
+
+            // Create a new Archipelago client
+            const client = new Client();
+
+            const connectionInfo = {
+                hostname: "your-server-hostname", // Replace with the actual AP server hostname.
+                port: 38281, // Replace with the actual AP server port.
+                game: "your-game-name", // Replace with the game name for this player.
+                name: "your-player-name", // Replace with the player slot name.
+                items_handling: ITEMS_HANDLING_FLAGS.REMOTE_ALL,
+            };
+
+            // Set up event listeners
+            client.addListener(SERVER_PACKET_TYPE.CONNECTED, (packet) => {
+                console.log("Connected to server: ", packet);
+            });
+
+            client.addListener(SERVER_PACKET_TYPE.ROOM_UPDATE, (packet) => {
+                console.log("Room update: ", packet);
+            });
+
+            // Connect to the Archipelago server
+            client
+                .connect(connectionInfo)
+                .then(() => {
+                    console.log("Connected to the server");
+                    // You are now connected and authenticated to the server. You can add more code here if need be.
+                })
+                .catch((error) => {
+                    console.error("Failed to connect:", error);
+                    // Handle the connection error.
+                });
+
+            // Disconnect from the server when unloading window.
+            window.addEventListener("beforeunload", () => {
+                client.disconnect();
+            });
+        </script>
+    </body>
+</html>
+```
+
+In this example, the Archipelago client is included as a script from the https://unpkg.com/archipelago.js CDN. You can
+also use a locally hosted version of the library if you prefer.
+
 ### Handling Server Events
 
 You can listen for server events and handle them in your code. Here's an example of adding an event listener for the

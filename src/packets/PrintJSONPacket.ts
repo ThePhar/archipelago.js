@@ -1,11 +1,10 @@
-import { PrintJSONType } from "../consts/PrintJSONType.ts";
 import { JSONMessagePart } from "../types/JSONMessagePart.ts";
 import { NetworkItem } from "../types/NetworkItem.ts";
 
 export type ItemSendJSONPacket = {
     cmd: "PrintJSON";
 
-    /** May be present to indicate the nature of this message. Known types are specified in {@link PrintJSONType}. */
+    /** May be present to indicate the nature of this message. Known types are specified in {@link PRINT_JSON_TYPE}. */
     type: "ItemSend";
 
     /** All the data for this type of message. */
@@ -21,7 +20,7 @@ export type ItemSendJSONPacket = {
 export type ItemCheatJSONPacket = {
     cmd: "PrintJSON";
 
-    /** May be present to indicate the nature of this message. Known types are specified in {@link PrintJSONType}. */
+    /** May be present to indicate the nature of this message. Known types are specified in {@link PRINT_JSON_TYPE}. */
     type: "ItemCheat";
 
     /** All the data for this type of message. */
@@ -40,7 +39,7 @@ export type ItemCheatJSONPacket = {
 export type HintJSONPacket = {
     cmd: "PrintJSON";
 
-    /** May be present to indicate the nature of this message. Known types are specified in {@link PrintJSONType}. */
+    /** May be present to indicate the nature of this message. Known types are specified in {@link PRINT_JSON_TYPE}. */
     type: "Hint";
 
     /** All the data for this type of message. */
@@ -59,7 +58,7 @@ export type HintJSONPacket = {
 export type JoinJSONPacket = {
     cmd: "PrintJSON";
 
-    /** May be present to indicate the nature of this message. Known types are specified in {@link PrintJSONType}. */
+    /** May be present to indicate the nature of this message. Known types are specified in {@link PRINT_JSON_TYPE}. */
     type: "Join";
 
     /** All the data for this type of message. */
@@ -78,7 +77,7 @@ export type JoinJSONPacket = {
 export type PartJSONPacket = {
     cmd: "PrintJSON";
 
-    /** May be present to indicate the nature of this message. Known types are specified in {@link PrintJSONType}. */
+    /** May be present to indicate the nature of this message. Known types are specified in {@link PRINT_JSON_TYPE}. */
     type: "Part";
 
     /** All the data for this type of message. */
@@ -94,7 +93,7 @@ export type PartJSONPacket = {
 export type ChatJSONPacket = {
     cmd: "PrintJSON";
 
-    /** May be present to indicate the nature of this message. Known types are specified in {@link PrintJSONType}. */
+    /** May be present to indicate the nature of this message. Known types are specified in {@link PRINT_JSON_TYPE}. */
     type: "Chat";
 
     /** All the data for this type of message. */
@@ -113,7 +112,7 @@ export type ChatJSONPacket = {
 export type ServerChatJSONPacket = {
     cmd: "PrintJSON";
 
-    /** May be present to indicate the nature of this message. Known types are specified in {@link PrintJSONType}. */
+    /** May be present to indicate the nature of this message. Known types are specified in {@link PRINT_JSON_TYPE}. */
     type: "ServerChat";
 
     /** All the data for this type of message. */
@@ -126,7 +125,7 @@ export type ServerChatJSONPacket = {
 export type TutorialJSONPacket = {
     cmd: "PrintJSON";
 
-    /** May be present to indicate the nature of this message. Known types are specified in {@link PrintJSONType}. */
+    /** May be present to indicate the nature of this message. Known types are specified in {@link PRINT_JSON_TYPE}. */
     type: "Tutorial";
 
     /** All the data for this type of message. */
@@ -136,7 +135,7 @@ export type TutorialJSONPacket = {
 export type TagsChangedJSONPacket = {
     cmd: "PrintJSON";
 
-    /** May be present to indicate the nature of this message. Known types are specified in {@link PrintJSONType}. */
+    /** May be present to indicate the nature of this message. Known types are specified in {@link PRINT_JSON_TYPE}. */
     type: "TagsChanged";
 
     /** All the data for this type of message. */
@@ -155,7 +154,7 @@ export type TagsChangedJSONPacket = {
 export type CommandResultJSONPacket = {
     cmd: "PrintJSON";
 
-    /** May be present to indicate the nature of this message. Known types are specified in {@link PrintJSONType}. */
+    /** May be present to indicate the nature of this message. Known types are specified in {@link PRINT_JSON_TYPE}. */
     type: "CommandResult";
 
     /** All the data for this type of message. */
@@ -165,7 +164,7 @@ export type CommandResultJSONPacket = {
 export type AdminCommandResultJSONPacket = {
     cmd: "PrintJSON";
 
-    /** May be present to indicate the nature of this message. Known types are specified in {@link PrintJSONType}. */
+    /** May be present to indicate the nature of this message. Known types are specified in {@link PRINT_JSON_TYPE}. */
     type: "AdminCommandResult";
 
     /** All the data for this type of message. */
@@ -175,7 +174,7 @@ export type AdminCommandResultJSONPacket = {
 export type GoalJSONPacket = {
     cmd: "PrintJSON";
 
-    /** May be present to indicate the nature of this message. Known types are specified in {@link PrintJSONType}. */
+    /** May be present to indicate the nature of this message. Known types are specified in {@link PRINT_JSON_TYPE}. */
     type: "Goal";
 
     /** All the data for this type of message. */
@@ -191,7 +190,7 @@ export type GoalJSONPacket = {
 export type ReleaseJSONPacket = {
     cmd: "PrintJSON";
 
-    /** May be present to indicate the nature of this message. Known types are specified in {@link PrintJSONType}. */
+    /** May be present to indicate the nature of this message. Known types are specified in {@link PRINT_JSON_TYPE}. */
     type: "Release";
 
     /** All the data for this type of message. */
@@ -207,7 +206,7 @@ export type ReleaseJSONPacket = {
 export type CollectJSONPacket = {
     cmd: "PrintJSON";
 
-    /** May be present to indicate the nature of this message. Known types are specified in {@link PrintJSONType}. */
+    /** May be present to indicate the nature of this message. Known types are specified in {@link PRINT_JSON_TYPE}. */
     type: "Collect";
 
     /** All the data for this type of message. */
@@ -223,7 +222,7 @@ export type CollectJSONPacket = {
 export type CountdownJSONPacket = {
     cmd: "PrintJSON";
 
-    /** May be present to indicate the nature of this message. Known types are specified in {@link PrintJSONType}. */
+    /** May be present to indicate the nature of this message. Known types are specified in {@link PRINT_JSON_TYPE}. */
     type: "Countdown";
 
     /** All the data for this type of message. */
