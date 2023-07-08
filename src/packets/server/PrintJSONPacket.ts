@@ -1,6 +1,6 @@
-import { CommandPacketType, PrintJSONType } from "../../enums";
+import { PrintJSONType, ServerPacketType } from "../../enums";
 import { JSONMessagePart, NetworkItem } from "../../structs";
-import { BasePacket } from "../index";
+import { ServerPacket } from "../index";
 
 /**
  * Sent to clients purely to display a message to the player. While various message types provide additional arguments,
@@ -13,8 +13,8 @@ import { BasePacket } from "../index";
  *
  * @category Server Packets
  */
-export interface BasePrintJSONPacket extends BasePacket {
-    cmd: CommandPacketType.PRINT_JSON;
+export interface BasePrintJSONPacket extends ServerPacket {
+    cmd: ServerPacketType.PRINT_JSON;
 
     /** All the data for this type of message. */
     data: JSONMessagePart[];

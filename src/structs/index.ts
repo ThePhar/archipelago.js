@@ -2,10 +2,12 @@
 export * from "./bounce";
 
 // All other exports.
-export * from "./SlotCredentials";
+export * from "./AbstractSlotData";
+export * from "./ConnectionInformation";
 export * from "./DataOperations";
 export * from "./DataPackageObject";
 export * from "./GameData";
+export * from "./Hint";
 export * from "./JSONMessagePart";
 export * from "./NetworkItem";
 export * from "./NetworkPlayer";

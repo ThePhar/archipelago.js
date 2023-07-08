@@ -1,26 +1,26 @@
-import { CommandPacketType, CreateAsHintMode } from "../enums";
-import { ArchipelagoClient } from "../index";
+import { ClientPacketType, CreateAsHintMode, ServerPacketType } from "../enums";
+import { Client } from "../index";
 import { ConnectedPacket, RoomUpdatePacket } from "../packets";
 
 /**
- * Managers and watches for events regarding location data and provides helper functions to make checking, scouting, or
+ * Manages and watches for events regarding location data and provides helper functions to make checking, scouting, or
  * working with locations in general easier.
  */
 export class LocationsManager {
-    private _client: ArchipelagoClient<unknown>;
-    private _checked: number[] = [];
-    private _missing: number[] = [];
+    #client: Client<unknown>;
+    #checked: number[] = [];
+    #missing: number[] = [];
 
     /**
-     * Creates a new {@link LocationsManager} and sets up events on the {@link ArchipelagoClient} to listen for to start
+     * Creates a new {@link LocationsManager} and sets up events on the {@link Client} to listen for to start
      * updating its internal state.
      *
-     * @param client The {@link ArchipelagoClient} that should be managing this manager.
+     * @param client The {@link Client} that should be managing this manager.
      */
-    public constructor(client: ArchipelagoClient<unknown>) {
-        this._client = client;
-        this._client.addListener("connected", this.onConnected.bind(this));
-        this._client.addListener("roomUpdate", this.onRoomUpdate.bind(this));
+    public constructor(client: Client<unknown>) {
+        this.#client = client;
+        this.#client.addListener(ServerPacketType.CONNECTED, this.#onConnected.bind(this));
+        this.#client.addListener(ServerPacketType.ROOM_UPDATE, this.#onRoomUpdate.bind(this));
     }
 
     /**
@@ -29,8 +29,8 @@ export class LocationsManager {
      * @param locationIds A list of location ids.
      */
     public check(...locationIds: number[]): void {
-        this._client.send({
-            cmd: CommandPacketType.LOCATION_CHECKS,
+        this.#client.send({
+            cmd: ClientPacketType.LOCATION_CHECKS,
             locations: locationIds,
         });
     }
@@ -42,8 +42,8 @@ export class LocationsManager {
      * @param locationIds A list of location ids.
      */
     public scout(hint = CreateAsHintMode.NO_HINT, ...locationIds: number[]): void {
-        this._client.send({
-            cmd: CommandPacketType.LOCATION_SCOUTS,
+        this.#client.send({
+            cmd: ClientPacketType.LOCATION_SCOUTS,
             locations: locationIds,
             create_as_hint: hint,
         });
@@ -52,31 +52,82 @@ export class LocationsManager {
     /**
      * Returns the `name` of a given location `id`.
      *
-     * Special cases:
-     * - If location id is `-1`, returns `Cheat Console`.
-     * - If location id is `-2`, returns `Server`.
-     *
-     * @param locationId The `id` of a location. Returns "Unknown Location #" if the location does not exist in the data
+     * @param game The `name` of the game this location belongs to.
+     * @param id The `id` of this location.
+     * @returns Returns the name of the location or `Unknown <Game> Location: <Id>` if location or game is not in data
      * package.
+     *
+     * @throws Throws an error if `id` is not a safe integer.
      */
-    public name(locationId: number): string {
-        switch (locationId) {
-            case -1:
-                return "Cheat Console";
-            case -2:
-                return "Server";
-            default:
-                return this._client.data.locations.get(locationId) ?? `Unknown Location ${locationId}`;
+    public name(game: string, id: number): string {
+        if (isNaN(id) || !Number.isSafeInteger(id)) {
+            throw new Error(`'id' must be a safe integer. Received: ${id}`);
         }
+
+        const gameData = this.#client.data.package.get(game);
+        if (!gameData) {
+            return `Unknown ${game} Location: ${id}`;
+        }
+
+        const name = gameData.location_id_to_name[id];
+        if (!name) {
+            return `Unknown ${game} Location: ${id}`;
+        }
+
+        return name;
+    }
+
+    /**
+     * Returns the `id` of a given location `name`.
+     *
+     * @param game The `name` of the game this location belongs to.
+     * @param name The `name` of this location.
+     *
+     * @throws Throws an error if unable to find the `id` for a location or unable to find game in data package.
+     */
+    public id(game: string, name: string): number {
+        const gameData = this.#client.data.package.get(game);
+        if (!gameData) {
+            throw new Error(`Unknown game: ${game}`);
+        }
+
+        const id = gameData.location_name_to_id[name];
+        if (!id) {
+            throw new Error(`Unknown location name: ${name}`);
+        }
+
+        return id;
+    }
+
+    /**
+     * Returns a list of all location names in a given group.
+     *
+     * @param game
+     * @param name
+     *
+     * @throws Throws an error if unable to find game for group in data package.
+     */
+    public group(game: string, name: string): string[] {
+        const gameData = this.#client.data.package.get(game);
+        if (!gameData) {
+            throw new Error(`Unknown game: ${game}`);
+        }
+
+        const group = gameData.location_name_groups[name];
+        if (!group) {
+            return [];
+        }
+
+        return group;
     }
 
     /**
      * Sends out all missing locations as checked.
      */
-    public auto_release(): void {
-        this._client.send({
-            cmd: CommandPacketType.LOCATION_CHECKS,
-            locations: this._missing,
+    public autoRelease(): void {
+        this.#client.send({
+            cmd: ClientPacketType.LOCATION_CHECKS,
+            locations: this.#missing,
         });
     }
 
@@ -84,32 +135,32 @@ export class LocationsManager {
      * An array of all checked locations.
      */
     public get checked(): ReadonlyArray<number> {
-        return this._checked;
+        return this.#checked;
     }
 
     /**
      * An array of all locations that are not checked.
      */
     public get missing(): ReadonlyArray<number> {
-        return this._missing;
+        return this.#missing;
     }
 
-    private onConnected(packet: ConnectedPacket): void {
-        this._checked = packet.checked_locations;
-        this._missing = packet.missing_locations;
+    #onConnected(packet: ConnectedPacket): void {
+        this.#checked = packet.checked_locations;
+        this.#missing = packet.missing_locations;
     }
 
-    private onRoomUpdate(packet: RoomUpdatePacket): void {
+    #onRoomUpdate(packet: RoomUpdatePacket): void {
         // Update our checked/missing arrays.
         if (packet.checked_locations) {
             for (const location of packet.checked_locations) {
-                if (!this._checked.includes(location)) {
-                    this._checked.push(location);
+                if (!this.#checked.includes(location)) {
+                    this.#checked.push(location);
 
                     // Remove from missing locations array as well.
-                    const index = this._missing.indexOf(location);
+                    const index = this.#missing.indexOf(location);
                     if (index !== -1) {
-                        this._missing.splice(index, 1);
+                        this.#missing.splice(index, 1);
                     }
                 }
             }

@@ -1,6 +1,6 @@
-import { CommandPacketType } from "../../enums";
+import { ServerPacketType } from "../../enums";
 import { APType } from "../../structs";
-import { BasePacket } from "../index";
+import { ServerPacket } from "../index";
 
 /**
  * Sent to clients as a response to a {@link GetPacket}.
@@ -10,8 +10,8 @@ import { BasePacket } from "../index";
  *
  * @category Server Packets
  */
-export interface RetrievedPacket extends BasePacket {
-    cmd: CommandPacketType.RETRIEVED;
+export interface RetrievedPacket extends ServerPacket {
+    cmd: ServerPacketType.RETRIEVED;
 
     /** A key-value collection containing all the values for the keys requested in the {@link GetPacket}. */
     keys: { [key: string]: APType };

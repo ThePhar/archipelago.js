@@ -20,10 +20,10 @@ Here is an example client that connects and sends a hello message on connection.
 message comes in.
 
 ```javascript
-const { ArchipelagoClient, ItemsHandlingFlags } = require("archipelago.js");
+const { Client, ItemsHandlingFlags } = require("archipelago.js");
 
 // Set up the AP client.
-const client = new ArchipelagoClient();
+const client = new Client();
 const credentials = {
     game: "Clique",
     name: "Phar",
@@ -55,7 +55,7 @@ for additional typing assistance.
 Here's the same client example code as above, but note the ES-style import syntax.
 
 ```typescript
-import { ArchipelagoClient, SlotCredentials, ItemsHandlingFlags } from ".";
+import { Client, SlotCredentials, ItemsHandlingFlags } from ".";
 
 // Define the structure of your slot data and you can have typing information on `client.data.slotData`.
 type CliqueSlotData = {
@@ -63,7 +63,7 @@ type CliqueSlotData = {
 }
 
 // Set up the AP client.
-const client = new ArchipelagoClient<CliqueSlotData>();
+const client = new Client<CliqueSlotData>();
 const credentials: SlotCredentials = {
     game: "Clique",
     name: "Phar",
@@ -106,10 +106,10 @@ variable.
     <script src="archipelago.min.js"></script>
     <script>
         // Pull objects from the `archipelagoJS` global.
-        const { ArchipelagoClient, ItemsHandlingFlags } = archipelagoJS;
+        const { Client, ItemsHandlingFlags } = archipelagoJS;
 
         // Set up the AP client.
-        const client = new ArchipelagoClient();
+        const client = new Client();
         const credentials = {
             game: "Clique",
             name: "Phar",
@@ -138,7 +138,7 @@ variable.
 
 ### LocationsManager
 
-The `locations` property on an `ArchipelagoClient` can be used to look up the name of a location from the data package,
+The `locations` property on an `Client` can be used to look up the name of a location from the data package,
 check or scout locations, or view a list of all locations checked or missing.
 
 ```javascript
@@ -159,12 +159,12 @@ client.locations.scout(CreateAsHint.NO_HINT, 90003, 90004); // Do not hint.
 client.locations.scout(CreateAsHint.HINT_ONLY_NEW, 90005) // Hint this location, if new!
 
 // Get the name of a location by its id.
-console.log(client.locations.name(90010));
+console.log(client.locations.lookup(90010));
 ```
 
 ### ItemsManager
 
-The `items` property on an `ArchipelagoClient` can be used to look up the name of an item from the data package.
+The `items` property on an `Client` can be used to look up the name of an item from the data package.
 
 ```javascript
 // Get the name of a item by its id.
@@ -173,7 +173,7 @@ console.log(client.items.name(90001));
 
 ### PlayersManager
 
-The `players` property on an `ArchipelagoClient` can be used to look up the name or alias of a player from the data 
+The `players` property on an `Client` can be used to look up the name or alias of a player from the data 
 package.
 
 ```javascript
@@ -184,7 +184,7 @@ console.log(client.players.alias(2)); // Their current alias.
 
 ### DataManager
 
-The `data` property on an `ArchipelagoClient` can be used for seeing current data about the room or to send `Set`
+The `data` property on an `Client` can be used for seeing current data about the room or to send `Set`
 operations to the server.
 
 ```javascript

@@ -1,17 +1,20 @@
-import { CommandPacketType, Permission } from "../../enums";
+import { Permission, ServerPacketType } from "../../enums";
 import { NetworkVersion } from "../../structs";
-import { BasePacket } from "../index";
+import { ServerPacket } from "../index";
 
 /**
  * Sent to clients when they connect to an Archipelago server.
  *
  * @category Server Packets
  */
-export interface RoomInfoPacket extends BasePacket {
-    cmd: CommandPacketType.ROOM_INFO;
+export interface RoomInfoPacket extends ServerPacket {
+    cmd: ServerPacketType.ROOM_INFO;
 
     /** Object denoting the version of Archipelago which the server is running. */
     version: NetworkVersion;
+
+    /** Object denoting the version of Archipelago which generated the multiworld. */
+    generator_version: NetworkVersion;
 
     /** Denotes special features or capabilities that the sender is capable of. Example: `WebHost` */
     tags: string[];
@@ -65,19 +68,8 @@ export interface RoomInfoPacket extends BasePacket {
     /** The amount of hint points you receive per item/location check completed. */
     location_check_points: number;
 
-    /**
-     * Sorted list of game names for the players, so first player's game will be `games[0]`. Matches game names in
-     * the data package.
-     */
+    /** List of games present in this multiworld. */
     games: string[];
-
-    /**
-     * Data versions of the individual games' data packages the server will send. Used to decide which games' caches
-     * are outdated. See {@link DataPackageObject} for more information on the data package.
-     *
-     * @deprecated Use `datapackage_checksums` instead.
-     */
-    datapackage_versions: { [game: string]: number };
 
     /**
      * Checksum hash of the individual games' data packages the server will send. Used by newer clients to decide which
@@ -89,7 +81,7 @@ export interface RoomInfoPacket extends BasePacket {
     seed_name: string;
 
     /**
-     * Unix time stamp of "now". Send for time synchronization if wanted for things like a DeathLink
+     * Unix time stamp in seconds of "now". Send for time synchronization if wanted for things like a DeathLink
      * {@link BouncePacket}.
      */
     time: number;

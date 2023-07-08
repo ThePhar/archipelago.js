@@ -1,6 +1,6 @@
-import { CommandPacketType, Permission } from "../../enums";
+import { Permission, ServerPacketType } from "../../enums";
 import { NetworkPlayer, NetworkVersion } from "../../structs";
-import { BasePacket } from "../index";
+import { ServerPacket } from "../index";
 
 /**
  * Sent when there is a need to update information about the present game session. Generally useful for **async** games.
@@ -10,8 +10,8 @@ import { BasePacket } from "../index";
  *
  * @category Server Packets
  */
-export interface RoomUpdatePacket extends BasePacket {
-    cmd: CommandPacketType.ROOM_UPDATE;
+export interface RoomUpdatePacket extends ServerPacket {
+    cmd: ServerPacketType.ROOM_UPDATE;
 
     /** Number of hint points that the current player has. */
     hint_points?: number;
@@ -20,17 +20,10 @@ export interface RoomUpdatePacket extends BasePacket {
     players?: NetworkPlayer[];
 
     /**
-     * Might be a partial update, containing new locations that were checked, especially from a coop partner in the same
-     * slot.
+     * Might be a partial update, containing new locations that were checked, especially from a co-op partner in the
+     * same slot.
      */
     checked_locations?: number[];
-
-    /**
-     * Should never be sent as an update, if needed is the inverse of {@link RoomUpdatePacket.checked_locations}.
-     * 
-     * @remarks May never actually be sent by AP, need to investigate.
-     */
-    missing_locations?: number[];
 
     /** Object denoting the version of Archipelago which the server is running. */
     version?: NetworkVersion;
@@ -87,19 +80,8 @@ export interface RoomUpdatePacket extends BasePacket {
     /** The amount of hint points you receive per item/location check completed. */
     location_check_points?: number;
 
-    /**
-     * Sorted list of game names for the players, so first player's game will be `games[0]`. Matches game names in
-     * the data package.
-     */
+    /** List of games present in this multiworld. */
     games?: string[];
-
-    /**
-     * Data versions of the individual games' data packages the server will send. Used to decide which games' caches
-     * are outdated. See {@link DataPackageObject} for more information on the data package.
-     *
-     * @deprecated Use `datapackage_checksums` instead.
-     */
-    datapackage_versions?: { [game: string]: number };
 
     /**
      * Checksum hash of the individual games' data packages the server will send. Used by newer clients to decide which

@@ -1,6 +1,6 @@
-import { CommandPacketType } from "../../enums";
+import { ClientPacketType } from "../../enums";
 import { APType, DataStorageOperation } from "../../structs";
-import { BasePacket } from "../index";
+import { ClientPacket } from "../index";
 
 /**
  * Sent by the client to write data to the server's data storage, that data can then be shared across worlds or just
@@ -11,8 +11,8 @@ import { BasePacket } from "../index";
  *
  * @category Client Packets
  */
-export interface SetPacket extends BasePacket {
-    cmd: CommandPacketType.SET;
+export interface SetPacket extends ClientPacket {
+    cmd: ClientPacketType.SET;
 
     /** The key to manipulate. */
     key: string;
@@ -21,7 +21,7 @@ export interface SetPacket extends BasePacket {
     default: APType;
 
     /**
-     * Operations to apply to the value, multiple operations can be present and they will be executed in order of
+     * Operations to apply to the value, multiple operations can be present, and they will be executed in order of
      * appearance. See {@link DataStorageOperation} for information on supported operations.
      */
     operations: DataStorageOperation[];

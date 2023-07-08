@@ -1,23 +1,8 @@
 /**
- * An enumeration of all possible packet types the server and client can send back and forth. See each packet's
- * interface page for additional information on each packet type.
+ * An enumeration of all possible packet types the server can send to the client. See each packet's interface page for
+ * additional information on each packet type.
  */
-export enum CommandPacketType {
-    // Client Packets
-    BOUNCE = "Bounce",
-    CONNECT = "Connect",
-    CONNECT_UPDATE = "ConnectUpdate",
-    GET_DATA_PACKAGE = "GetDataPackage",
-    GET = "Get",
-    LOCATION_CHECKS = "LocationChecks",
-    LOCATION_SCOUTS = "LocationScouts",
-    SAY = "Say",
-    SET_NOTIFY = "SetNotify",
-    SET = "Set",
-    STATUS_UPDATE = "StatusUpdate",
-    SYNC = "Sync",
-
-    // Server Packets
+export enum ServerPacketType {
     BOUNCED = "Bounced",
     CONNECTED = "Connected",
     CONNECTION_REFUSED = "ConnectionRefused",
@@ -31,3 +16,25 @@ export enum CommandPacketType {
     ROOM_UPDATE = "RoomUpdate",
     SET_REPLY = "SetReply",
 }
+
+/**
+ * An enumeration of all possible packet types the client can send to the server. See each packet's interface page for
+ * additional information on each packet type.
+ */
+export enum ClientPacketType {
+    BOUNCE = "Bounce",
+    CONNECT = "Connect",
+    CONNECT_UPDATE = "ConnectUpdate",
+    GET_DATA_PACKAGE = "GetDataPackage",
+    GET = "Get",
+    LOCATION_CHECKS = "LocationChecks",
+    LOCATION_SCOUTS = "LocationScouts",
+    SAY = "Say",
+    SET_NOTIFY = "SetNotify",
+    SET = "Set",
+    STATUS_UPDATE = "StatusUpdate",
+    SYNC = "Sync",
+}
+
+/** A type alias for both {@link ServerPacketType} and {@link ClientPacketType}. */
+export type CommandPacketType = ServerPacketType | ClientPacketType;

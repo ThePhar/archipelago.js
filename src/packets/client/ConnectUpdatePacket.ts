@@ -1,13 +1,13 @@
-import { CommandPacketType } from "../../enums";
-import { BasePacket } from "../index";
+import { ClientPacketType } from "../../enums";
+import { ClientPacket } from "../index";
 
 /**
  * Update arguments from the Connect packet, currently only updating `tags` and `items_handling` is supported.
  *
  * @category Client Packets
  */
-export interface ConnectUpdatePacket extends BasePacket {
-    cmd: CommandPacketType.CONNECT_UPDATE;
+export interface ConnectUpdatePacket extends ClientPacket {
+    cmd: ClientPacketType.CONNECT_UPDATE;
 
     /**
      * Bit flags configuring which items should be sent by the server. See {@link ItemsHandlingFlags} for additional

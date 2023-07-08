@@ -1,13 +1,13 @@
-import { CommandPacketType } from "../../enums";
-import { BasePacket } from "../index";
+import { ClientPacketType } from "../../enums";
+import { ClientPacket } from "../index";
 
 /**
  * Sent by the client to have the server forward data to all clients that satisfy any given search criteria.
  *
  * @category Client Packets
  */
-export interface BouncePacket extends BasePacket {
-    cmd: CommandPacketType.BOUNCE;
+export interface BouncePacket extends ClientPacket {
+    cmd: ClientPacketType.BOUNCE;
 
     /** Any data you want to send. */
     data: object;

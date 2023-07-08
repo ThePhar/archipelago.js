@@ -1,5 +1,5 @@
-import { CommandPacketType, CreateAsHintMode } from "../../enums";
-import { BasePacket } from "../index";
+import { ClientPacketType, CreateAsHintMode } from "../../enums";
+import { ClientPacket } from "../index";
 
 /**
  * Sent by the client to inform the server of locations the client has seen, but not checked. Useful in cases in which
@@ -8,8 +8,8 @@ import { BasePacket } from "../index";
  *
  * @category Client Packets
  */
-export interface LocationScoutsPacket extends BasePacket {
-    cmd: CommandPacketType.LOCATION_SCOUTS;
+export interface LocationScoutsPacket extends ClientPacket {
+    cmd: ClientPacketType.LOCATION_SCOUTS;
 
     /**
      * The ids of the locations seen by the client. May contain any number of locations, even ones sent before;

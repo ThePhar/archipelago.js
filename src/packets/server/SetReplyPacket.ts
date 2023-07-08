@@ -1,6 +1,6 @@
-import { CommandPacketType } from "../../enums";
+import { ServerPacketType } from "../../enums";
 import { APType } from "../../structs";
-import { BasePacket } from "../index";
+import { ServerPacket } from "../index";
 
 /**
  * Sent to clients in response to a {@link SetPacket} if `want_reply` was set to true, or if the client has registered
@@ -12,8 +12,8 @@ import { BasePacket } from "../index";
  *
  * @category Server Packets
  */
-export interface SetReplyPacket extends BasePacket {
-    readonly cmd: CommandPacketType.SET_REPLY;
+export interface SetReplyPacket extends ServerPacket {
+    readonly cmd: ServerPacketType.SET_REPLY;
 
     /** The key that was updated. */
     readonly key: string;

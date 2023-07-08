@@ -1,19 +1,19 @@
-import { ArchipelagoClient } from "../index";
+import { Client } from "../index";
 
 /**
  * Managers and watches for events regarding player data and provides helper functions to make working with players
  * easier.
  */
 export class PlayersManager {
-    private _client: ArchipelagoClient<unknown>;
+    private _client: Client<unknown>;
 
     /**
-     * Creates a new {@link PlayersManager} and sets up events on the {@link ArchipelagoClient} to listen for to start
+     * Creates a new {@link PlayersManager} and sets up events on the {@link Client} to listen for to start
      * updating its internal state.
      *
-     * @param client The {@link ArchipelagoClient} that should be managing this manager.
+     * @param client The {@link Client} that should be managing this manager.
      */
-    public constructor(client: ArchipelagoClient<unknown>) {
+    public constructor(client: Client<unknown>) {
         this._client = client;
     }
 

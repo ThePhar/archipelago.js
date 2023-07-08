@@ -1,5 +1,5 @@
 import * as Packets from "./index";
-import { CommandPacketType } from "../enums";
+import { ClientPacketType, CommandPacketType, ServerPacketType } from "../enums";
 
 /**
  * The base packet structure for all packets.
@@ -10,6 +10,26 @@ import { CommandPacketType } from "../enums";
 export interface BasePacket {
     /** The type of packet this is. */
     readonly cmd: CommandPacketType;
+}
+
+/**
+ * The base packet structure for all client packets.
+ *
+ * @category Client Packets
+ */
+export interface ClientPacket {
+    /** The type of packet this is. */
+    readonly cmd: ClientPacketType;
+}
+
+/**
+ * The base packet structure for all server packets.
+ *
+ * @category Server Packets
+ */
+export interface ServerPacket {
+    /** The type of packet this is. */
+    readonly cmd: ServerPacketType;
 }
 
 /**

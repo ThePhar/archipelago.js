@@ -1,13 +1,13 @@
-import { CommandPacketType } from "../../enums";
-import { BasePacket } from "../index";
+import { ServerPacketType } from "../../enums";
+import { ServerPacket } from "../index";
 
 /**
  * Sent to clients after a client requested this message be sent to them, more info in the {@link BouncePacket}.
  *
  * @category Server Packets
  */
-export interface BouncedPacket extends BasePacket {
-    cmd: CommandPacketType.BOUNCED;
+export interface BouncedPacket extends ServerPacket {
+    cmd: ServerPacketType.BOUNCED;
 
     /** Optional. Game names this message is targeting. */
     games?: string[];

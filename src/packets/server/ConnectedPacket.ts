@@ -1,14 +1,14 @@
-import { CommandPacketType } from "../../enums";
-import { NetworkPlayer, NetworkSlot } from "../../structs";
-import { BasePacket } from "../index";
+import { ServerPacketType } from "../../enums";
+import { AbstractSlotData, NetworkPlayer, NetworkSlot } from "../../structs";
+import { ServerPacket } from "../index";
 
 /**
  * Sent to clients when the connection handshake is successfully completed.
  *
  * @category Server Packets
  */
-export interface ConnectedPacket extends BasePacket {
-    cmd: CommandPacketType.CONNECTED;
+export interface ConnectedPacket extends ServerPacket {
+    cmd: ServerPacketType.CONNECTED;
 
     /** Your team number. See {@link NetworkPlayer} for more info on team number. */
     team: number;
@@ -29,7 +29,7 @@ export interface ConnectedPacket extends BasePacket {
     checked_locations: number[];
 
     /** Contains a json object for slot related data, differs per game. Empty if not required. */
-    slot_data: object;
+    slot_data: AbstractSlotData;
 
     /** Object of each slot with their {@link NetworkSlot} information. */
     slot_info: { [slot: number]: NetworkSlot };

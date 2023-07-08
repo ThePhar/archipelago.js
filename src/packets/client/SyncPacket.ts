@@ -1,11 +1,11 @@
-import { CommandPacketType } from "../../enums";
-import { BasePacket } from "../index";
+import { ClientPacketType } from "../../enums";
+import { ClientPacket } from "../index";
 
 /**
- * Sent to server to request a {@link ReceivedItemsPacket} to synchronize items.
+ * Sent to server to request a {@link ReceivedItemsPacket} to resynchronize items if a "desync" ever occurs.
  *
  * @category Client Packets
  */
-export interface SyncPacket extends BasePacket {
-    cmd: CommandPacketType.SYNC;
+export interface SyncPacket extends ClientPacket {
+    cmd: ClientPacketType.SYNC;
 }

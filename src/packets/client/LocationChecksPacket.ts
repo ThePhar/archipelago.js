@@ -1,5 +1,5 @@
-import { CommandPacketType } from "../../enums";
-import { BasePacket } from "../index";
+import { ClientPacketType } from "../../enums";
+import { ClientPacket } from "../index";
 
 /**
  * Sent by the client to inform the server of locations that the client has checked. Used to inform the server of new
@@ -7,8 +7,8 @@ import { BasePacket } from "../index";
  *
  * @category Client Packets
  */
-export interface LocationChecksPacket extends BasePacket {
-    cmd: CommandPacketType.LOCATION_CHECKS;
+export interface LocationChecksPacket extends ClientPacket {
+    cmd: ClientPacketType.LOCATION_CHECKS;
 
     /**
      * The ids of the locations checked by the client. May contain any number of checks, even ones sent before;

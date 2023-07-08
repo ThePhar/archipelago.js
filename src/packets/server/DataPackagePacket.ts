@@ -1,6 +1,6 @@
-import { CommandPacketType } from "../../enums";
+import { ServerPacketType } from "../../enums";
 import { DataPackageObject } from "../../structs";
-import { BasePacket } from "../index";
+import { ServerPacket } from "../index";
 
 /**
  * Sent to clients to provide what is known as a 'data package' which contains information to enable a client to most
@@ -9,9 +9,9 @@ import { BasePacket } from "../index";
  *
  * @category Server Packets
  */
-export interface DataPackagePacket extends BasePacket {
-    cmd: CommandPacketType.DATA_PACKAGE;
+export interface DataPackagePacket extends ServerPacket {
+    cmd: ServerPacketType.DATA_PACKAGE;
 
-    /** The data package as an object of {@link DataPackageObject}s. */
+    /** The data package as an object of {@link DataPackageObject}. */
     data: DataPackageObject;
 }
