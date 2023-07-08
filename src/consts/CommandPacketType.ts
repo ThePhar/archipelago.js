@@ -1,8 +1,8 @@
 import { ObjectValues } from "../types/ObjectValues.ts";
 
 /**
- * An enumeration of all possible packet types the server can send to the client. See each packet's documentation page
- * for additional information on each packet type.
+ * A const of all possible packet types the server can send to the client. See each packet's documentation page for
+ * additional information on each packet type.
  */
 export const SERVER_PACKET_TYPE = {
     BOUNCED: "Bounced",
@@ -20,8 +20,8 @@ export const SERVER_PACKET_TYPE = {
 } as const;
 
 /**
- * An enumeration of all possible packet types the client can send to the server. See each packet's documentation page
- * for additional information on each packet type.
+ * A const of all possible packet types the client can send to the server. See each packet's documentation page for
+ * additional information on each packet type.
  */
 export const CLIENT_PACKET_TYPE = {
     BOUNCE: "Bounce",

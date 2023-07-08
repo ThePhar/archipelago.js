@@ -106,69 +106,93 @@ export class Client<TSlotData = UnknownSlotData> {
      * return a `string[]` of error messages.
      */
     public async connect(info: ConnectionInformation): Promise<ConnectedPacket> {
-        const { hostname, port, game, name, uuid, password, protocol, items_handling, tags } = info;
-        const version = info.version ?? MINIMUM_SUPPORTED_AP_VERSION;
-
         // Confirm a valid port was given.
-        if (port < 1 || port > 65535 || !Number.isInteger(port))
-            throw new Error(`Port must be an integer between 1 and 65535. Received: ${port}`);
+        if (info.port < 1 || info.port > 65535 || !Number.isInteger(info.port))
+            throw new Error(`Port must be an integer between 1 and 65535. Received: ${info.port}`);
 
         try {
             // First establish the initial connection.
             this.#status = CONNECTION_STATUS.CONNECTING;
 
-            if (protocol === "ws") {
-                await this.#connectSocket(`ws://${hostname}:${port}/`);
-            } else if (protocol === "wss") {
-                await this.#connectSocket(`wss://${hostname}:${port}/`);
+            if (info.protocol === "ws") {
+                await this.#connectSocket(`ws://${info.hostname}:${info.port}/`);
+            } else if (info.protocol === "wss") {
+                await this.#connectSocket(`wss://${info.hostname}:${info.port}/`);
             } else {
                 try {
                     // Attempt a secure connection first.
-                    await this.#connectSocket(`wss://${hostname}:${port}/`);
+                    await this.#connectSocket(`wss://${info.hostname}:${info.port}/`);
                 } catch {
                     // Failing that, attempt to connect to normal websocket.
-                    await this.#connectSocket(`ws://${hostname}:${port}/`);
+                    await this.#connectSocket(`ws://${info.hostname}:${info.port}/`);
                 }
             }
 
-            // Attempt to log into the room.
+            // Wait for data package to complete, then finalize connection.
             return await new Promise<ConnectedPacket>((resolve, reject) => {
-                // Successfully connected!
-                const onConnectedListener = (packet: ConnectedPacket) => {
-                    this.#status = CONNECTION_STATUS.CONNECTED;
-                    this.removeListener(SERVER_PACKET_TYPE.CONNECTED, onConnectedListener);
-                    resolve(packet);
+                const onDataPackageLoaded = () => {
+                    this.#finalizeConnection(info)
+                        .then((connectPacket) => {
+                            this.#emitter.removeListener("__onRoomInfoLoaded", onDataPackageLoaded.bind(this));
+                            resolve(connectPacket);
+                        })
+                        .catch((error) => reject(error));
                 };
 
-                const onConnectionRefusedListener = (packet: ConnectionRefusedPacket) => {
-                    this.disconnect();
-                    reject(packet.errors);
-                };
-
-                this.addListener(SERVER_PACKET_TYPE.CONNECTED, onConnectedListener);
-                this.addListener(SERVER_PACKET_TYPE.CONNECTION_REFUSED, onConnectionRefusedListener);
-
-                // Get the data package and connect to room.
-                this.send(
-                    {
-                        cmd: CLIENT_PACKET_TYPE.GET_DATA_PACKAGE,
-                    },
-                    {
-                        cmd: CLIENT_PACKET_TYPE.CONNECT,
-                        game,
-                        name,
-                        version: { ...version, class: "Version" },
-                        items_handling,
-                        uuid: uuid ?? generateUUIDv4(),
-                        tags: tags ?? [],
-                        password: password ?? "",
-                    },
-                );
+                this.#emitter.addListener("__onRoomInfoLoaded", onDataPackageLoaded.bind(this));
             });
         } catch (error) {
             this.disconnect();
             throw error;
         }
+    }
+
+    /**
+     * Not meant for users of archipelago.js to use, just an easy way for me to pass events around.
+     *
+     * @internal
+     */
+    public emitRawEvent(event: string, ...args: unknown[]): void {
+        this.#emitter.emit(event, ...args);
+    }
+
+    #finalizeConnection(info: ConnectionInformation): Promise<ConnectedPacket> {
+        const version = info.version ?? MINIMUM_SUPPORTED_AP_VERSION;
+
+        return new Promise<ConnectedPacket>((resolve, reject) => {
+            // Successfully connected!
+            const onConnectedListener = (packet: ConnectedPacket) => {
+                this.#status = CONNECTION_STATUS.CONNECTED;
+                this.removeListener(SERVER_PACKET_TYPE.CONNECTED, onConnectedListener.bind(this));
+                resolve(packet);
+            };
+
+            const onConnectionRefusedListener = (packet: ConnectionRefusedPacket) => {
+                this.disconnect();
+                reject(packet.errors);
+            };
+
+            this.addListener(SERVER_PACKET_TYPE.CONNECTED, onConnectedListener.bind(this));
+            this.addListener(SERVER_PACKET_TYPE.CONNECTION_REFUSED, onConnectionRefusedListener.bind(this));
+
+            // Get the data package and connect to room.
+            this.send(
+                {
+                    cmd: CLIENT_PACKET_TYPE.GET_DATA_PACKAGE,
+                    games: this.#dataManager.games,
+                },
+                {
+                    cmd: CLIENT_PACKET_TYPE.CONNECT,
+                    game: info.game,
+                    name: info.name,
+                    version: { ...version, class: "Version" },
+                    items_handling: info.items_handling,
+                    uuid: info.uuid ?? generateUUIDv4(),
+                    tags: info.tags ?? [],
+                    password: info.password ?? "",
+                },
+            );
+        });
     }
 
     /**
@@ -293,49 +317,49 @@ export class Client<TSlotData = UnknownSlotData> {
     }
 
     #parsePackets(event: MessageEvent): void {
-        // Parse packets and fire our packetReceived event for each packet.
+        // Parse packets and fire our PacketReceived event for each packet.
         const packets = JSON.parse(event.data.toString()) as ServerPacket[];
         for (const packet of packets) {
-            // Regardless of what type of event this is, we always emit the packetReceived event.
-            this.#emitter.emit("packetReceived", packet);
+            // Regardless of what type of event this is, we always emit the PacketReceived event.
+            this.#emitter.emit("PacketReceived", packet);
 
             switch (packet.cmd) {
                 case SERVER_PACKET_TYPE.INVALID_PACKET:
-                    this.#emitter.emit("invalidPacket", packet);
+                    this.#emitter.emit(SERVER_PACKET_TYPE.INVALID_PACKET, packet);
                     break;
                 case SERVER_PACKET_TYPE.BOUNCED:
-                    this.#emitter.emit("bounced", packet);
+                    this.#emitter.emit(SERVER_PACKET_TYPE.BOUNCED, packet);
                     break;
                 case SERVER_PACKET_TYPE.CONNECTION_REFUSED:
-                    this.#emitter.emit("connectionRefused", packet);
+                    this.#emitter.emit(SERVER_PACKET_TYPE.CONNECTION_REFUSED, packet);
                     break;
                 case SERVER_PACKET_TYPE.CONNECTED:
-                    this.#emitter.emit("connected", packet);
+                    this.#emitter.emit(SERVER_PACKET_TYPE.CONNECTED, packet);
                     break;
                 case SERVER_PACKET_TYPE.DATA_PACKAGE:
-                    this.#emitter.emit("dataPackage", packet);
+                    this.#emitter.emit(SERVER_PACKET_TYPE.DATA_PACKAGE, packet);
                     break;
                 case SERVER_PACKET_TYPE.LOCATION_INFO:
-                    this.#emitter.emit("locationInfo", packet);
+                    this.#emitter.emit(SERVER_PACKET_TYPE.LOCATION_INFO, packet);
                     break;
                 case SERVER_PACKET_TYPE.RECEIVED_ITEMS:
-                    this.#emitter.emit("receivedItems", packet);
+                    this.#emitter.emit(SERVER_PACKET_TYPE.RECEIVED_ITEMS, packet);
                     break;
                 case SERVER_PACKET_TYPE.RETRIEVED:
-                    this.#emitter.emit("retrieved", packet);
+                    this.#emitter.emit(SERVER_PACKET_TYPE.RETRIEVED, packet);
                     break;
                 case SERVER_PACKET_TYPE.ROOM_INFO:
-                    this.#emitter.emit("roomInfo", packet);
+                    this.#emitter.emit(SERVER_PACKET_TYPE.ROOM_INFO, packet);
                     break;
                 case SERVER_PACKET_TYPE.ROOM_UPDATE:
-                    this.#emitter.emit("roomUpdate", packet);
+                    this.#emitter.emit(SERVER_PACKET_TYPE.ROOM_UPDATE, packet);
                     break;
                 case SERVER_PACKET_TYPE.SET_REPLY:
-                    this.#emitter.emit("setReply", packet);
+                    this.#emitter.emit(SERVER_PACKET_TYPE.SET_REPLY, packet);
                     break;
                 case SERVER_PACKET_TYPE.PRINT_JSON: {
                     // Add the plain text version of entire message for easy access.
-                    this.#emitter.emit("printJSON", packet, this.#consolidateMessage(packet));
+                    this.#emitter.emit(SERVER_PACKET_TYPE.PRINT_JSON, packet, this.#consolidateMessage(packet));
                     break;
                 }
             }

@@ -19,6 +19,7 @@ export class DataManager<TSlotData> {
     #client: Client<TSlotData>;
     #dataPackage = new Map<string, GamePackage>();
     #players = new Map<number, Player>();
+    #games: string[] = [];
     #hintCost = 0;
     #hintPoints = 0;
     #slotData: TSlotData = {} as TSlotData;
@@ -58,6 +59,13 @@ export class DataManager<TSlotData> {
      */
     public get players(): ReadonlyMap<number, Player> {
         return this.#players;
+    }
+
+    /**
+     * Returns an array of all games that exist in this room.
+     */
+    public get games(): string[] {
+        return this.#games;
     }
 
     /**
@@ -143,15 +151,33 @@ export class DataManager<TSlotData> {
         for (const game in packet.data.games) {
             const data = packet.data.games[game] as GamePackage;
             this.#dataPackage.set(game, data);
+            let createItemNameGroup = false;
+            let createLocationNameGroup = false;
 
-            // Build reverse lookups for items and locations.
+            // Check if these fields exist, if not, let's add them.
+            if (!data.item_name_groups) {
+                data.item_name_groups = { Everything: [] };
+                createItemNameGroup = true;
+            }
+            if (!data.location_name_groups) {
+                data.location_name_groups = { Everywhere: [] };
+                createLocationNameGroup = true;
+            }
+
+            // Build reverse lookups for items and locations. (also add to Everywhere and Everything group if needed)
             data.location_id_to_name = {};
             data.item_id_to_name = {};
             for (const [name, id] of Object.entries(data.location_name_to_id)) {
                 data.location_id_to_name[id] = name;
+                if (createLocationNameGroup) {
+                    (data.location_name_groups["Everywhere"] as string[]).push(name);
+                }
             }
             for (const [name, id] of Object.entries(data.item_name_to_id)) {
                 data.item_id_to_name[id] = name;
+                if (createItemNameGroup) {
+                    (data.item_name_groups["Everything"] as string[]).push(name);
+                }
             }
         }
     }
@@ -168,6 +194,7 @@ export class DataManager<TSlotData> {
         }
 
         this.#slot = packet.slot;
+        this.#team = packet.team;
         this.#hintPoints = packet.hint_points ?? 0;
         this.#slotData = packet.slot_data as TSlotData;
     }
@@ -176,6 +203,10 @@ export class DataManager<TSlotData> {
         this.#seed = packet.seed_name;
         this.#hintCost = packet.hint_cost;
         this.#permissions = packet.permissions;
+        this.#games = packet.games;
+
+        // We are ready to finalize connection.
+        this.#client.emitRawEvent("__onRoomInfoLoaded");
     }
 
     #onRoomUpdate(packet: RoomUpdatePacket): void {
