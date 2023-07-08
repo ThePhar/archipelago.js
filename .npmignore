@@ -4,3 +4,4 @@
 # JavaScript and Type Definitions
 !dist/**/*.d.ts
 !dist/**/*.js
+!dist/**/*.cjs

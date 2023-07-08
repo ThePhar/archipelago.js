@@ -1,101 +1,241 @@
-import { ArchipelagoClient } from "../index";
-import { ConnectedPacket, DataPackagePacket, RoomUpdatePacket } from "../packets";
-import { GameData, NetworkPlayer } from "../structs";
+import { Client } from "../Client.ts";
+import { SetOperationsBuilder } from "../builders/SetOperationsBuilder.ts";
+import { SERVER_PACKET_TYPE } from "../consts/CommandPacketType.ts";
+import { PERMISSION, Permissions } from "../consts/Permission.ts";
+import { ConnectedPacket } from "../packets/ConnectedPacket.ts";
+import { DataPackagePacket } from "../packets/DataPackagePacket.ts";
+import { RoomInfoPacket } from "../packets/RoomInfoPacket.ts";
+import { RoomUpdatePacket } from "../packets/RoomUpdatePacket.ts";
+import { SetReplyPacket } from "../packets/SetReplyPacket.ts";
+import { GamePackage } from "../types/GamePackage.ts";
+import { NetworkSlot } from "../types/NetworkSlot.ts";
+import { Player } from "../types/Player.ts";
 
 /**
  * Manages and watches for events regarding session data and the data package. Most other mangers use this information
  * to create helper functions and track other information.
  */
-export class DataManager {
-    private _client: ArchipelagoClient;
-    private _dataPackage = new Map<string, GameData>();
-    private _locations = new Map<number, string>();
-    private _items = new Map<number, string>();
-    private _players = new Map<number, NetworkPlayer>();
-    private _hintPoints = 0;
+export class DataManager<TSlotData> {
+    #client: Client<TSlotData>;
+    #dataPackage = new Map<string, GamePackage>();
+    #players = new Map<number, Player>();
+    #games: string[] = [];
+    #hintCost = 0;
+    #hintPoints = 0;
+    #slotData: TSlotData = {} as TSlotData;
+    #slot = -1;
+    #team = -1;
+    #seed = "";
+    #awaitingSetReplies: AwaitSetReply[] = [];
+    #permissions: Permissions = {
+        release: PERMISSION.DISABLED,
+        collect: PERMISSION.DISABLED,
+        remaining: PERMISSION.DISABLED,
+    };
 
     /**
-     * Creates a new {@link DataManager} and sets up events on the {@link ArchipelagoClient} to listen for to start
+     * Creates a new {@link DataManager} and sets up events on the {@link Client} to listen for to start
      * updating its internal state.
-     * @param client The {@link ArchipelagoClient} that should be managing this manager.
+     * @param client The {@link Client} that should be managing this manager.
      */
-    public constructor(client: ArchipelagoClient) {
-        this._client = client;
-        this._client.addListener("dataPackage", this.onDataPackage.bind(this));
-        this._client.addListener("connected", this.onConnected.bind(this));
-        this._client.addListener("roomUpdate", this.onRoomUpdate.bind(this));
+    public constructor(client: Client<TSlotData>) {
+        this.#client = client;
+        this.#client.addListener(SERVER_PACKET_TYPE.DATA_PACKAGE, this.#onDataPackage.bind(this));
+        this.#client.addListener(SERVER_PACKET_TYPE.CONNECTED, this.#onConnected.bind(this));
+        this.#client.addListener(SERVER_PACKET_TYPE.ROOM_INFO, this.#onRoomInfo.bind(this));
+        this.#client.addListener(SERVER_PACKET_TYPE.ROOM_UPDATE, this.#onRoomUpdate.bind(this));
+        this.#client.addListener(SERVER_PACKET_TYPE.SET_REPLY, this.#onSetReply.bind(this));
     }
 
     /**
-     * Returns a map of all {@link GameData} mapped to their game `name`.
+     * Returns a map of all {@link GamePackage} mapped to their game `name`.
      */
-    public get package(): ReadonlyMap<string, GameData> {
-        return this._dataPackage;
+    public get package(): ReadonlyMap<string, GamePackage> {
+        return this.#dataPackage;
     }
 
     /**
-     * Returns a map of all location `names` mapped to their `id`.
+     * Returns a map of all `players`, keyed by player id.
      */
-    public get locations(): ReadonlyMap<number, string> {
-        return this._locations;
+    public get players(): ReadonlyMap<number, Player> {
+        return this.#players;
     }
 
     /**
-     * Returns a map of all item `names` mapped to their `id`.
+     * Returns an array of all games that exist in this room.
      */
-    public get items(): ReadonlyMap<number, string> {
-        return this._items;
+    public get games(): string[] {
+        return this.#games;
     }
 
     /**
-     * Returns a map of all `players` mapped to their slot `id`.
+     * Returns how many hint points a player needs to spend to receive a hint.
      */
-    public get players(): ReadonlyMap<number, NetworkPlayer> {
-        return this._players;
+    public get hintCost(): number {
+        return this.#hintCost;
     }
 
     /**
      * Returns how many hint points a player has.
      */
     public get hintPoints(): number {
-        return this._hintPoints;
+        return this.#hintPoints;
     }
 
-    private onDataPackage(packet: DataPackagePacket): void {
+    /**
+     * Returns the slot data for this game. Will be `undefined` if no connection has been established.
+     */
+    public get slotData(): TSlotData {
+        return this.#slotData;
+    }
+
+    /**
+     * Returns this player's slot. Returns `-1` if player is not connected.
+     */
+    public get slot(): number {
+        return this.#slot;
+    }
+
+    /**
+     * Returns this player's team. Returns `-1` if player is not connected.
+     */
+    public get team(): number {
+        return this.#team;
+    }
+
+    /**
+     * Return the seed for this room.
+     */
+    public get seed(): string {
+        return this.#seed;
+    }
+
+    /**
+     * Get the current permissions for the room.
+     */
+    public get permissions(): Permissions {
+        return this.#permissions;
+    }
+
+    /**
+     * Send a series of set operations to the server. Promise returns a {@link SetReplyPacket} if `want_reply` was
+     * requested.
+     *
+     * @param setOperation The set builder to do operations on the data storage.
+     */
+    public async set(setOperation: SetOperationsBuilder): Promise<SetReplyPacket | void> {
+        const packet = setOperation.build();
+
+        if (packet.want_reply) {
+            return new Promise<SetReplyPacket>((resolve) => {
+                this.#awaitingSetReplies.push({ key: packet.key, resolve });
+                this.#client.send(packet);
+            });
+        } else {
+            this.#client.send(packet);
+        }
+    }
+
+    #onSetReply(packet: SetReplyPacket) {
+        const replyIndex = this.#awaitingSetReplies.findIndex((s) => s.key === packet.key);
+        if (replyIndex !== -1) {
+            const { resolve } = this.#awaitingSetReplies[replyIndex] as AwaitSetReply;
+
+            // Remove the "await".
+            this.#awaitingSetReplies.splice(replyIndex, 1);
+            resolve(packet as SetReplyPacket);
+        }
+    }
+
+    #onDataPackage(packet: DataPackagePacket): void {
         // TODO: Cache results.
         for (const game in packet.data.games) {
-            const data = packet.data.games[game] as GameData;
-            this._dataPackage.set(game, data);
+            const data = packet.data.games[game] as GamePackage;
+            this.#dataPackage.set(game, data);
+            let createItemNameGroup = false;
+            let createLocationNameGroup = false;
 
-            // Fill locations map.
-            for (const location in data.location_name_to_id) {
-                this._locations.set(data.location_name_to_id[location] as number, location);
+            // Check if these fields exist, if not, let's add them.
+            if (!data.item_name_groups) {
+                data.item_name_groups = { Everything: [] };
+                createItemNameGroup = true;
+            }
+            if (!data.location_name_groups) {
+                data.location_name_groups = { Everywhere: [] };
+                createLocationNameGroup = true;
             }
 
-            // Fill items map.
-            for (const item in data.item_name_to_id) {
-                this._items.set(data.item_name_to_id[item] as number, item);
+            // Build reverse lookups for items and locations. (also add to Everywhere and Everything group if needed)
+            data.location_id_to_name = {};
+            data.item_id_to_name = {};
+            for (const [name, id] of Object.entries(data.location_name_to_id)) {
+                data.location_id_to_name[id] = name;
+                if (createLocationNameGroup) {
+                    (data.location_name_groups["Everywhere"] as string[]).push(name);
+                }
+            }
+            for (const [name, id] of Object.entries(data.item_name_to_id)) {
+                data.item_id_to_name[id] = name;
+                if (createItemNameGroup) {
+                    (data.item_name_groups["Everything"] as string[]).push(name);
+                }
             }
         }
     }
 
-    private onConnected(packet: ConnectedPacket): void {
-        for (const player of packet.players) {
-            this._players.set(player.slot, player);
+    #onConnected(packet: ConnectedPacket): void {
+        for (const networkPlayer of packet.players) {
+            const player: Player = {
+                ...networkPlayer,
+                // Can always assume this info will be filled out.
+                ...(packet.slot_info[networkPlayer.slot] as NetworkSlot),
+            };
+
+            this.#players.set(player.slot, player);
         }
 
-        this._hintPoints = packet.hint_points ?? 0;
+        this.#slot = packet.slot;
+        this.#team = packet.team;
+        this.#hintPoints = packet.hint_points ?? 0;
+        this.#slotData = packet.slot_data as TSlotData;
     }
 
-    private onRoomUpdate(packet: RoomUpdatePacket): void {
+    #onRoomInfo(packet: RoomInfoPacket): void {
+        this.#seed = packet.seed_name;
+        this.#hintCost = packet.hint_cost;
+        this.#permissions = packet.permissions;
+        this.#games = packet.games;
+
+        // We are ready to finalize connection.
+        this.#client.emitRawEvent("__onRoomInfoLoaded");
+    }
+
+    #onRoomUpdate(packet: RoomUpdatePacket): void {
         if (packet.hint_points) {
-            this._hintPoints = packet.hint_points;
+            this.#hintPoints = packet.hint_points;
+        }
+
+        if (packet.hint_cost) {
+            this.#hintCost = packet.hint_cost;
+        }
+
+        if (packet.permissions) {
+            this.#permissions = packet.permissions;
         }
 
         if (packet.players) {
-            for (const player of packet.players) {
-                this._players.set(player.slot, player);
+            for (const networkPlayer of packet.players) {
+                const player = this.#players.get(networkPlayer.slot) as Player;
+                this.#players.set(player.slot, { ...player, ...networkPlayer });
             }
         }
     }
 }
+
+/**
+ * A helper object for awaiting a key to return from a Set request.
+ */
+export type AwaitSetReply = {
+    key: string;
+    resolve: (value: PromiseLike<SetReplyPacket> | SetReplyPacket) => void;
+};
