@@ -120,6 +120,7 @@ export class DataManager<TSlotData> {
     /**
      * Send a series of set operations to the server. Promise returns a {@link SetReplyPacket} if `want_reply` was
      * requested.
+     *
      * @param setOperation The set builder to do operations on the data storage.
      */
     public async set(setOperation: SetOperationsBuilder): Promise<SetReplyPacket | void> {
