@@ -24,6 +24,7 @@ import { PrintJSONPacket } from "./PrintJSONPacket.ts";
 import { LocationInfoPacket } from "./LocationInfoPacket.ts";
 import { InvalidPacketPacket } from "./InvalidPacketPacket.ts";
 import { DataPackagePacket } from "./DataPackagePacket.ts";
+import { PrintJSONType } from "./PrintJSONType.ts";
 
 /**
  * The client that connects to an Archipelago server and facilitates communication, listens for events, and manages
@@ -95,7 +96,7 @@ export class Client<TSlotData = AbstractSlotData> {
     /**
      * Connects to the given address with given connection information.
      *
-     * @param info All the necessary connection information to connect to a Archipelago server.
+     * @param info All the necessary connection information to connect to an Archipelago server.
      *
      * @resolves On successful connection and authentication to the room.
      * @rejects If web socket connection failed to establish connection or server refused connection, promise will
@@ -354,7 +355,7 @@ export class Client<TSlotData = AbstractSlotData> {
                 case ServerPacketType.PRINT_JSON: {
                     // Add the plain text for easy access.
                     let message = "";
-                    if (packet.message) {
+                    if (packet.type === PrintJSONType.CHAT || packet.type === PrintJSONType.SERVER_CHAT) {
                         message = packet.message;
                     } else {
                         // Join each data piece together.
