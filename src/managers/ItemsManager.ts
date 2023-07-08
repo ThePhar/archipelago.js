@@ -1,7 +1,7 @@
 import { Client } from "../index";
 
 /**
- * Managers and watches for events regarding item data and provides helper functions to make working with items easier.
+ * Manages and watches for events regarding item data and provides helper functions to make working with items easier.
  */
 export class ItemsManager {
     #client: Client<unknown>;

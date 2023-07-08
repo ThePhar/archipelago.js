@@ -1,25 +1,25 @@
 import { DataStorageOperation } from "./DataOperations";
 import { APType } from "./index";
 import { SetPacket } from "../packets";
-import { CommandPacketType } from "../enums";
+import { ClientPacketType } from "../enums";
 
 /**
  * A helper class of data operations to perform server-side on a given key.
  */
 export class SetOperationsBuilder {
-    private readonly _operations: DataStorageOperation[] = [];
-    private readonly _key: string;
-    private readonly _default: APType;
-    private readonly _wantReply: boolean;
+    readonly #operations: DataStorageOperation[] = [];
+    readonly #key: string;
+    readonly #default: APType;
+    readonly #wantReply: boolean;
 
     public constructor(key: string, defaultValue?: APType, wantReply = false) {
-        this._key = key;
-        this._default = defaultValue;
-        this._wantReply = wantReply;
+        this.#key = key;
+        this.#default = defaultValue;
+        this.#wantReply = wantReply;
     }
 
     public replace(value: APType): SetOperationsBuilder {
-        this._operations.push({
+        this.#operations.push({
             operation: "replace",
             value,
         });
@@ -28,7 +28,7 @@ export class SetOperationsBuilder {
     }
 
     public default(value: APType): SetOperationsBuilder {
-        this._operations.push({
+        this.#operations.push({
             operation: "default",
             value,
         });
@@ -37,7 +37,7 @@ export class SetOperationsBuilder {
     }
 
     public add(value: number | number[]): SetOperationsBuilder {
-        this._operations.push({
+        this.#operations.push({
             operation: "add",
             value,
         });
@@ -46,7 +46,7 @@ export class SetOperationsBuilder {
     }
 
     public multiply(value: number): SetOperationsBuilder {
-        this._operations.push({
+        this.#operations.push({
             operation: "mul",
             value,
         });
@@ -55,7 +55,7 @@ export class SetOperationsBuilder {
     }
 
     public power(value: number): SetOperationsBuilder {
-        this._operations.push({
+        this.#operations.push({
             operation: "pow",
             value,
         });
@@ -64,7 +64,7 @@ export class SetOperationsBuilder {
     }
 
     public modulo(value: number): SetOperationsBuilder {
-        this._operations.push({
+        this.#operations.push({
             operation: "mod",
             value,
         });
@@ -73,7 +73,7 @@ export class SetOperationsBuilder {
     }
 
     public max(value: number): SetOperationsBuilder {
-        this._operations.push({
+        this.#operations.push({
             operation: "max",
             value,
         });
@@ -82,7 +82,7 @@ export class SetOperationsBuilder {
     }
 
     public min(value: number): SetOperationsBuilder {
-        this._operations.push({
+        this.#operations.push({
             operation: "min",
             value,
         });
@@ -91,7 +91,7 @@ export class SetOperationsBuilder {
     }
 
     public and(value: number): SetOperationsBuilder {
-        this._operations.push({
+        this.#operations.push({
             operation: "and",
             value,
         });
@@ -100,7 +100,7 @@ export class SetOperationsBuilder {
     }
 
     public or(value: number): SetOperationsBuilder {
-        this._operations.push({
+        this.#operations.push({
             operation: "or",
             value,
         });
@@ -109,7 +109,7 @@ export class SetOperationsBuilder {
     }
 
     public xor(value: number): SetOperationsBuilder {
-        this._operations.push({
+        this.#operations.push({
             operation: "xor",
             value,
         });
@@ -118,7 +118,7 @@ export class SetOperationsBuilder {
     }
 
     public shiftLeft(value: number): SetOperationsBuilder {
-        this._operations.push({
+        this.#operations.push({
             operation: "left_shift",
             value,
         });
@@ -127,7 +127,7 @@ export class SetOperationsBuilder {
     }
 
     public shiftRight(value: number): SetOperationsBuilder {
-        this._operations.push({
+        this.#operations.push({
             operation: "right_shift",
             value,
         });
@@ -136,7 +136,7 @@ export class SetOperationsBuilder {
     }
 
     public remove(value: APType): SetOperationsBuilder {
-        this._operations.push({
+        this.#operations.push({
             operation: "remove",
             value,
         });
@@ -145,7 +145,7 @@ export class SetOperationsBuilder {
     }
 
     public pop(value: APType): SetOperationsBuilder {
-        this._operations.push({
+        this.#operations.push({
             operation: "pop",
             value,
         });
@@ -154,7 +154,7 @@ export class SetOperationsBuilder {
     }
 
     public update(value: APType): SetOperationsBuilder {
-        this._operations.push({
+        this.#operations.push({
             operation: "update",
             value,
         });
@@ -164,11 +164,11 @@ export class SetOperationsBuilder {
 
     public build(): SetPacket {
         return {
-            cmd: CommandPacketType.SET,
-            key: this._key,
-            default: this._default,
-            want_reply: this._wantReply,
-            operations: this._operations,
+            cmd: ClientPacketType.SET,
+            key: this.#key,
+            default: this.#default,
+            want_reply: this.#wantReply,
+            operations: this.#operations,
         };
     }
 }

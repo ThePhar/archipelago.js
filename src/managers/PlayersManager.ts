@@ -1,7 +1,7 @@
 import { Client } from "../index";
 
 /**
- * Managers and watches for events regarding player data and provides helper functions to make working with players
+ * Manages and watches for events regarding player data and provides helper functions to make working with players
  * easier.
  */
 export class PlayersManager {

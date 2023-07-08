@@ -4,7 +4,7 @@ import { v4 as generateUUIDv4 } from "uuid";
 
 import * as Packet from "./packets";
 import { ClientPacketType, ClientStatus, ServerPacketType, SessionStatus } from "./enums";
-import { DataManager, ItemsManager, LocationsManager, PlayersManager } from "./managers";
+import { DataManager, HintManager, ItemsManager, LocationsManager, PlayersManager } from "./managers";
 import { AbstractSlotData, ConnectionInformation } from "./structs";
 import { ConnectedPacket } from "./packets";
 
@@ -17,6 +17,7 @@ export class Client<TSlotData = AbstractSlotData> {
     #status = SessionStatus.DISCONNECTED;
     #emitter = new EventEmitter();
     #dataManager: DataManager<TSlotData> = new DataManager<TSlotData>(this);
+    #hintManager: HintManager = new HintManager(this);
     #itemsManager: ItemsManager = new ItemsManager(this);
     #locationsManager: LocationsManager = new LocationsManager(this);
     #playersManager: PlayersManager = new PlayersManager(this);
@@ -33,6 +34,13 @@ export class Client<TSlotData = AbstractSlotData> {
      */
     public get data(): DataManager<TSlotData> {
         return this.#dataManager;
+    }
+
+    /**
+     * Get the {@link HintManager} helper object. See {@link HintManager} for additional information.
+     */
+    public get hints(): HintManager {
+        return this.#hintManager;
     }
 
     /**
@@ -89,21 +97,22 @@ export class Client<TSlotData = AbstractSlotData> {
             this.#status = SessionStatus.CONNECTING;
 
             if (protocol === "ws") {
-                await this.connectSocket(`ws://${hostname}:${port}/`);
+                await this.#connectSocket(`ws://${hostname}:${port}/`);
             } else if (protocol === "wss") {
-                await this.connectSocket(`wss://${hostname}:${port}/`);
+                await this.#connectSocket(`wss://${hostname}:${port}/`);
             } else {
                 try {
                     // Attempt a secure connection first.
-                    await this.connectSocket(`wss://${hostname}:${port}/`);
+                    await this.#connectSocket(`wss://${hostname}:${port}/`);
                 } catch {
                     // Failing that, attempt to connect to normal websocket.
-                    await this.connectSocket(`ws://${hostname}:${port}/`);
+                    await this.#connectSocket(`ws://${hostname}:${port}/`);
                 }
             }
 
             // Attempt to log into the room.
             return await new Promise<ConnectedPacket>((resolve, reject) => {
+                // Successfully connected!
                 const onConnectedListener = (packet: ConnectedPacket) => {
                     this.#status = SessionStatus.CONNECTED;
                     this.removeListener(ServerPacketType.CONNECTED, onConnectedListener);
@@ -178,6 +187,7 @@ export class Client<TSlotData = AbstractSlotData> {
 
         // Reinitialize our Managers.
         this.#dataManager = new DataManager(this);
+        this.#hintManager = new HintManager(this);
         this.#itemsManager = new ItemsManager(this);
         this.#locationsManager = new LocationsManager(this);
         this.#playersManager = new PlayersManager(this);
@@ -259,7 +269,7 @@ export class Client<TSlotData = AbstractSlotData> {
         this.#emitter.removeListener(event, listener as (packet: Packet.ArchipelagoServerPacket) => void);
     }
 
-    private connectSocket(uri: string): Promise<void> {
+    #connectSocket(uri: string): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this.#socket = new WebSocket(uri);
 
@@ -268,7 +278,7 @@ export class Client<TSlotData = AbstractSlotData> {
                 this.#status = SessionStatus.WAITING_FOR_AUTH;
 
                 if (this.#socket) {
-                    this.#socket.onmessage = this.parsePackets.bind(this);
+                    this.#socket.onmessage = this.#parsePackets.bind(this);
                     resolve();
                 } else {
                     reject(["Socket was closed unexpectedly."]);
@@ -283,7 +293,7 @@ export class Client<TSlotData = AbstractSlotData> {
         });
     }
 
-    private parsePackets(event: MessageEvent): void {
+    #parsePackets(event: MessageEvent): void {
         // Parse packets and fire our packetReceived event for each packet.
         const packets = JSON.parse(event.data.toString()) as Packet.ArchipelagoServerPacket[];
         for (const packet of packets) {

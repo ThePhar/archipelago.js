@@ -16,6 +16,7 @@ export class DataManager<TSlotData> {
     #hintPoints = 0;
     #slotData: TSlotData = {} as TSlotData;
     #slot = -1;
+    #team = -1;
     #seed = "";
     #awaitingSetReplies: AwaitSetReply[] = [];
     #permissions: Permissions = {
@@ -67,17 +68,24 @@ export class DataManager<TSlotData> {
     }
 
     /**
-     * Returns the slot data for this game. Will be undefined if no connection has been established.
+     * Returns the slot data for this game. Will be `undefined` if no connection has been established.
      */
     public get slotData(): TSlotData {
         return this.#slotData;
     }
 
     /**
-     * Returns this player's slot. Returns -1 if player is not connected.
+     * Returns this player's slot. Returns `-1` if player is not connected.
      */
     public get slot(): number {
         return this.#slot;
+    }
+
+    /**
+     * Returns this player's team. Returns `-1` if player is not connected.
+     */
+    public get team(): number {
+        return this.#team;
     }
 
     /**
