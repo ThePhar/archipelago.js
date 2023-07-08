@@ -1,5 +1,5 @@
 /**
- * An enumeration of the current {@link ArchipelagoClient} connection status to the Archipelago server.
+ * An enumeration of the current {@link Client} connection status to the Archipelago server.
  */
 export enum SessionStatus {
     /** Currently not connected to any Archipelago server. */
