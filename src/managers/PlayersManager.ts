@@ -5,7 +5,7 @@ import { Client } from "../index";
  * easier.
  */
 export class PlayersManager {
-    private _client: Client<unknown>;
+    #client: Client<unknown>;
 
     /**
      * Creates a new {@link PlayersManager} and sets up events on the {@link Client} to listen for to start
@@ -14,7 +14,7 @@ export class PlayersManager {
      * @param client The {@link Client} that should be managing this manager.
      */
     public constructor(client: Client<unknown>) {
-        this._client = client;
+        this.#client = client;
     }
 
     /**
@@ -23,12 +23,21 @@ export class PlayersManager {
      * Special cases:
      * - If player id is `0`, returns `Archipelago`.
      *
-     * @param playerId The slot id of a player.
+     * @param id The slot `id` of a player.
+     *
+     * @throws Throws an error if unable to find a player with the given `id`.
      */
-    public name(playerId: number): string {
-        if (playerId === 0) return "Archipelago";
+    public name(id: number): string {
+        if (id === 0) {
+            return "Archipelago";
+        }
 
-        return this._client.data.players.get(playerId)?.name ?? `Unknown Player ${playerId}`;
+        const name = this.#client.data.players.get(id)?.name;
+        if (!name) {
+            throw new Error(`Unable to find player by id: ${id}`);
+        }
+
+        return name;
     }
 
     /**
@@ -37,11 +46,58 @@ export class PlayersManager {
      * Special cases:
      * - If player id is `0`, returns `Archipelago`.
      *
-     * @param playerId The slot id of a player.
+     * @param id The slot `id` of a player.
+     *
+     * @throws Throws an error if unable to find a player with the given `id`.
      */
-    public alias(playerId: number): string {
-        if (playerId === 0) return "Archipelago";
+    public alias(id: number): string {
+        if (id === 0) {
+            return "Archipelago";
+        }
 
-        return this._client.data.players.get(playerId)?.alias ?? `Unknown Player ${playerId}`;
+        const alias = this.#client.data.players.get(id)?.alias;
+        if (!alias) {
+            throw new Error(`Unable to find player by id: ${id}`);
+        }
+
+        return alias;
+    }
+
+    /**
+     * Returns the game name of a given player.
+     *
+     * Special cases:
+     * - If player id is `0`, returns `Archipelago`.
+     *
+     * @param id The slot `id` of a player.
+     *
+     * @throws Throws an error if unable to find a player with the given `id`.
+     */
+    public game(id: number): string {
+        if (id === 0) {
+            return "Archipelago";
+        }
+
+        const game = this.#client.data.players.get(id)?.game;
+        if (!game) {
+            throw new Error(`Unable to find player by id: ${id}`);
+        }
+
+        return game;
+    }
+
+    /**
+     * Returns an array of player `id`s in a specific group. Returns an empty array for non-{@link SlotType.GROUP}
+     * members.
+     *
+     * @param id The slot `id` of a {@link SlotType.GROUP} player.
+     */
+    public members(id: number): number[] {
+        const members = this.#client.data.players.get(id)?.group_members;
+        if (!members) {
+            return [];
+        }
+
+        return members;
     }
 }
