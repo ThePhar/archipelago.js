@@ -1,12 +1,29 @@
-import { EventEmitter } from "events";
 import WebSocket, { MessageEvent } from "isomorphic-ws";
+import { EventEmitter } from "events";
 import { v4 as generateUUIDv4 } from "uuid";
-
-import * as Packet from "./packets";
-import { ClientPacketType, ClientStatus, ServerPacketType, SessionStatus } from "./enums";
-import { DataManager, HintManager, ItemsManager, LocationsManager, PlayersManager } from "./managers";
-import { AbstractSlotData, ConnectionInformation } from "./structs";
-import { ConnectedPacket } from "./packets";
+import { AbstractSlotData } from "./AbstractSlotData.ts";
+import { ClientStatus } from "./ClientStatus.ts";
+import { DataManager } from "./DataManager.ts";
+import { SessionStatus } from "./SessionStatus.ts";
+import { HintManager } from "./HintManager.ts";
+import { ItemsManager } from "./ItemsManager.ts";
+import { LocationsManager } from "./LocationsManager.ts";
+import { PlayersManager } from "./PlayersManager.ts";
+import { ConnectionInformation } from "./ConnectionInformation.ts";
+import { ConnectedPacket } from "./ConnectedPacket.ts";
+import { ClientPacketType, ServerPacketType } from "./CommandPacketType.ts";
+import { ConnectionRefusedPacket } from "./ConnectionRefusedPacket.ts";
+import { ArchipelagoClientPacket, ArchipelagoServerPacket } from "./BasePacket.ts";
+import { SetReplyPacket } from "./SetReplyPacket.ts";
+import { RoomUpdatePacket } from "./RoomUpdatePacket.ts";
+import { RoomInfoPacket } from "./RoomInfoPacket.ts";
+import { RetrievedPacket } from "./RetrievedPacket.ts";
+import { ReceivedItemsPacket } from "./ReceivedItemsPacket.ts";
+import { BouncedPacket } from "./BouncedPacket.ts";
+import { PrintJSONPacket } from "./PrintJSONPacket.ts";
+import { LocationInfoPacket } from "./LocationInfoPacket.ts";
+import { InvalidPacketPacket } from "./InvalidPacketPacket.ts";
+import { DataPackagePacket } from "./DataPackagePacket.ts";
 
 /**
  * The client that connects to an Archipelago server and facilitates communication, listens for events, and manages
@@ -119,7 +136,7 @@ export class Client<TSlotData = AbstractSlotData> {
                     resolve(packet);
                 };
 
-                const onConnectionRefusedListener = (packet: Packet.ConnectionRefusedPacket) => {
+                const onConnectionRefusedListener = (packet: ConnectionRefusedPacket) => {
                     this.disconnect();
                     reject(packet.errors);
                 };
@@ -156,7 +173,7 @@ export class Client<TSlotData = AbstractSlotData> {
      * @param packets An array of raw {@link ArchipelagoClientPacket}s to send to the AP server. They are processed in
      * the order they are listed as arguments.
      */
-    public send(...packets: Packet.ArchipelagoClientPacket[]): void {
+    public send(...packets: ArchipelagoClientPacket[]): void {
         this.#socket?.send(JSON.stringify(packets));
     }
 
@@ -194,31 +211,31 @@ export class Client<TSlotData = AbstractSlotData> {
     }
 
     public addListener(event: ServerPacketType.BOUNCED, listener:
-        (packet: Packet.BouncedPacket) => void): void;
+        (packet: BouncedPacket) => void): void;
     public addListener(event: ServerPacketType.CONNECTED, listener:
-        (packet: Packet.ConnectedPacket) => void): void;
+        (packet: ConnectedPacket) => void): void;
     public addListener(event: ServerPacketType.CONNECTION_REFUSED, listener:
-        (packet: Packet.ConnectionRefusedPacket) => void): void;
+        (packet: ConnectionRefusedPacket) => void): void;
     public addListener(event: ServerPacketType.DATA_PACKAGE, listener:
-        (packet: Packet.DataPackagePacket) => void): void;
+        (packet: DataPackagePacket) => void): void;
     public addListener(event: ServerPacketType.INVALID_PACKET, listener:
-        (packet: Packet.InvalidPacketPacket) => void): void;
+        (packet: InvalidPacketPacket) => void): void;
     public addListener(event: ServerPacketType.LOCATION_INFO, listener:
-        (packet: Packet.LocationInfoPacket) => void): void;
+        (packet: LocationInfoPacket) => void): void;
     public addListener(event: ServerPacketType.PRINT_JSON, listener:
-        (packet: Packet.PrintJSONPacket, message: string) => void): void;
+        (packet: PrintJSONPacket, message: string) => void): void;
     public addListener(event: ServerPacketType.RECEIVED_ITEMS, listener:
-        (packet: Packet.ReceivedItemsPacket) => void): void;
+        (packet: ReceivedItemsPacket) => void): void;
     public addListener(event: ServerPacketType.RETRIEVED, listener:
-        (packet: Packet.RetrievedPacket) => void): void;
+        (packet: RetrievedPacket) => void): void;
     public addListener(event: ServerPacketType.ROOM_INFO, listener:
-        (packet: Packet.RoomInfoPacket) => void): void;
+        (packet: RoomInfoPacket) => void): void;
     public addListener(event: ServerPacketType.ROOM_UPDATE, listener:
-        (packet: Packet.RoomUpdatePacket) => void): void;
+        (packet: RoomUpdatePacket) => void): void;
     public addListener(event: ServerPacketType.SET_REPLY, listener:
-        (packet: Packet.SetReplyPacket) => void): void;
+        (packet: SetReplyPacket) => void): void;
     public addListener(event: "AnyPacket", listener:
-        (packet: Packet.ArchipelagoServerPacket) => void): void;
+        (packet: ArchipelagoServerPacket) => void): void;
 
     /**
      * Add an eventListener to fire depending on an event from the Archipelago server or the client.
@@ -228,35 +245,35 @@ export class Client<TSlotData = AbstractSlotData> {
      */
     public addListener(event: ServerPacketType | "AnyPacket", listener:
         (packet: never, message: never) => void): void {
-        this.#emitter.addListener(event, listener as (packet: Packet.ArchipelagoServerPacket) => void);
+        this.#emitter.addListener(event, listener as (packet: ArchipelagoServerPacket) => void);
     }
 
     public removeListener(event: ServerPacketType.BOUNCED, listener:
-        (packet: Packet.BouncedPacket) => void): void;
+        (packet: BouncedPacket) => void): void;
     public removeListener(event: ServerPacketType.CONNECTED, listener:
-        (packet: Packet.ConnectedPacket) => void): void;
+        (packet: ConnectedPacket) => void): void;
     public removeListener(event: ServerPacketType.CONNECTION_REFUSED, listener:
-        (packet: Packet.ConnectionRefusedPacket) => void): void;
+        (packet: ConnectionRefusedPacket) => void): void;
     public removeListener(event: ServerPacketType.DATA_PACKAGE, listener:
-        (packet: Packet.DataPackagePacket) => void): void;
+        (packet: DataPackagePacket) => void): void;
     public removeListener(event: ServerPacketType.INVALID_PACKET, listener:
-        (packet: Packet.InvalidPacketPacket) => void): void;
+        (packet: InvalidPacketPacket) => void): void;
     public removeListener(event: ServerPacketType.LOCATION_INFO, listener:
-        (packet: Packet.LocationInfoPacket) => void): void;
+        (packet: LocationInfoPacket) => void): void;
     public removeListener(event: ServerPacketType.PRINT_JSON, listener:
-        (packet: Packet.PrintJSONPacket, message: string) => void): void;
+        (packet: PrintJSONPacket, message: string) => void): void;
     public removeListener(event: ServerPacketType.RECEIVED_ITEMS, listener:
-        (packet: Packet.ReceivedItemsPacket) => void): void;
+        (packet: ReceivedItemsPacket) => void): void;
     public removeListener(event: ServerPacketType.RETRIEVED, listener:
-        (packet: Packet.RetrievedPacket) => void): void;
+        (packet: RetrievedPacket) => void): void;
     public removeListener(event: ServerPacketType.ROOM_INFO, listener:
-        (packet: Packet.RoomInfoPacket) => void): void;
+        (packet: RoomInfoPacket) => void): void;
     public removeListener(event: ServerPacketType.ROOM_UPDATE, listener:
-        (packet: Packet.RoomUpdatePacket) => void): void;
+        (packet: RoomUpdatePacket) => void): void;
     public removeListener(event: ServerPacketType.SET_REPLY, listener:
-        (packet: Packet.SetReplyPacket) => void): void;
+        (packet: SetReplyPacket) => void): void;
     public removeListener(event: "AnyPacket", listener:
-        (packet: Packet.ArchipelagoServerPacket) => void): void;
+        (packet: ArchipelagoServerPacket) => void): void;
 
     /**
      * Remove an eventListener from this client's event emitter.
@@ -266,7 +283,7 @@ export class Client<TSlotData = AbstractSlotData> {
      */
     public removeListener(event: ServerPacketType | "AnyPacket", listener:
         (packet: never, message: never) => void): void {
-        this.#emitter.removeListener(event, listener as (packet: Packet.ArchipelagoServerPacket) => void);
+        this.#emitter.removeListener(event, listener as (packet: ArchipelagoServerPacket) => void);
     }
 
     #connectSocket(uri: string): Promise<void> {
@@ -295,7 +312,7 @@ export class Client<TSlotData = AbstractSlotData> {
 
     #parsePackets(event: MessageEvent): void {
         // Parse packets and fire our packetReceived event for each packet.
-        const packets = JSON.parse(event.data.toString()) as Packet.ArchipelagoServerPacket[];
+        const packets = JSON.parse(event.data.toString()) as ArchipelagoServerPacket[];
         for (const packet of packets) {
             // Regardless of what type of event this is, we always emit the packetReceived event.
             this.#emitter.emit("packetReceived", packet);
