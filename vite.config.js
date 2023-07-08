@@ -1,8 +1,7 @@
-import dts from "vite-plugin-dts";
 import path from "path";
+import { terser } from "rollup-plugin-terser";
 import { defineConfig } from "vite";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
-import { terser } from "rollup-plugin-terser";
 
 export default defineConfig({
     build: {
@@ -13,19 +12,23 @@ export default defineConfig({
             fileName: "archipelago",
         },
         rollupOptions: {
-            plugins: [terser({
-                format: {
-                    comments: false,
-                }
-            })]
-        }
-    },
-    plugins: [dts(), nodePolyfills({
-        globals: {
-            Buffer: false,
-            global: false,
-            process: false,
+            plugins: [
+                terser({
+                    format: {
+                        comments: false,
+                    },
+                }),
+            ],
         },
-        protocolImports: false,
-    })],
+    },
+    plugins: [
+        nodePolyfills({
+            globals: {
+                Buffer: false,
+                global: false,
+                process: false,
+            },
+            protocolImports: false,
+        }),
+    ],
 });

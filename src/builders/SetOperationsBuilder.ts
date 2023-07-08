@@ -9,10 +9,10 @@ import { JSONSerializableData } from "../types/JSONSerializableData.ts";
 export class SetOperationsBuilder {
     readonly #operations: DataStorageOperation[] = [];
     readonly #key: string;
-    readonly #default?: JSONSerializableData;
+    readonly #default: Exclude<JSONSerializableData, undefined>;
     readonly #wantReply: boolean;
 
-    public constructor(key: string, defaultValue?: JSONSerializableData, wantReply = false) {
+    public constructor(key: string, defaultValue: Exclude<JSONSerializableData, undefined>, wantReply = false) {
         this.#key = key;
         this.#default = defaultValue;
         this.#wantReply = wantReply;
