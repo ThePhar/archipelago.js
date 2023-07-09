@@ -1,4 +1,4 @@
-import { ObjectValues } from "../types/ObjectValues.ts";
+import { ObjectValues } from "../types/ObjectValues";
 
 /**
  * A const representing the nature of the slot.

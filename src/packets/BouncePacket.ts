@@ -1,5 +1,5 @@
-import { JSONSerializableData } from "../types/JSONSerializableData.ts";
-import { BaseClientPacket } from "./BasePackets.ts";
+import { JSONSerializableData } from "../types/JSONSerializableData";
+import { BaseClientPacket } from "./BasePackets";
 
 /**
  * Sent by the client to have the server forward data to all clients that satisfy any given search criteria.

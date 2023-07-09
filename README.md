@@ -28,15 +28,14 @@ To start a new project with Archipelago.js follow these steps:
 1. Create a new directory for your project.
 2. Open a terminal or command prompt and navigate to the project directory.
 3. Run the following command to initialize a new Node.js project: `npm install archipelago.js`.
-4. If you plan to use TypeScript, also install typescript dependencies and nice to haves:
-   `npm install -D typescript ts-node`.
+4. If you plan to use TypeScript, also install typescript dependencies and nice to haves: `npm install -D typescript`.
     - Replace any instances of "`.js`" with "`.ts`" in this quick start guide.
 
 ### Getting Started
 
 Follow the steps below to quickly set up a client and connect to an Archipelago server:
 
-1. Create a new TypeScript file called `client.js` in your project directory.
+1. Create a new file called `client.js` in your project directory.
 2. Open the `client.js` file with your preferred code editor and add the following code:
 
 ```js
@@ -82,7 +81,7 @@ Archipelago.js can also run in the browser. Here's an example that works in most
 
 ```html
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="UTF-8" />
         <title>Archipelago.js Client Example</title>
@@ -93,7 +92,7 @@ Archipelago.js can also run in the browser. Here's an example that works in most
                 Client,
                 ITEMS_HANDLING_FLAGS,
                 SERVER_PACKET_TYPE,
-            } from "https://unpkg.com/archipelago.js/dist/archipelago.js";
+            } from "https://unpkg.com/archipelago.js/dist/archipelago.min.js";
 
             // Create a new Archipelago client
             const client = new Client();

@@ -1,4 +1,4 @@
-import { ObjectValues } from "../types/ObjectValues.ts";
+import { ObjectValues } from "../types/ObjectValues";
 
 /**
  * An enumeration of known errors the Archipelago server can send back to the client when they receive a

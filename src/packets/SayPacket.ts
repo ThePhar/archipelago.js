@@ -1,4 +1,4 @@
-import { BaseClientPacket } from "./BasePackets.ts";
+import { BaseClientPacket } from "./BasePackets";
 
 /**
  * Basic chat-type packet which sends text to the server to be distributed to other clients.

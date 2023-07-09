@@ -1,5 +1,5 @@
-import { ItemsHandlingFlags } from "../consts/ItemsHandlingFlags.ts";
-import { BaseClientPacket } from "./BasePackets.ts";
+import { ItemsHandlingFlags } from "../consts/ItemsHandlingFlags";
+import { BaseClientPacket } from "./BasePackets";
 
 /**
  * Update arguments from the Connect packet, currently only updating `tags` and `items_handling` is supported.

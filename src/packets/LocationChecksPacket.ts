@@ -1,4 +1,4 @@
-import { BaseClientPacket } from "./BasePackets.ts";
+import { BaseClientPacket } from "./BasePackets";
 
 /**
  * Sent by the client to inform the server of locations that the client has checked. Used to inform the server of new

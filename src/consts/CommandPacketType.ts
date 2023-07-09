@@ -1,4 +1,4 @@
-import { ObjectValues } from "../types/ObjectValues.ts";
+import { ObjectValues } from "../types/ObjectValues";
 
 /**
  * A const of all possible packet types the server can send to the client. See each packet's documentation page for

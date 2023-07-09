@@ -1,4 +1,4 @@
-import { ObjectValues } from "../types/ObjectValues.ts";
+import { ObjectValues } from "../types/ObjectValues";
 
 /**
  * A const of the current {@link Client} connection status to the Archipelago server.

@@ -1,4 +1,4 @@
-import { ItemFlags } from "../consts/ItemFlags.ts";
+import { ItemFlags } from "../consts/ItemFlags";
 
 /**
  * Items that are sent over the network.

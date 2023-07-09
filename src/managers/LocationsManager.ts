@@ -1,8 +1,8 @@
-import { Client } from "../Client.ts";
-import { CLIENT_PACKET_TYPE, SERVER_PACKET_TYPE } from "../consts/CommandPacketType.ts";
-import { CREATE_AS_HINT_MODE } from "../consts/CreateAsHintMode.ts";
-import { ConnectedPacket } from "../packets/ConnectedPacket.ts";
-import { RoomUpdatePacket } from "../packets/RoomUpdatePacket.ts";
+import { Client } from "../Client";
+import { CLIENT_PACKET_TYPE, SERVER_PACKET_TYPE } from "../consts/CommandPacketType";
+import { CREATE_AS_HINT_MODE } from "../consts/CreateAsHintMode";
+import { ConnectedPacket } from "../packets/ConnectedPacket";
+import { RoomUpdatePacket } from "../packets/RoomUpdatePacket";
 
 /**
  * Manages and watches for events regarding location data and provides helper functions to make checking, scouting, or

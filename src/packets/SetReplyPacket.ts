@@ -1,5 +1,5 @@
-import { JSONSerializableData } from "../types/JSONSerializableData.ts";
-import { BaseServerPacket } from "./BasePackets.ts";
+import { JSONSerializableData } from "../types/JSONSerializableData";
+import { BaseServerPacket } from "./BasePackets";
 
 /**
  * Sent to clients in response to a {@link SetPacket} if `want_reply` was set to true, or if the client has registered

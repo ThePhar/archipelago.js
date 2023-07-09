@@ -1,5 +1,5 @@
-import { DataPackage } from "../types/DataPackage.ts";
-import { BaseServerPacket } from "./BasePackets.ts";
+import { DataPackage } from "../types/DataPackage";
+import { BaseServerPacket } from "./BasePackets";
 
 /**
  * Sent to clients to provide what is known as a 'data package' which contains information to enable a client to most

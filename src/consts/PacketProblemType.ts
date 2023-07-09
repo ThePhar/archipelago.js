@@ -1,4 +1,4 @@
-import { ObjectValues } from "../types/ObjectValues.ts";
+import { ObjectValues } from "../types/ObjectValues";
 
 /**
  * PacketProblemType indicates the type of problem that was detected in the faulty packet, the known problem types are

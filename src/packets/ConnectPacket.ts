@@ -1,6 +1,6 @@
-import { ItemsHandlingFlags } from "../consts/ItemsHandlingFlags.ts";
-import { NetworkVersion } from "../types/NetworkVersion.ts";
-import { BaseClientPacket } from "./BasePackets.ts";
+import { ItemsHandlingFlags } from "../consts/ItemsHandlingFlags";
+import { NetworkVersion } from "../types/NetworkVersion";
+import { BaseClientPacket } from "./BasePackets";
 
 /**
  * Sent by the client to initiate a connection to an Archipelago game session. Sent automatically during

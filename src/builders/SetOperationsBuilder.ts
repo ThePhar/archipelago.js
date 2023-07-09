@@ -1,7 +1,7 @@
-import { CLIENT_PACKET_TYPE } from "../consts/CommandPacketType.ts";
-import { SetPacket } from "../packets/SetPacket.ts";
-import { DataStorageOperation } from "../types/DataStorageOperations.ts";
-import { JSONSerializableData } from "../types/JSONSerializableData.ts";
+import { CLIENT_PACKET_TYPE } from "../consts/CommandPacketType";
+import { SetPacket } from "../packets/SetPacket";
+import { DataStorageOperation } from "../types/DataStorageOperations";
+import { JSONSerializableData } from "../types/JSONSerializableData";
 
 /**
  * A helper class of data operations to perform server-side on a given key.

@@ -1,5 +1,5 @@
-import { PacketProblemType } from "../consts/PacketProblemType.ts";
-import { BaseServerPacket } from "./BasePackets.ts";
+import { PacketProblemType } from "../consts/PacketProblemType";
+import { BaseServerPacket } from "./BasePackets";
 
 /**
  * Sent to clients if the server caught a problem with a packet. This only occurs for errors that are explicitly checked

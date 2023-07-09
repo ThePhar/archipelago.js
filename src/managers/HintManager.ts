@@ -1,8 +1,8 @@
-import { Client } from "../Client.ts";
-import { CLIENT_PACKET_TYPE, SERVER_PACKET_TYPE } from "../consts/CommandPacketType.ts";
-import { RetrievedPacket } from "../packets/RetrievedPacket.ts";
-import { SetReplyPacket } from "../packets/SetReplyPacket.ts";
-import { Hint } from "../types/Hint.ts";
+import { Client } from "../Client";
+import { CLIENT_PACKET_TYPE, SERVER_PACKET_TYPE } from "../consts/CommandPacketType";
+import { RetrievedPacket } from "../packets/RetrievedPacket";
+import { SetReplyPacket } from "../packets/SetReplyPacket";
+import { Hint } from "../types/Hint";
 
 /**
  * Manages and watches for hint events to this player slot and provides helper functions to make working with hints

@@ -1,5 +1,5 @@
-import { ConnectionError } from "../consts/ConnectionError.ts";
-import { BaseServerPacket } from "./BasePackets.ts";
+import { ConnectionError } from "../consts/ConnectionError";
+import { BaseServerPacket } from "./BasePackets";
 
 /**
  * Sent to clients when the server refuses connection. This is sent during the initial connection handshake.

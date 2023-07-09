@@ -1,4 +1,4 @@
-import { ItemFlags } from "../consts/ItemFlags.ts";
+import { ItemFlags } from "../consts/ItemFlags";
 
 /**
  * An object representing a hint information for a particular item and location that contains it.

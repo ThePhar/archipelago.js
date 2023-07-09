@@ -1,5 +1,5 @@
-import { ItemFlags } from "../consts/ItemFlags.ts";
-import { ObjectValues } from "./ObjectValues.ts";
+import { ItemFlags } from "../consts/ItemFlags";
+import { ObjectValues } from "./ObjectValues";
 
 export type ItemJSONMessagePart = {
     /** Used to denote the intent of the message part. */

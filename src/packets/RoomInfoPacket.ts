@@ -1,6 +1,6 @@
-import { Permission, ReducedPermission } from "../consts/Permission.ts";
-import { NetworkVersion } from "../types/NetworkVersion.ts";
-import { BaseServerPacket } from "./BasePackets.ts";
+import { Permission, ReducedPermission } from "../consts/Permission";
+import { NetworkVersion } from "../types/NetworkVersion";
+import { BaseServerPacket } from "./BasePackets";
 
 /**
  * Sent to clients when they connect to an Archipelago server, but before they authenticate.

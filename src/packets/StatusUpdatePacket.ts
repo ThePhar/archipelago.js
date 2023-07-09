@@ -1,5 +1,5 @@
-import { ClientStatus } from "../consts/ClientStatus.ts";
-import { BaseClientPacket } from "./BasePackets.ts";
+import { ClientStatus } from "../consts/ClientStatus";
+import { BaseClientPacket } from "./BasePackets";
 
 /**
  * Sent to the server to update on the client's status. Examples include readiness or goal completion. (Example:
