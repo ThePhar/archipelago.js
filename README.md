@@ -8,6 +8,12 @@
 
 A general purpose library for communicating with Archipelago servers in Node.js or in the browser.
 
+You can install it from npm or use a CDN to use it in browser.
+
+-   NPM: `npm install archipelago.js`
+-   CDN: `import { /* ... */ } from "https://unpkg.com/archipelago.js/dist/archipelago.min.js";` in a
+    `<script type="module"></script>` block.
+
 ## Archipelago.js Node.js Quick Start Guide
 
 Archipelago.js is a JavaScript library that runs in Node or the browser that allows you to connect to an Archipelago
@@ -135,8 +141,9 @@ Archipelago.js can also run in the browser. Here's an example that works in most
 </html>
 ```
 
-In this example, the Archipelago client is included as a script from the https://unpkg.com/archipelago.js CDN. You can
-also use a locally hosted version of the library if you prefer.
+In this example, the Archipelago client is included as a script from the
+https://unpkg.com/archipelago.js/dist/archipelago.min.js CDN. You can also use a locally hosted version of the library
+if you prefer.
 
 ### Handling Server Events
 
@@ -188,6 +195,23 @@ send.
     client.send(syncPacket);
     ```
 
+### Player
+
+Player objects returned from `PlayersManager` contain the following data and helper functions for easy item and location
+name lookups:
+
+-   `name`: The slot name for this player.
+-   `alias`: The aliased name for this player.
+-   `slot`: The slot number for this player.
+-   `team`: The team number for this player.
+-   `game`: The name of the game this player is playing.
+-   `type`: Whether this player is a spectator, actual player, or item link group.
+-   `group_members`: If this player is an item link group, this is the ids of all players that belong to this group.
+-   `item(itemId)`: A function that returns the name for a given item id in the game of this player.
+    -   Example: `const itemName = player.item(1000);`
+-   `location(locationId)`: A function that returns the name for a given location id in the game of this player.
+    -   Example: `const locationName = player.location(1000);`
+
 ### LocationsManager
 
 The `LocationsManager` class in archipelago.js provides functionality for managing locations within the game. Here are
@@ -208,27 +232,20 @@ some tips for working with the `LocationsManager`:
     ```
 
 3. **Retrieve Location Name**: Use the `name` method to retrieve the name of a location based on its ID and game name.
-   If the location or game is not found, it will return a default message.
+   If the location or game is not found, it will return an "Unknown Location" string instead.
 
     ```ts
     const locationName = client.locations.name("your-game-name", locationId);
     ```
 
-4. **Retrieve Location ID**: Use the `id` method to retrieve the ID of a location based on its name and game name. If
-   the location or game is not found, it will throw an error.
-
-    ```ts
-    const locationId = client.locations.id("your-game-name", "location-name");
-    ```
-
-5. **Retrieve Location Group**: Use the `group` method to retrieve an array of location names belonging to a specific
+4. **Retrieve Location Group**: Use the `group` method to retrieve an array of location names belonging to a specific
    group in a game. If the game or group is not found, it will return an empty array.
 
     ```ts
     const locationGroup = client.locations.group("your-game-name", "group-name");
     ```
 
-6. **Automatically Release All Locations**: Use the `autoRelease` method to send all missing locations as checked.
+5. **Automatically Release All Locations**: Use the `autoRelease` method to send all missing locations as checked.
 
     ```ts
     client.locations.autoRelease();
@@ -260,12 +277,25 @@ game. Here are some helpful methods for working with the `PlayersManager`:
     const playerGame = client.players.game(playerId);
     ```
 
-4. **Retrieve Group Members**: Use the members method to retrieve an array of player IDs belonging to an item links
+4. **Retrieve Group Members**: Use the `members` method to retrieve an array of player IDs belonging to an item links
    group. If the id is of someone who is not an item links group or the group is not found, it will return an empty
    array.
 
     ```ts
     const groupMembers = client.players.members(groupId);
+    ```
+
+5. **Retrieve all Players**: Use the `all` method to return an array of all `Player` objects that are in this room.
+
+    ```ts
+    const players = client.players.all;
+    ```
+
+6. **Retrieve a specific Player**: Use the `get` method to return a `Player` object with that id. Returns `undefined` if
+   player does not exist.
+
+    ```ts
+    const playerOne = client.players.get(1);
     ```
 
 **Special Cases**: The methods in PlayersManager handle some special cases. For example, if the player ID is `0`, it
@@ -277,57 +307,50 @@ for full exceptions.
 The `DataManager` class in archipelago.js is responsible for managing room session data and the data package. Here are
 some tips for working with the `DataManager`:
 
-1. **Retrieve Player Information**: Use the `players` property to access a map of all players, keyed by their player
-   IDs.
-
-    ```ts
-    const player = client.data.players.get(playerId);
-    ```
-
-2. **Retrieve Games List**: Use the `games` property to get an array of all games present in the room.
+1. **Retrieve Games List**: Use the `games` property to get an array of all games present in the room.
 
     ```ts
     const gamesList = client.data.games;
     ```
 
-3. **Retrieve Hint Cost**: Use the `hintCost` property to get the number of hint points required to receive a hint.
+2. **Retrieve Hint Cost**: Use the `hintCost` property to get the number of hint points required to receive a hint.
 
     ```ts
     const hintCost = client.data.hintCost;
     ```
 
-4. **Retrieve Hint Points**: Use the `hintPoints` property to get the number of hint points the player has.
+3. **Retrieve Hint Points**: Use the `hintPoints` property to get the number of hint points the player has.
 
     ```ts
     const hintPoints = client.data.hintPoints;
     ```
 
-5. **Retrieve Slot Data**: Use the `slotData` property to access the slot data for the game.
+4. **Retrieve Slot Data**: Use the `slotData` property to access the slot data for the game.
 
     ```ts
     const slotData = client.data.slotData;
     ```
 
-6. **Retrieve Slot and Team**: Use the `slot` and `team` properties to get the player's slot and team.
+5. **Retrieve Slot and Team**: Use the `slot` and `team` properties to get the player's slot and team.
 
     ```ts
     const slot = client.data.slot;
     const team = client.data.team;
     ```
 
-7. **Retrieve Seed**: Use the `seed` property to get the seed for the room.
+6. **Retrieve Seed**: Use the `seed` property to get the seed for the room.
 
     ```ts
     const seed = client.data.seed;
     ```
 
-8. **Retrieve Permissions**: Use the `permissions` property to get the current permissions for the room.
+7. **Retrieve Permissions**: Use the `permissions` property to get the current permissions for the room.
 
     ```ts
     const permissions = client.data.permissions;
     ```
 
-9. **Send Set Operations**: Use the `set` method to send a series of set operations using the `SetOperationBuilder`
+8. **Send Set Operations**: Use the `set` method to send a series of set operations using the `SetOperationBuilder`
    object to the server. This method returns a promise that resolves with a `SetReplyPacket` if `wantReply` was
    requested.
 
@@ -369,10 +392,25 @@ the `ItemsManager`:
     const itemGroup = client.items.group(gameName, groupName);
     ```
 
-### HintManager
+4.  **Retrieve all received items**: Use the `received` property to retrieve an array of all items that have been sent
+    by the server.
 
-The `HintManager` class in archipelago.js is responsible for managing hint events for a specific player slot. Here are
-some tips for working with the `HintManager`:
+    ```ts
+    const allItems = client.items.received;
+    ```
+
+5.  **Retrieve ReceivedItem index**: Returns the `index` of the next expected item to be received from the server. Any
+    items with a lower index are stored in `ItemsManager.received`. Useful for tracking if new items have been received
+    or to check if a de-sync event occurred.
+
+    ```ts
+    const receivedItemIndex = client.items.index;
+    ```
+
+### HintsManager
+
+The `HintsManager` class in archipelago.js is responsible for managing hint events for a specific player slot. Here are
+some tips for working with the `HintsManager`:
 
 1. **Get Relevant Hints**: Use the `mine` property to access an array of hints that are relevant to the player slot.
 
