@@ -3,7 +3,7 @@ import { ItemsHandlingFlags } from "../consts/ItemsHandlingFlags";
 /**
  * An object that holds credential information for a slot to connect.
  */
-export interface ConnectionInformation {
+export type ConnectionInformation = {
     /** The hostname or ip address of the Archipelago server to connect to. */
     hostname: string;
 
@@ -46,4 +46,4 @@ export interface ConnectionInformation {
      * on individual flags.
      */
     items_handling: number | ItemsHandlingFlags;
-}
+};

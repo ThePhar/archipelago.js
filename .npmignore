@@ -3,4 +3,4 @@
 
 # JavaScript and Type Definitions
 !dist/**/*.d.ts
-!dist/archipelago.min.js
+!dist/**/*.js

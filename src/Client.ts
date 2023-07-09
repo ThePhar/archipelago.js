@@ -27,13 +27,13 @@ import { SetReplyPacket } from "./packets/SetReplyPacket";
 import { ConnectionInformation } from "./types/ConnectionInformation";
 import { VALID_JSON_MESSAGE_TYPE } from "./types/JSONMessagePart";
 import { NetworkVersion } from "./types/NetworkVersion";
-import { UnknownSlotData } from "./types/UnknownSlotData";
+import { SlotData } from "./types/SlotData";
 
 /**
  * The client that connects to an Archipelago server and facilitates communication, listens for events, and manages
  * data.
  */
-export class Client<TSlotData = UnknownSlotData> {
+export class Client<TSlotData = SlotData> {
     #socket?: WebSocket;
     #status: ConnectionStatus = CONNECTION_STATUS.DISCONNECTED;
     #emitter = new EventEmitter();
