@@ -1,4 +1,4 @@
-import { GamePackage } from "./GamePackage.ts";
+import { GamePackage } from "./GamePackage";
 
 /**
  * A {@link DataPackage} is an object which contains arbitrary metadata about each game to enable a client to interact

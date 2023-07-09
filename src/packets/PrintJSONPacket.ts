@@ -1,5 +1,5 @@
-import { JSONMessagePart } from "../types/JSONMessagePart.ts";
-import { NetworkItem } from "../types/NetworkItem.ts";
+import { JSONMessagePart } from "../types/JSONMessagePart";
+import { NetworkItem } from "../types/NetworkItem";
 
 export type ItemSendJSONPacket = {
     cmd: "PrintJSON";

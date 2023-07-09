@@ -1,7 +1,7 @@
-import { Permission, ReducedPermission } from "../consts/Permission.ts";
-import { NetworkPlayer } from "../types/NetworkPlayer.ts";
-import { NetworkVersion } from "../types/NetworkVersion.ts";
-import { BaseServerPacket } from "./BasePackets.ts";
+import { Permission, ReducedPermission } from "../consts/Permission";
+import { NetworkPlayer } from "../types/NetworkPlayer";
+import { NetworkVersion } from "../types/NetworkVersion";
+import { BaseServerPacket } from "./BasePackets";
 
 /**
  * Sent when there is a need to update information about the present game session. Generally useful for **async** games.

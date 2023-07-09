@@ -1,4 +1,4 @@
-import { BaseClientPacket } from "./BasePackets.ts";
+import { BaseClientPacket } from "./BasePackets";
 
 /**
  * Used to register your current session for receiving all {@link SetReplyPacket}s of certain keys to allow your client

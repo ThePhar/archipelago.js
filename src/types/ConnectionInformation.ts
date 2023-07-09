@@ -1,9 +1,9 @@
-import { ItemsHandlingFlags } from "../consts/ItemsHandlingFlags.ts";
+import { ItemsHandlingFlags } from "../consts/ItemsHandlingFlags";
 
 /**
  * An object that holds credential information for a slot to connect.
  */
-export type ConnectionInformation = {
+export interface ConnectionInformation {
     /** The hostname or ip address of the Archipelago server to connect to. */
     hostname: string;
 
@@ -46,4 +46,4 @@ export type ConnectionInformation = {
      * on individual flags.
      */
     items_handling: number | ItemsHandlingFlags;
-};
+}

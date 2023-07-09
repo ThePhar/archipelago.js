@@ -1,5 +1,5 @@
-import { JSONSerializableData } from "../types/JSONSerializableData.ts";
-import { BaseServerPacket } from "./BasePackets.ts";
+import { JSONSerializableData } from "../types/JSONSerializableData";
+import { BaseServerPacket } from "./BasePackets";
 
 /**
  * Sent to clients after a client requested this message be sent to them, more info in the {@link BouncePacket}.

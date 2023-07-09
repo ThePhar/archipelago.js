@@ -1,4 +1,4 @@
-import { JSONSerializableData } from "./JSONSerializableData.ts";
+import { JSONSerializableData } from "./JSONSerializableData";
 
 /**
  * Sets the current value of the key to `value`.

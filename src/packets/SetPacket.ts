@@ -1,6 +1,6 @@
-import { DataStorageOperation } from "../types/DataStorageOperations.ts";
-import { JSONSerializableData } from "../types/JSONSerializableData.ts";
-import { BaseClientPacket } from "./BasePackets.ts";
+import { DataStorageOperation } from "../types/DataStorageOperations";
+import { JSONSerializableData } from "../types/JSONSerializableData";
+import { BaseClientPacket } from "./BasePackets";
 
 /**
  * Sent by the client to write data to the server's data storage, that data can then be shared across worlds or just

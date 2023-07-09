@@ -1,7 +1,7 @@
-import { NetworkPlayer } from "../types/NetworkPlayer.ts";
-import { NetworkSlot } from "../types/NetworkSlot.ts";
-import { UnknownSlotData } from "../types/UnknownSlotData.ts";
-import { BaseServerPacket } from "./BasePackets.ts";
+import { NetworkPlayer } from "../types/NetworkPlayer";
+import { NetworkSlot } from "../types/NetworkSlot";
+import { UnknownSlotData } from "../types/UnknownSlotData";
+import { BaseServerPacket } from "./BasePackets";
 
 /**
  * Sent to clients when the connection handshake is successfully completed.

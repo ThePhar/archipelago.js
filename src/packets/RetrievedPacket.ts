@@ -1,5 +1,5 @@
-import { JSONSerializableData } from "../types/JSONSerializableData.ts";
-import { BaseServerPacket } from "./BasePackets.ts";
+import { JSONSerializableData } from "../types/JSONSerializableData";
+import { BaseServerPacket } from "./BasePackets";
 
 /**
  * Sent to clients as a response to a {@link GetPacket}.

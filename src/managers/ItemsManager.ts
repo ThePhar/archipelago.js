@@ -1,4 +1,4 @@
-import { Client } from "../Client.ts";
+import { Client } from "../Client";
 
 /**
  * Manages and watches for events regarding item data and provides helper functions to make working with items easier.

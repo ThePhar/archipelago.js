@@ -1,4 +1,4 @@
-import { BaseClientPacket } from "./BasePackets.ts";
+import { BaseClientPacket } from "./BasePackets";
 
 /**
  * Sent by the client to request the data package from the server. Does not require client authentication. Sent

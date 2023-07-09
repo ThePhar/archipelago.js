@@ -1,15 +1,15 @@
-import { Client } from "../Client.ts";
-import { SetOperationsBuilder } from "../builders/SetOperationsBuilder.ts";
-import { SERVER_PACKET_TYPE } from "../consts/CommandPacketType.ts";
-import { PERMISSION, Permissions } from "../consts/Permission.ts";
-import { ConnectedPacket } from "../packets/ConnectedPacket.ts";
-import { DataPackagePacket } from "../packets/DataPackagePacket.ts";
-import { RoomInfoPacket } from "../packets/RoomInfoPacket.ts";
-import { RoomUpdatePacket } from "../packets/RoomUpdatePacket.ts";
-import { SetReplyPacket } from "../packets/SetReplyPacket.ts";
-import { GamePackage } from "../types/GamePackage.ts";
-import { NetworkSlot } from "../types/NetworkSlot.ts";
-import { Player } from "../types/Player.ts";
+import { Client } from "../Client";
+import { SetOperationsBuilder } from "../builders/SetOperationsBuilder";
+import { SERVER_PACKET_TYPE } from "../consts/CommandPacketType";
+import { PERMISSION, Permissions } from "../consts/Permission";
+import { ConnectedPacket } from "../packets/ConnectedPacket";
+import { DataPackagePacket } from "../packets/DataPackagePacket";
+import { RoomInfoPacket } from "../packets/RoomInfoPacket";
+import { RoomUpdatePacket } from "../packets/RoomUpdatePacket";
+import { SetReplyPacket } from "../packets/SetReplyPacket";
+import { GamePackage } from "../types/GamePackage";
+import { NetworkSlot } from "../types/NetworkSlot";
+import { Player } from "../types/Player";
 
 /**
  * Manages and watches for events regarding session data and the data package. Most other mangers use this information

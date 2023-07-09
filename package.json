@@ -1,22 +1,14 @@
 {
     "name": "archipelago.js",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "A general-purpose client library for communicating with Archipelago game servers, written for Node.js.",
     "license": "MIT",
-    "type": "module",
-    "main": "./dist/archipelago.umd.cjs",
-    "module": "./dist/archipelago.js",
-    "types": "./dist/index.d.ts",
+    "main": "archipelago.min.js",
+    "types": "dist/index.d.ts",
     "author": {
         "email": "zach@alliware.com",
         "name": "Zach Parks",
         "url": "https://pharmakesbad.software"
-    },
-    "exports": {
-        ".": {
-            "import": "./dist/archipelago.js",
-            "require": "./dist/archipelago.umd.cjs"
-        }
     },
     "browserslist": [
         ">0.2%",
@@ -30,7 +22,7 @@
     "scripts": {
         "clean": "rimraf -rf dist",
         "docs": "rimraf -rf docs && typedoc --options typedoc.json",
-        "build": "npm run clean && vite build && tsc",
+        "build": "npm run clean && tsc && webpack",
         "lint": "eslint src",
         "pack": "npm run build && npm pack --pack-destination packs"
     },
@@ -48,7 +40,9 @@
     ],
     "dependencies": {
         "isomorphic-ws": "^5.0.0",
+        "ts-loader": "^9.4.4",
         "uuid": "^9.0.0",
+        "webpack": "^5.88.1",
         "ws": "^8.13.0"
     },
     "devDependencies": {
@@ -62,13 +56,9 @@
         "eslint-config-prettier": "^8.8.0",
         "prettier": "^2.8.7",
         "rimraf": "^4.4.1",
-        "rollup-plugin-node-polyfills": "^0.2.1",
-        "rollup-plugin-terser": "^7.0.2",
-        "tsup": "^7.1.0",
-        "typedoc": "^0.23.28",
-        "typescript": "^5.0.3",
-        "vite": "^4.4.2",
-        "vite-plugin-dts": "^3.1.1",
-        "vite-plugin-node-polyfills": "^0.9.0"
+        "terser-webpack-plugin": "^5.3.9",
+        "typedoc": "^0.24.8",
+        "typescript": "^5.1.6",
+        "webpack-cli": "^5.1.4"
     }
 }

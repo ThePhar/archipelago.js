@@ -1,4 +1,4 @@
-import { SlotType } from "../consts/SlotType.ts";
+import { SlotType } from "../consts/SlotType";
 
 /**
  * An object representing static information about a slot.
