@@ -1,4 +1,5 @@
 import { Client } from "../Client";
+import { Player } from "../types";
 
 /**
  * Manages and watches for events regarding player data and provides helper functions to make working with players
@@ -18,6 +19,20 @@ export class PlayersManager {
     }
 
     /**
+     * Returns an array of all `players`, keyed by player id.
+     */
+    public get all(): ReadonlyArray<Player> {
+        return this.#client.data.players;
+    }
+
+    /**
+     * Returns a specific `player` by player id. Returns undefined if player does not exist.
+     */
+    public get(id: number): Player | undefined {
+        return this.#client.data.players[id];
+    }
+
+    /**
      * Returns the `name` of a given player `id`. Returns "Unknown Player #" if player does not exist in the room.
      *
      * Special cases:
@@ -32,7 +47,7 @@ export class PlayersManager {
             return "Archipelago";
         }
 
-        const name = this.#client.data.players.get(id)?.name;
+        const name = this.get(id)?.name;
         if (!name) {
             throw new Error(`Unable to find player by id: ${id}`);
         }
@@ -55,7 +70,7 @@ export class PlayersManager {
             return "Archipelago";
         }
 
-        const alias = this.#client.data.players.get(id)?.alias;
+        const alias = this.get(id)?.alias;
         if (!alias) {
             throw new Error(`Unable to find player by id: ${id}`);
         }
@@ -78,7 +93,7 @@ export class PlayersManager {
             return "Archipelago";
         }
 
-        const game = this.#client.data.players.get(id)?.game;
+        const game = this.get(id)?.game;
         if (!game) {
             throw new Error(`Unable to find player by id: ${id}`);
         }
@@ -93,7 +108,7 @@ export class PlayersManager {
      * @param id The slot `id` of a {@link SlotType.GROUP} player.
      */
     public members(id: number): number[] {
-        const members = this.#client.data.players.get(id)?.group_members;
+        const members = this.get(id)?.group_members;
         if (!members) {
             return [];
         }

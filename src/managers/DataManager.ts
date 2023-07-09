@@ -2,14 +2,13 @@ import { Client } from "../Client";
 import { SetOperationsBuilder } from "../builders/SetOperationsBuilder";
 import { SERVER_PACKET_TYPE } from "../consts/CommandPacketType";
 import { PERMISSION, Permissions } from "../consts/Permission";
+import { SLOT_TYPE } from "../consts/SlotType";
 import { ConnectedPacket } from "../packets/ConnectedPacket";
 import { DataPackagePacket } from "../packets/DataPackagePacket";
 import { RoomInfoPacket } from "../packets/RoomInfoPacket";
 import { RoomUpdatePacket } from "../packets/RoomUpdatePacket";
 import { SetReplyPacket } from "../packets/SetReplyPacket";
-import { GamePackage } from "../types/GamePackage";
-import { NetworkSlot } from "../types/NetworkSlot";
-import { Player } from "../types/Player";
+import { GamePackage, NetworkSlot, Player } from "../types";
 
 /**
  * Manages and watches for events regarding session data and the data package. Most other mangers use this information
@@ -18,7 +17,7 @@ import { Player } from "../types/Player";
 export class DataManager<TSlotData> {
     #client: Client<TSlotData>;
     #dataPackage = new Map<string, GamePackage>();
-    #players = new Map<number, Player>();
+    #players: Player[] = [];
     #games: string[] = [];
     #hintCost = 0;
     #hintPoints = 0;
@@ -55,9 +54,9 @@ export class DataManager<TSlotData> {
     }
 
     /**
-     * Returns a map of all `players`, keyed by player id.
+     * Returns an array of all `players`, keyed by player id.
      */
-    public get players(): ReadonlyMap<number, Player> {
+    public get players(): ReadonlyArray<Player> {
         return this.#players;
     }
 
@@ -184,16 +183,35 @@ export class DataManager<TSlotData> {
     }
 
     #onConnected(packet: ConnectedPacket): void {
+        // Archipelago player for slot 0 is implicitly the server.
+        const players: Player[] = [
+            {
+                name: "Archipelago",
+                slot: 0,
+                game: "Archipelago",
+                team: 0,
+                type: SLOT_TYPE.SPECTATOR,
+                alias: "Archipelago",
+                group_members: [],
+                item: (id) => this.#client.items.name(0, id),
+                location: (id) => this.#client.locations.name(0, id),
+            },
+        ];
+
+        // Add all players.
         for (const networkPlayer of packet.players) {
             const player: Player = {
                 ...networkPlayer,
                 // Can always assume this info will be filled out.
                 ...(packet.slot_info[networkPlayer.slot] as NetworkSlot),
+                item: (id) => this.#client.items.name(networkPlayer.slot, id),
+                location: (id) => this.#client.locations.name(networkPlayer.slot, id),
             };
 
-            this.#players.set(player.slot, player);
+            players[player.slot] = player;
         }
 
+        this.#players = players;
         this.#slot = packet.slot;
         this.#team = packet.team;
         this.#hintPoints = packet.hint_points ?? 0;
@@ -224,9 +242,8 @@ export class DataManager<TSlotData> {
         }
 
         if (packet.players) {
-            for (const networkPlayer of packet.players) {
-                const player = this.#players.get(networkPlayer.slot) as Player;
-                this.#players.set(player.slot, { ...player, ...networkPlayer });
+            for (const player of packet.players) {
+                this.#players[player.slot] = { ...this.#players[player.slot], ...player } as Player;
             }
         }
     }

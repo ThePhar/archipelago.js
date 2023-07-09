@@ -13,7 +13,7 @@ export * from "./consts/Permission";
 export * from "./consts/PrintJSONType";
 export * from "./consts/SlotType";
 export * from "./managers/DataManager";
-export * from "./managers/HintManager";
+export * from "./managers/HintsManager";
 export * from "./managers/ItemsManager";
 export * from "./managers/LocationsManager";
 export * from "./managers/PlayersManager";
@@ -42,3 +42,6 @@ export * from "./packets/SetPacket";
 export * from "./packets/SetReplyPacket";
 export * from "./packets/StatusUpdatePacket";
 export * from "./packets/SyncPacket";
+
+// Export types.
+export * from "./types";

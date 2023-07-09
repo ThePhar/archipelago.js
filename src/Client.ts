@@ -7,7 +7,7 @@ import { CLIENT_PACKET_TYPE, SERVER_PACKET_TYPE, ServerPacketType } from "./cons
 import { CONNECTION_STATUS, ConnectionStatus } from "./consts/ConnectionStatus";
 import { PRINT_JSON_TYPE } from "./consts/PrintJSONType";
 import { DataManager } from "./managers/DataManager";
-import { HintManager } from "./managers/HintManager";
+import { HintsManager } from "./managers/HintsManager";
 import { ItemsManager } from "./managers/ItemsManager";
 import { LocationsManager } from "./managers/LocationsManager";
 import { PlayersManager } from "./managers/PlayersManager";
@@ -24,10 +24,7 @@ import { RetrievedPacket } from "./packets/RetrievedPacket";
 import { RoomInfoPacket } from "./packets/RoomInfoPacket";
 import { RoomUpdatePacket } from "./packets/RoomUpdatePacket";
 import { SetReplyPacket } from "./packets/SetReplyPacket";
-import { ConnectionInformation } from "./types/ConnectionInformation";
-import { VALID_JSON_MESSAGE_TYPE } from "./types/JSONMessagePart";
-import { NetworkVersion } from "./types/NetworkVersion";
-import { SlotData } from "./types/SlotData";
+import { ConnectionInformation, NetworkVersion, SlotData, VALID_JSON_MESSAGE_TYPE } from "./types";
 
 /**
  * The client that connects to an Archipelago server and facilitates communication, listens for events, and manages
@@ -38,7 +35,7 @@ export class Client<TSlotData = SlotData> {
     #status: ConnectionStatus = CONNECTION_STATUS.DISCONNECTED;
     #emitter = new EventEmitter();
     #dataManager: DataManager<TSlotData> = new DataManager<TSlotData>(this);
-    #hintManager: HintManager = new HintManager(this);
+    #hintManager: HintsManager = new HintsManager(this);
     #itemsManager: ItemsManager = new ItemsManager(this);
     #locationsManager: LocationsManager = new LocationsManager(this);
     #playersManager: PlayersManager = new PlayersManager(this);
@@ -58,9 +55,9 @@ export class Client<TSlotData = SlotData> {
     }
 
     /**
-     * Get the {@link HintManager} helper object. See {@link HintManager} for additional information.
+     * Get the {@link HintsManager} helper object. See {@link HintsManager} for additional information.
      */
-    public get hints(): HintManager {
+    public get hints(): HintsManager {
         return this.#hintManager;
     }
 
@@ -232,7 +229,7 @@ export class Client<TSlotData = SlotData> {
 
         // Reinitialize our Managers.
         this.#dataManager = new DataManager(this);
-        this.#hintManager = new HintManager(this);
+        this.#hintManager = new HintsManager(this);
         this.#itemsManager = new ItemsManager(this);
         this.#locationsManager = new LocationsManager(this);
         this.#playersManager = new PlayersManager(this);
@@ -379,10 +376,10 @@ export class Client<TSlotData = SlotData> {
                     return string + this.players.alias(parseInt(piece.text));
 
                 case VALID_JSON_MESSAGE_TYPE.LOCATION_ID:
-                    return string + this.locations.name(this.players.game(piece.player), parseInt(piece.text));
+                    return string + this.players.get(piece.player)?.location(parseInt(piece.text));
 
                 case VALID_JSON_MESSAGE_TYPE.ITEM_ID:
-                    return string + this.items.name(this.players.game(piece.player), parseInt(piece.text));
+                    return string + this.players.get(piece.player)?.item(parseInt(piece.text));
 
                 default:
                     return string + piece.text;
