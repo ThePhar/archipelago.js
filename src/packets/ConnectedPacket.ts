@@ -1,6 +1,6 @@
 import { NetworkPlayer } from "../types/NetworkPlayer";
 import { NetworkSlot } from "../types/NetworkSlot";
-import { UnknownSlotData } from "../types/UnknownSlotData";
+import { SlotData } from "../types/SlotData";
 import { BaseServerPacket } from "./BasePackets";
 
 /**
@@ -30,7 +30,7 @@ export interface ConnectedPacket extends BaseServerPacket {
     checked_locations: number[];
 
     /** Contains a json object for slot related data, differs per game. Empty if not required. */
-    slot_data: UnknownSlotData;
+    slot_data: SlotData;
 
     /** Object of each slot with their {@link NetworkSlot} information. */
     slot_info: { [slot: number]: NetworkSlot };

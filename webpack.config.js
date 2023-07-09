@@ -26,7 +26,7 @@ module.exports = {
         minimizer: [new TerserPlugin()],
     },
     output: {
-        path: path.resolve(__dirname),
+        path: path.resolve(__dirname, "dist"),
         filename: "archipelago.min.js",
         library: {
             type: "module",
