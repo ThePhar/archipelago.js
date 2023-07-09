@@ -2,13 +2,13 @@ import { Client } from "../Client";
 import { CLIENT_PACKET_TYPE, SERVER_PACKET_TYPE } from "../consts/CommandPacketType";
 import { RetrievedPacket } from "../packets/RetrievedPacket";
 import { SetReplyPacket } from "../packets/SetReplyPacket";
-import { Hint } from "../types/Hint";
+import { Hint } from "../types";
 
 /**
  * Manages and watches for hint events to this player slot and provides helper functions to make working with hints
  * easier.
  */
-export class HintManager {
+export class HintsManager {
     #client: Client<unknown>;
     #hints: Hint[] = [];
 

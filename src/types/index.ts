@@ -9,6 +9,7 @@ export * from "./JSONSerializableData";
 export * from "./NetworkItem";
 export * from "./NetworkPlayer";
 export * from "./NetworkSlot";
+export * from "./NetworkVersion";
 export * from "./ObjectValues";
 export * from "./Player";
 export * from "./SlotData";

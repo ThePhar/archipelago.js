@@ -68,51 +68,57 @@ export class LocationsManager {
     /**
      * Returns the `name` of a given location `id`.
      *
+     * @param player The `id` of the player this location belongs to.
+     * @param id The `id` of this location.
+     * @returns Returns the name of the location or `Unknown Location: <id>` if location or player is not in data.
+     *
+     * @throws Throws an error if `player` or `id` is not a safe integer.
+     */
+    public name(player: number, id: number): string;
+
+    /**
+     * Returns the `name` of a given location `id`.
+     *
      * @param game The `name` of the game this location belongs to.
      * @param id The `id` of this location.
-     * @returns Returns the name of the location or `Unknown <Game> Location: <Id>` if location or game is not in data
-     * package.
+     * @returns Returns the name of the location or `Unknown Location: <id>` if location or player is not in data.
      *
      * @throws Throws an error if `id` is not a safe integer.
      */
-    public name(game: string, id: number): string {
+    public name(game: string, id: number): string;
+
+    public name(value: string | number, id: number): string {
         if (isNaN(id) || !Number.isSafeInteger(id)) {
             throw new Error(`'id' must be a safe integer. Received: ${id}`);
         }
 
+        let game: string;
+        if (typeof value === "string") {
+            game = value;
+        } else {
+            if (isNaN(value) || !Number.isSafeInteger(value)) {
+                throw new Error(`'player' must be a safe integer. Received: ${id}`);
+            }
+
+            const player = this.#client.players.get(value);
+            if (!player) {
+                return `Unknown Location: ${id}`;
+            }
+
+            game = player.game;
+        }
+
         const gameData = this.#client.data.package.get(game);
         if (!gameData) {
-            return `Unknown ${game} Location: ${id}`;
+            return `Unknown Location: ${id}`;
         }
 
         const name = gameData.location_id_to_name[id];
         if (!name) {
-            return `Unknown ${game} Location: ${id}`;
+            return `Unknown Location: ${id}`;
         }
 
         return name;
-    }
-
-    /**
-     * Returns the `id` of a given location `name`.
-     *
-     * @param game The `name` of the game this location belongs to.
-     * @param name The `name` of this location.
-     *
-     * @throws Throws an error if unable to find the `id` for a location or unable to find game in data package.
-     */
-    public id(game: string, name: string): number {
-        const gameData = this.#client.data.package.get(game);
-        if (!gameData) {
-            throw new Error(`Unknown game: ${game}`);
-        }
-
-        const id = gameData.location_name_to_id[name];
-        if (!id) {
-            throw new Error(`Unknown location name: ${name}`);
-        }
-
-        return id;
     }
 
     /**
@@ -126,7 +132,7 @@ export class LocationsManager {
     public group(game: string, name: string): string[] {
         const gameData = this.#client.data.package.get(game);
         if (!gameData) {
-            throw new Error(`Unknown game: ${game}`);
+            throw new Error(`Unknown Game: ${game}`);
         }
 
         const group = gameData.location_name_groups[name];
