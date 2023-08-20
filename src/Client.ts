@@ -187,6 +187,7 @@ export class Client<TSlotData = SlotData> {
                     uuid: info.uuid ?? generateUUIDv4(),
                     tags: info.tags ?? [],
                     password: info.password ?? "",
+                    slot_data: info.slot_data ?? true,
                 },
             );
         });
