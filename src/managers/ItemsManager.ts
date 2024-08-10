@@ -128,5 +128,7 @@ export class ItemsManager {
         for (const item of packet.items) {
             this.#items[index++] = item;
         }
+
+        this.#index = index;
     }
 }
