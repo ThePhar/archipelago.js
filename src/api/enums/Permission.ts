@@ -39,13 +39,3 @@ export const enum Permission {
     /** Allows players to use this command manually after they have completed their goal. */
     Goal = 0b010,
 }
-
-/**
- * All three possible {@link Permission} values for a given room.
- * @internal
- */
-export type PermissionsTable = {
-    readonly release: AutoPermission
-    readonly collect: AutoPermission
-    readonly remaining: Permission
-};
