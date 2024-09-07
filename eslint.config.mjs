@@ -1,4 +1,5 @@
 // @ts-check
+// noinspection JSCheckFunctionSignatures
 
 import eslint from "@eslint/js";
 import stylistic from "@stylistic/eslint-plugin";
@@ -24,7 +25,7 @@ export default tslint.config(
             "@stylistic/indent-binary-ops": ["error", 4],
             "@stylistic/quotes": ["error", "double"],
             "@stylistic/semi": ["error", "always"],
-            "jsdoc/check-tag-names": ["warn", { definedTags: ["remarks"] }],
+            "jsdoc/check-tag-names": ["warn", { definedTags: ["remarks", "category"] }],
             "jsdoc/require-description": 1,
             "jsdoc/require-template": 1,
             "jsdoc/require-throws": 1,
