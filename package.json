@@ -1,6 +1,6 @@
 {
     "name": "@pharware/archipelago",
-    "version": "2.0.0",
+    "version": "2.0.0-dev+1725766823",
     "description": "A runtime-agnostic JS library for communicating with Archipelago servers.",
     "license": "MIT",
     "type": "module",
@@ -23,9 +23,9 @@
     "scripts": {
         "clean": "rimraf -rf dist",
         "docs": "rimraf -rf docs && typedoc --options typedoc.json",
-        "build": "npm run clean && tsc",
+        "build": "pnpm run clean && tsc",
         "lint": "eslint src",
-        "pack": "npm run build && npm pack --pack-destination packs"
+        "pack": "pnpm pack --pack-destination packs"
     },
     "homepage": "https://thephar.github.io/archipelago.js/",
     "repository": "https://github.com/ThePhar/archipelago.js.git",

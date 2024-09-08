@@ -306,4 +306,8 @@ $RECYCLE.BIN/
 # typedoc output
 docs
 
+### Extra stuff
+eslint.config.d.mts
+eslint.config.d.mts.map
+
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,linux,intellij+all,node
