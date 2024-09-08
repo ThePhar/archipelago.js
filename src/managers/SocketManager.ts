@@ -71,7 +71,6 @@ export class SocketManager {
 
                 // Establish a connection and setup basic handlers.
                 this.#socket = new IsomorphousWebSocket(url);
-                this.#socket.onclose = this.disconnect.bind(this);
                 this.#socket.onopen = () => {
                     this.#status = ConnectionStatus.Unauthenticated;
 

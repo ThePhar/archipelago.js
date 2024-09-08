@@ -1,6 +1,6 @@
 {
     "name": "@pharware/archipelago",
-    "version": "2.0.0-dev+1725826960",
+    "version": "2.0.0-dev+1725827511",
     "exports": "./src/index.ts",
     "publish": {
         "include": [
