@@ -1,10 +1,11 @@
 import { ClientPacketType } from "./api/index.ts";
 import { ConnectionStatus } from "./enums/ConnectionStatus.ts";
+import { RoomManager } from "./managers/RoomManager.ts";
 import { SocketManager } from "./managers/SocketManager.ts";
 import { APEventEmitter } from "./utils/APEventEmitter.ts";
 
 /**
- * The client that connects to an Archipelago server and facilitates communication, listens for events, and managers
+ * The client that connects to an Archipelago server and facilitates communication, listens for events, and manages
  * data.
  */
 export class ArchipelagoClient {
@@ -16,6 +17,11 @@ export class ArchipelagoClient {
      * api or socket directly, but it is exposed if necessary.
      */
     public readonly socket: SocketManager = new SocketManager(this.#events);
+
+    /**
+     * Manages room data such as room settings, containing games, data packages, etc.
+     */
+    public readonly room: RoomManager = new RoomManager(this, this.#events);
 
     /**
      * Send a chat message to the server.

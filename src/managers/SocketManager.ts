@@ -63,7 +63,6 @@ export class SocketManager {
         }
 
         this.disconnect();
-        this.#status = ConnectionStatus.Connecting;
         try {
             await new Promise<void>((resolve, reject) => {
                 if (IsomorphousWebSocket === null) {
@@ -85,6 +84,8 @@ export class SocketManager {
                     this.#parsePackets(JSON.parse(event.data) as ServerPacket[]);
                 };
             });
+
+            this.#events.dispatchEvent(new Event("_Connected"));
         } catch (error) {
             // Reset socket state, then rethrow.
             this.disconnect();
@@ -100,6 +101,8 @@ export class SocketManager {
         this.#socket?.close();
         this.#socket = null;
         this.#status = ConnectionStatus.Disconnected;
+
+        this.#events.dispatchEvent(new Event("_Disconnected"));
     }
 
     /**
