@@ -6,8 +6,7 @@
         "include": [
             "LICENSE",
             "README.md",
-            "src/**/*.ts",
-            "package.json"
+            "src/**/*.ts"
         ]
     }
 }

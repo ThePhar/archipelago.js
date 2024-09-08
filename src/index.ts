@@ -14,3 +14,5 @@ export {
 export type {
     SocketManager,
 };
+
+export default ArchipelagoClient;
