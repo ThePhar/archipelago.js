@@ -40,8 +40,16 @@ export class RoomManager {
 
         // Update fields based on room info.
         this.#client.socket.subscribe(ServerPacketType.RoomInfo, (packet) => {
-            this.#serverVersion = packet.version;
-            this.#generatorVersion = packet.generator_version;
+            this.#serverVersion = {
+                major: packet.version.major,
+                minor: packet.version.minor,
+                build: packet.version.build,
+            };
+            this.#generatorVersion = {
+                major: packet.generator_version.major,
+                minor: packet.generator_version.minor,
+                build: packet.generator_version.build,
+            };
             this.#serverTags = packet.tags;
             this.#password = packet.password;
             this.#permissions = packet.permissions;
