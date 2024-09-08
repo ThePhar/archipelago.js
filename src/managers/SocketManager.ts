@@ -1,4 +1,18 @@
-import { ClientPacket, NetworkPackets as NP, ServerPacket, ServerPacketType } from "../api/index.ts";
+import { ClientPacket, ServerPacket } from "../api/index.ts";
+import {
+    BouncedPacket,
+    ConnectedPacket,
+    ConnectionRefusedPacket,
+    DataPackagePacket,
+    InvalidPacketPacket,
+    LocationInfoPacket,
+    PrintJSONPacket,
+    ReceivedItemsPacket,
+    RetrievedPacket,
+    RoomInfoPacket,
+    RoomUpdatePacket,
+    SetReplyPacket,
+} from "../api/packets/index.ts";
 import { ConnectionStatus } from "../enums/ConnectionStatus.ts";
 import { APEventEmitter, APEventUnsubscribe } from "../utils/APEventEmitter.ts";
 import { IsomorphousWebSocket } from "../utils/IsomorphousWebSocket.ts";
@@ -137,18 +151,18 @@ export class SocketManager {
         this.#socket.send(JSON.stringify(packets));
     }
 
-    public subscribe(type: "onBounced", callback: (packet: NP.BouncedPacket) => void): APEventUnsubscribe;
-    public subscribe(type: "onConnected", callback: (packet: NP.ConnectedPacket) => void): APEventUnsubscribe;
-    public subscribe(type: "onConnectionRefused", callback: (packet: NP.ConnectionRefusedPacket) => void): APEventUnsubscribe;
-    public subscribe(type: "onDataPackage", callback: (packet: NP.DataPackagePacket) => void): APEventUnsubscribe;
-    public subscribe(type: "onInvalidPacket", callback: (packet: NP.InvalidPacketPacket) => void): APEventUnsubscribe;
-    public subscribe(type: "onLocationInfo", callback: (packet: NP.LocationInfoPacket) => void): APEventUnsubscribe;
-    public subscribe(type: "onPrintJSON", callback: (packet: NP.PrintJSONPacket) => void): APEventUnsubscribe;
-    public subscribe(type: "onReceivedItems", callback: (packet: NP.ReceivedItemsPacket) => void): APEventUnsubscribe;
-    public subscribe(type: "onRetrieved", callback: (packet: NP.RetrievedPacket) => void): APEventUnsubscribe;
-    public subscribe(type: "onRoomInfo", callback: (packet: NP.RoomInfoPacket) => void): APEventUnsubscribe;
-    public subscribe(type: "onRoomUpdate", callback: (packet: NP.RoomUpdatePacket) => void): APEventUnsubscribe;
-    public subscribe(type: "onSetReply", callback: (packet: NP.SetReplyPacket) => void): APEventUnsubscribe;
+    public subscribe(type: "onBounced", callback: (packet: BouncedPacket) => void): APEventUnsubscribe;
+    public subscribe(type: "onConnected", callback: (packet: ConnectedPacket) => void): APEventUnsubscribe;
+    public subscribe(type: "onConnectionRefused", callback: (packet: ConnectionRefusedPacket) => void): APEventUnsubscribe;
+    public subscribe(type: "onDataPackage", callback: (packet: DataPackagePacket) => void): APEventUnsubscribe;
+    public subscribe(type: "onInvalidPacket", callback: (packet: InvalidPacketPacket) => void): APEventUnsubscribe;
+    public subscribe(type: "onLocationInfo", callback: (packet: LocationInfoPacket) => void): APEventUnsubscribe;
+    public subscribe(type: "onPrintJSON", callback: (packet: PrintJSONPacket) => void): APEventUnsubscribe;
+    public subscribe(type: "onReceivedItems", callback: (packet: ReceivedItemsPacket) => void): APEventUnsubscribe;
+    public subscribe(type: "onRetrieved", callback: (packet: RetrievedPacket) => void): APEventUnsubscribe;
+    public subscribe(type: "onRoomInfo", callback: (packet: RoomInfoPacket) => void): APEventUnsubscribe;
+    public subscribe(type: "onRoomUpdate", callback: (packet: RoomUpdatePacket) => void): APEventUnsubscribe;
+    public subscribe(type: "onSetReply", callback: (packet: SetReplyPacket) => void): APEventUnsubscribe;
     public subscribe(type: "onAnyPacket", callback: (packet: ServerPacket) => void): APEventUnsubscribe;
     public subscribe(type: "onDisconnected", callback: () => void): APEventUnsubscribe;
 
@@ -170,12 +184,12 @@ export class SocketManager {
 
     #parsePackets(packets: ServerPacket[]): void {
         for (const packet of packets) {
-            this.#dispatch(packet.cmd, packet);
-            this.#dispatch("Any", packet);
+            this.#dispatchPacketEvent(`on${packet.cmd}`, packet);
+            this.#dispatchPacketEvent("onAnyPacket", packet);
         }
     }
 
-    #dispatch(type: ServerPacketType | "Any", packet: ServerPacket): void {
+    #dispatchPacketEvent(type: SubscriptionEvent, packet: ServerPacket): void {
         this.#events.dispatchEvent(new CustomEvent<ServerPacket>(type, { detail: packet }));
     }
 }
