@@ -115,7 +115,7 @@ export class SocketManager {
             // If this fails for whatever reason, we don't want to completely crash, but still set status.
             try {
                 this.#socket?.close();
-            } finally {}
+            } finally { /* empty */ }
         }
         this.#socket = null;
         this.#status = ConnectionStatus.Disconnected;
