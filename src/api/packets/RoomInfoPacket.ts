@@ -1,6 +1,6 @@
-import { ServerPacketType } from "../enums/CommandPacketTypes";
-import { AutoPermission, Permission } from "../enums/Permission";
-import { NetworkVersion } from "../types/NetworkVersion";
+import { ServerPacketType } from "../enums/CommandPacketTypes.ts";
+import { AutoPermission, Permission } from "../enums/Permission.ts";
+import { NetworkVersion } from "../types/NetworkVersion.ts";
 
 /**
  * Sent to clients when they connect to an Archipelago server, but before they authenticate.

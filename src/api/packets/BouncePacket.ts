@@ -1,5 +1,5 @@
-import { ClientPacketType } from "../enums/CommandPacketTypes";
-import { JSONSerializableData } from "../types/JSONSerializableData";
+import { ClientPacketType } from "../enums/CommandPacketTypes.ts";
+import { JSONSerializableData } from "../types/JSONSerializableData.ts";
 
 /**
  * Sent by the client to have the server forward data to all clients that satisfy any given search criteria.

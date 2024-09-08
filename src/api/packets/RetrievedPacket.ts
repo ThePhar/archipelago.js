@@ -1,5 +1,5 @@
-import { ServerPacketType } from "../enums/CommandPacketTypes";
-import { JSONSerializableData } from "../types/JSONSerializableData";
+import { ServerPacketType } from "../enums/CommandPacketTypes.ts";
+import { JSONSerializableData } from "../types/JSONSerializableData.ts";
 
 /**
  * Sent to clients as a response to a {@link GetPacket}.

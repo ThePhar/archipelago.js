@@ -1,5 +1,5 @@
-import { ServerPacketType } from "../enums/CommandPacketTypes";
-import { NetworkItem } from "../types/NetworkItem";
+import { ServerPacketType } from "../enums/CommandPacketTypes.ts";
+import { NetworkItem } from "../types/NetworkItem.ts";
 
 /**
  * Sent to clients when they receive an item.

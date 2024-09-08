@@ -1,4 +1,4 @@
-import { ClientPacketType } from "../enums/CommandPacketTypes";
+import { ClientPacketType } from "../enums/CommandPacketTypes.ts";
 
 /**
  * Sent by the client to request the data package from the server. Does not require client authentication. Sent

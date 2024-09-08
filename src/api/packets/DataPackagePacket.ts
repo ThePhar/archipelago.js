@@ -1,5 +1,5 @@
-import { ServerPacketType } from "../enums/CommandPacketTypes";
-import { DataPackage } from "../types/DataPackage";
+import { ServerPacketType } from "../enums/CommandPacketTypes.ts";
+import { DataPackage } from "../types/DataPackage.ts";
 
 /**
  * Sent to clients to provide what is known as a 'data package' which contains information to enable a client to most

@@ -1,7 +1,7 @@
-import { ClientPacket, NetworkPackets as NP, ServerPacket, ServerPacketType } from "../api";
-import { ConnectionStatus } from "../enums/ConnectionStatus";
-import { APEventEmitter, APEventUnsubscribe } from "../utils/APEventEmitter";
-import { IsomorphousWebSocket } from "../utils/IsomorphousWebSocket";
+import { ClientPacket, NetworkPackets as NP, ServerPacket, ServerPacketType } from "../api/index.ts";
+import { ConnectionStatus } from "../enums/ConnectionStatus.ts";
+import { APEventEmitter, APEventUnsubscribe } from "../utils/APEventEmitter.ts";
+import { IsomorphousWebSocket } from "../utils/IsomorphousWebSocket.ts";
 
 /**
  * Manages the web socket and API-level communication.

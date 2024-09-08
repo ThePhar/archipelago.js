@@ -1,5 +1,5 @@
-import { ClientStatus } from "../enums/ClientStatus";
-import { ClientPacketType } from "../enums/CommandPacketTypes";
+import { ClientStatus } from "../enums/ClientStatus.ts";
+import { ClientPacketType } from "../enums/CommandPacketTypes.ts";
 
 /**
  * Sent to the server to update on the client's status. Examples include readiness or goal completion.

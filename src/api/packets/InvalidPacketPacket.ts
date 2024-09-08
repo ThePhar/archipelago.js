@@ -1,5 +1,5 @@
-import { ServerPacketType } from "../enums/CommandPacketTypes";
-import { PacketProblemType } from "../enums/PacketProblemType";
+import { ServerPacketType } from "../enums/CommandPacketTypes.ts";
+import { PacketProblemType } from "../enums/PacketProblemType.ts";
 
 /** @internal */
 export interface InvalidCommandPacketPacket {

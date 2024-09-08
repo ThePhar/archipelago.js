@@ -1,6 +1,6 @@
-import { ServerPacketType } from "../enums/CommandPacketTypes";
-import { JSONMessagePart } from "../types/JSONMessagePart";
-import { NetworkItem } from "../types/NetworkItem";
+import { ServerPacketType } from "../enums/CommandPacketTypes.ts";
+import { JSONMessagePart } from "../types/JSONMessagePart.ts";
+import { NetworkItem } from "../types/NetworkItem.ts";
 
 /** @internal */
 export interface ItemSendJSONPacket {

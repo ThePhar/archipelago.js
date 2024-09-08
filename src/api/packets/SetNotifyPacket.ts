@@ -1,4 +1,4 @@
-import { ClientPacketType } from "../enums/CommandPacketTypes";
+import { ClientPacketType } from "../enums/CommandPacketTypes.ts";
 
 /**
  * Used to register your current session for receiving all {@link SetReplyPacket}s of certain keys to allow your client

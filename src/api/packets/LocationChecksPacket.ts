@@ -1,4 +1,4 @@
-import { ClientPacketType } from "../enums/CommandPacketTypes";
+import { ClientPacketType } from "../enums/CommandPacketTypes.ts";
 
 /**
  * Sent by the client to inform the server of locations that the client has checked. Used to inform the server of new

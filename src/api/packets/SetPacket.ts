@@ -1,6 +1,6 @@
-import { ClientPacketType } from "../enums/CommandPacketTypes";
-import { DataStorageOperation } from "../types/DataStorageOperations";
-import { JSONSerializableData } from "../types/JSONSerializableData";
+import { ClientPacketType } from "../enums/CommandPacketTypes.ts";
+import { DataStorageOperation } from "../types/DataStorageOperations.ts";
+import { JSONSerializableData } from "../types/JSONSerializableData.ts";
 
 /**
  * Sent by the client to write data to the server's data storage, that data can then be shared across worlds or just

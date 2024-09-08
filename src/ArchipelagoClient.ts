@@ -1,7 +1,7 @@
-import { ClientPacketType } from "./api";
-import { ConnectionStatus } from "./enums/ConnectionStatus";
-import { SocketManager } from "./managers/SocketManager";
-import { APEventEmitter } from "./utils/APEventEmitter";
+import { ClientPacketType } from "./api/index.ts";
+import { ConnectionStatus } from "./enums/ConnectionStatus.ts";
+import { SocketManager } from "./managers/SocketManager.ts";
+import { APEventEmitter } from "./utils/APEventEmitter.ts";
 
 /**
  * The client that connects to an Archipelago server and facilitates communication, listens for events, and managers

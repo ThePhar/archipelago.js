@@ -1,4 +1,4 @@
-import { ClientPacketType } from "../enums/CommandPacketTypes";
+import { ClientPacketType } from "../enums/CommandPacketTypes.ts";
 
 /**
  * Sent by the client to request a single or multiple values from the server's data storage, see the {@link SetPacket}

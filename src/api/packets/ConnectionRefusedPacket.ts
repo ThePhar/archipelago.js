@@ -1,5 +1,5 @@
-import { ServerPacketType } from "../enums/CommandPacketTypes";
-import { ConnectionError } from "../enums/ConnectionError";
+import { ServerPacketType } from "../enums/CommandPacketTypes.ts";
+import { ConnectionError } from "../enums/ConnectionError.ts";
 
 /**
  * Sent to clients when the server refuses connection. This is sent during the initial connection handshake.

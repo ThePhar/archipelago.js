@@ -1,5 +1,5 @@
-import { ClientPacketType } from "../enums/CommandPacketTypes";
-import { NetworkVersion } from "../types/NetworkVersion";
+import { ClientPacketType } from "../enums/CommandPacketTypes.ts";
+import { NetworkVersion } from "../types/NetworkVersion.ts";
 
 /**
  * Sent by the client to initiate a connection to an Archipelago game session. Sent automatically during

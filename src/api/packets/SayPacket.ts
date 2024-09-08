@@ -1,4 +1,4 @@
-import { ClientPacketType } from "../enums/CommandPacketTypes";
+import { ClientPacketType } from "../enums/CommandPacketTypes.ts";
 
 /**
  * Basic chat-type packet which sends text to the server to be distributed to other clients.

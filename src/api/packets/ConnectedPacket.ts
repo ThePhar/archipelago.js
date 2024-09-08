@@ -1,7 +1,7 @@
-import { ServerPacketType } from "../enums/CommandPacketTypes";
-import { NetworkPlayer } from "../types/NetworkPlayer";
-import { NetworkSlot } from "../types/NetworkSlot";
-import { SlotData } from "../types/SlotData";
+import { ServerPacketType } from "../enums/CommandPacketTypes.ts";
+import { NetworkPlayer } from "../types/NetworkPlayer.ts";
+import { NetworkSlot } from "../types/NetworkSlot.ts";
+import { SlotData } from "../types/SlotData.ts";
 
 /**
  * Sent to clients when the connection handshake is successfully completed.

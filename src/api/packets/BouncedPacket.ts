@@ -1,5 +1,5 @@
-import { ServerPacketType } from "../enums/CommandPacketTypes";
-import { JSONSerializableData } from "../types/JSONSerializableData";
+import { ServerPacketType } from "../enums/CommandPacketTypes.ts";
+import { JSONSerializableData } from "../types/JSONSerializableData.ts";
 
 /**
  * Sent to clients after a client requested this message be sent to them, more info in the {@link BouncePacket}.

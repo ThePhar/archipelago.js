@@ -1,6 +1,6 @@
-import { ServerPacketType } from "../enums/CommandPacketTypes";
-import { AutoPermission, Permission } from "../enums/Permission";
-import { NetworkPlayer } from "../types/NetworkPlayer";
+import { ServerPacketType } from "../enums/CommandPacketTypes.ts";
+import { AutoPermission, Permission } from "../enums/Permission.ts";
+import { NetworkPlayer } from "../types/NetworkPlayer.ts";
 
 /**
  * Sent when there is a need to update information about the present game session. Generally useful for **async** games.

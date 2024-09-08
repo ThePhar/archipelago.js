@@ -1,4 +1,4 @@
-import { ClientPacketType } from "../enums/CommandPacketTypes";
+import { ClientPacketType } from "../enums/CommandPacketTypes.ts";
 
 /**
  * Sent to server to request a {@link ReceivedItemsPacket} to resynchronize items if a "desync" ever occurs.

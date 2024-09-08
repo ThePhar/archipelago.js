@@ -1,4 +1,4 @@
-import { SlotType } from "../enums/SlotType";
+import { SlotType } from "../enums/SlotType.ts";
 
 /**
  * An object representing static information about a slot.
