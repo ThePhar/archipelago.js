@@ -25,9 +25,9 @@ export class SocketManager {
      * Get the URL of the current connection, including protocol.
      * @returns The current connection URL or `null` if not connected.
      */
-    public get url(): URL | null {
+    public get url(): string | null {
         if (this.#socket) {
-            return new URL(this.#socket.url);
+            return this.#socket.url;
         }
 
         return null;
@@ -78,8 +78,8 @@ export class SocketManager {
                     const timeout = setTimeout(() => {
                         unsub();
                         reject(new Error(
-                            "Client did not receive RoomInfo packet within 10 seconds of establishing connection. " +
-                            "Is this an Archipelago server?"
+                            "Client did not receive RoomInfo packet within 10 seconds of establishing connection. "
+                            + "Is this an Archipelago server?",
                         ));
                     }, 10_000);
                     const unsub = this.subscribe("onRoomInfo", () => {
@@ -90,7 +90,7 @@ export class SocketManager {
                 };
                 this.#socket.onerror = () => {
                     this.disconnect(false); // Already being closed.
-                    reject(new Error("Socket closed unexpectedly."));
+                    reject(new Error("Socket closed unexpectedly. Is there a server listening on that URL?"));
                 };
                 this.#socket.onmessage = (event: MessageEvent<string>) => {
                     this.#parsePackets(JSON.parse(event.data) as ServerPacket[]);
