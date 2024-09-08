@@ -23,7 +23,7 @@
     "scripts": {
         "clean": "rimraf -rf dist",
         "docs": "rimraf -rf docs && typedoc --options typedoc.json",
-        "build": "npm run clean && tsc && webpack",
+        "build": "npm run clean && tsc",
         "lint": "eslint src",
         "pack": "npm run build && npm pack --pack-destination packs"
     },
