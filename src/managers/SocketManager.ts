@@ -108,11 +108,14 @@ export class SocketManager {
     /**
      * Disconnect from the current Archipelago server and/or reset internal state.
      * @internal
-     * @param closeSocket
+     * @param closeSocket Should an attempt be made to close socket? Leave as default unless you know what you're doing.
      */
     public disconnect(closeSocket = true): void {
         if (closeSocket) {
-            this.#socket?.close();
+            // If this fails for whatever reason, we don't want to completely crash, but still set status.
+            try {
+                this.#socket?.close();
+            } finally {}
         }
         this.#socket = null;
         this.#status = ConnectionStatus.Disconnected;
