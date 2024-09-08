@@ -74,7 +74,18 @@ export class SocketManager {
                 this.#socket.onclose = this.disconnect.bind(this);
                 this.#socket.onopen = () => {
                     this.#status = ConnectionStatus.Unauthenticated;
-                    resolve();
+
+                    // Wait for RoomInfo packet or timeout after 10 seconds with no packet.
+                    const timeout = setTimeout(() => {
+                        unsub();
+                        reject(new Error("Client did not receive RoomInfo packet within 10 seconds of establishing " +
+                            "connection. Is this an Archipelago server?"));
+                    }, 10_000);
+                    const unsub = this.subscribe(ServerPacketType.RoomInfo, () => {
+                        clearTimeout(timeout);
+                        unsub();
+                        resolve();
+                    });
                 };
                 this.#socket.onerror = () => {
                     this.disconnect();
