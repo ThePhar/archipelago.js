@@ -1,18 +1,9 @@
-import * as NetworkProtocol from "./api/index.ts";
+export * as API from "./api/index.ts";
+export { ArchipelagoClient } from "./ArchipelagoClient.ts";
+export { CommonTags } from "./consts/CommonTags.ts";
+export { ConnectionStatus } from "./enums/ConnectionStatus.ts";
+export { SocketManager } from "./managers/SocketManager.ts";
+
 import { ArchipelagoClient } from "./ArchipelagoClient.ts";
-import { CommonTags } from "./consts/CommonTags.ts";
-import { ConnectionStatus } from "./enums/ConnectionStatus.ts";
-import { SocketManager } from "./managers/SocketManager.ts";
-
-export {
-    ArchipelagoClient,
-    CommonTags,
-    ConnectionStatus,
-    NetworkProtocol,
-};
-
-export type {
-    SocketManager,
-};
 
 export default ArchipelagoClient;
