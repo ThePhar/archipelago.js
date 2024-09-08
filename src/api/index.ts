@@ -22,11 +22,6 @@ import { NetworkSlot } from "./types/NetworkSlot";
 import { NetworkVersion } from "./types/NetworkVersion";
 import { SlotData } from "./types/SlotData";
 
-/**
- * A collection of constants, enums, interfaces, and types that are utilized by the Archipelago Network Protocol.
- * @namespace NetworkAPI
- * @internal
- */
 export {
     AutoPermission,
     ClientPacketType,
@@ -45,11 +40,6 @@ export {
     SlotType,
 };
 
-/**
- * A collection of constants, enums, interfaces, and types that are utilized by the Archipelago Network Protocol.
- * @namespace NetworkAPI
- * @internal
- */
 export type {
     ClientPacket,
     DataPackage,
