@@ -1,3 +1,4 @@
+import { ServerPacketType } from "../enums/CommandPacketTypes";
 import { JSONSerializableData } from "../types/JSONSerializableData";
 
 /**
@@ -6,7 +7,7 @@ import { JSONSerializableData } from "../types/JSONSerializableData";
  * @category Server Packets
  */
 export interface BouncedPacket {
-    readonly cmd: "Bounced"
+    readonly cmd: ServerPacketType.Bounced
 
     /** Optional. Game names this message is targeting. */
     readonly games?: string[]

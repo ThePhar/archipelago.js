@@ -1,3 +1,4 @@
+import { ServerPacketType } from "../enums/CommandPacketTypes";
 import { NetworkItem } from "../types/NetworkItem";
 
 /**
@@ -6,7 +7,7 @@ import { NetworkItem } from "../types/NetworkItem";
  * @category Server Packets
  */
 export interface ReceivedItemsPacket {
-    readonly cmd: "ReceivedItems"
+    readonly cmd: ServerPacketType.ReceivedItems
 
     /** The next empty slot in the list of items for the receiving client. Useful for tracking items. */
     readonly index: number

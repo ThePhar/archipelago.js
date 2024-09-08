@@ -1,6 +1,5 @@
 /**
  * Tags are represented as a list of strings, these are some of the most common tags.
- * @internal
  */
 export const CommonTags = {
     /**

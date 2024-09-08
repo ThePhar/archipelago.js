@@ -1,3 +1,4 @@
+import { ServerPacketType } from "../enums/CommandPacketTypes";
 import { AutoPermission, Permission } from "../enums/Permission";
 import { NetworkPlayer } from "../types/NetworkPlayer";
 
@@ -10,7 +11,7 @@ import { NetworkPlayer } from "../types/NetworkPlayer";
  * @category Server Packets
  */
 export interface RoomUpdatePacket {
-    readonly cmd: "RoomUpdate"
+    readonly cmd: ServerPacketType.RoomUpdate
 
     /** Number of hint points that the current player has. */
     readonly hint_points?: number

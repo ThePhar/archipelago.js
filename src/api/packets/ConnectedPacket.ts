@@ -1,3 +1,4 @@
+import { ServerPacketType } from "../enums/CommandPacketTypes";
 import { NetworkPlayer } from "../types/NetworkPlayer";
 import { NetworkSlot } from "../types/NetworkSlot";
 import { SlotData } from "../types/SlotData";
@@ -8,7 +9,7 @@ import { SlotData } from "../types/SlotData";
  * @category Server Packets
  */
 export interface ConnectedPacket {
-    readonly cmd: "Connected"
+    readonly cmd: ServerPacketType.Connected
 
     /** Your team number. See {@link NetworkPlayer} for more info on team number. */
     readonly team: number

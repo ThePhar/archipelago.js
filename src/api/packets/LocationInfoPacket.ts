@@ -1,3 +1,4 @@
+import { ServerPacketType } from "../enums/CommandPacketTypes";
 import { NetworkItem } from "../types/NetworkItem";
 
 /**
@@ -7,7 +8,7 @@ import { NetworkItem } from "../types/NetworkItem";
  * @category Server Packets
  */
 export interface LocationInfoPacket {
-    readonly cmd: "LocationInfo"
+    readonly cmd: ServerPacketType.LocationInfo
 
     /** Contains the list of item(s) in the location(s) scouted. */
     readonly locations: NetworkItem[]

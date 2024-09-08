@@ -1,3 +1,4 @@
+import { ServerPacketType } from "../enums/CommandPacketTypes";
 import { ConnectionError } from "../enums/ConnectionError";
 
 /**
@@ -6,7 +7,7 @@ import { ConnectionError } from "../enums/ConnectionError";
  * @category Server Packets
  */
 export interface ConnectionRefusedPacket {
-    readonly cmd: "ConnectionRefused"
+    readonly cmd: ServerPacketType.ConnectionRefused
 
     /**
      * Optional. When provided, should contain any one of the following {@link ConnectionError} enumerations or other

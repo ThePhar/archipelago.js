@@ -1,3 +1,5 @@
+import { ClientPacketType } from "../enums/CommandPacketTypes";
+
 /**
  * Sent to server to request a {@link ReceivedItemsPacket} to resynchronize items if a "desync" ever occurs.
  * @internal
@@ -5,5 +7,5 @@
  * @category Client Packets
  */
 export interface SyncPacket {
-    readonly cmd: "Sync"
+    readonly cmd: ClientPacketType.Sync
 }

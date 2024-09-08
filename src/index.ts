@@ -1,47 +1,16 @@
-export * from "./Client";
-export * from "./builders/SetOperationsBuilder";
-export * from "./consts/ClientStatus";
-export * from "./consts/CommandPacketType";
-export * from "./consts/CommonTags";
-export * from "./consts/ConnectionError";
-export * from "./consts/ConnectionStatus";
-export * from "./consts/CreateAsHintMode";
-export * from "./consts/ItemFlags";
-export * from "./consts/ItemsHandlingFlags";
-export * from "./consts/PacketProblemType";
-export * from "./consts/Permission";
-export * from "./consts/PrintJSONType";
-export * from "./consts/SlotType";
-export * from "./managers/DataManager";
-export * from "./managers/HintsManager";
-export * from "./managers/ItemsManager";
-export * from "./managers/LocationsManager";
-export * from "./managers/PlayersManager";
-export * from "./packets/BasePackets";
-export * from "./packets/BouncePacket";
-export * from "./packets/BouncedPacket";
-export * from "./packets/ConnectPacket";
-export * from "./packets/ConnectUpdatePacket";
-export * from "./packets/ConnectedPacket";
-export * from "./packets/ConnectionRefusedPacket";
-export * from "./packets/DataPackagePacket";
-export * from "./packets/GetDataPackagePacket";
-export * from "./packets/GetPacket";
-export * from "./packets/InvalidPacketPacket";
-export * from "./packets/LocationChecksPacket";
-export * from "./packets/LocationInfoPacket";
-export * from "./packets/LocationScoutsPacket";
-export * from "./packets/PrintJSONPacket";
-export * from "./packets/ReceivedItemsPacket";
-export * from "./packets/RetrievedPacket";
-export * from "./packets/RoomInfoPacket";
-export * from "./packets/RoomUpdatePacket";
-export * from "./packets/SayPacket";
-export * from "./packets/SetNotifyPacket";
-export * from "./packets/SetPacket";
-export * from "./packets/SetReplyPacket";
-export * from "./packets/StatusUpdatePacket";
-export * from "./packets/SyncPacket";
+import * as NetworkProtocol from "./api";
+import { ArchipelagoClient } from "./ArchipelagoClient";
+import { CommonTags } from "./consts/CommonTags";
+import { ConnectionStatus } from "./enums/ConnectionStatus";
+import { SocketManager } from "./managers/SocketManager";
 
-// Export types.
-export * from "./types";
+export {
+    ArchipelagoClient,
+    CommonTags,
+    ConnectionStatus,
+    NetworkProtocol,
+};
+
+export type {
+    SocketManager,
+};

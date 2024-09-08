@@ -1,3 +1,4 @@
+import { ServerPacketType } from "../enums/CommandPacketTypes";
 import { JSONSerializableData } from "../types/JSONSerializableData";
 
 /**
@@ -9,7 +10,7 @@ import { JSONSerializableData } from "../types/JSONSerializableData";
  * @category Server Packets
  */
 export interface RetrievedPacket {
-    readonly cmd: "Retrieved"
+    readonly cmd: ServerPacketType.Retrieved
 
     /** A key-value collection containing all the values for the keys requested in the {@link GetPacket}. */
     readonly keys: { [key: string]: JSONSerializableData }

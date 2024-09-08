@@ -1,3 +1,4 @@
+import { ClientPacketType } from "../enums/CommandPacketTypes";
 import { DataStorageOperation } from "../types/DataStorageOperations";
 import { JSONSerializableData } from "../types/JSONSerializableData";
 
@@ -11,7 +12,7 @@ import { JSONSerializableData } from "../types/JSONSerializableData";
  * @category Client Packets
  */
 export interface SetPacket {
-    readonly cmd: "Set"
+    readonly cmd: ClientPacketType.Set
 
     /** The default value to use in case the key has no value on the server. */
     readonly default: JSONSerializableData

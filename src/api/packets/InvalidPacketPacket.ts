@@ -1,8 +1,9 @@
+import { ServerPacketType } from "../enums/CommandPacketTypes";
 import { PacketProblemType } from "../enums/PacketProblemType";
 
 /** @internal */
 export interface InvalidCommandPacketPacket {
-    readonly cmd: "InvalidPacket"
+    readonly cmd: ServerPacketType.InvalidPacket
 
     /** The {@link PacketProblemType} that was detected in the packet. */
     readonly type: PacketProblemType.Command
@@ -16,7 +17,7 @@ export interface InvalidCommandPacketPacket {
 
 /** @internal */
 export interface InvalidArgumentsPacketPacket {
-    readonly cmd: "InvalidPacket"
+    readonly cmd: ServerPacketType.InvalidPacket
 
     /** The {@link PacketProblemType} that was detected in the packet. */
     readonly type: PacketProblemType.Arguments

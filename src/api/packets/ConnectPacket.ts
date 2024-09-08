@@ -1,3 +1,4 @@
+import { ClientPacketType } from "../enums/CommandPacketTypes";
 import { NetworkVersion } from "../types/NetworkVersion";
 
 /**
@@ -7,7 +8,7 @@ import { NetworkVersion } from "../types/NetworkVersion";
  * @category Client Packets
  */
 export interface ConnectPacket {
-    readonly cmd: "Connect"
+    readonly cmd: ClientPacketType.Connect
 
     /** If the game session requires a password, it should be passed here. */
     readonly password: string

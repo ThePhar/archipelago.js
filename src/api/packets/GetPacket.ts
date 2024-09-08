@@ -1,3 +1,5 @@
+import { ClientPacketType } from "../enums/CommandPacketTypes";
+
 /**
  * Sent by the client to request a single or multiple values from the server's data storage, see the {@link SetPacket}
  * for how to write values to the data storage. A {@link GetPacket} will be answered with a {@link RetrievedPacket}.
@@ -17,7 +19,7 @@
  * @category Client Packets
  */
 export interface GetPacket {
-    readonly cmd: "Get"
+    readonly cmd: ClientPacketType.Get
 
     /** Keys to retrieve the values for. */
     readonly keys: string[]

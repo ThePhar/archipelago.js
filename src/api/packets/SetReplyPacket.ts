@@ -1,3 +1,4 @@
+import { ServerPacketType } from "../enums/CommandPacketTypes";
 import { JSONSerializableData } from "../types/JSONSerializableData";
 
 /**
@@ -11,7 +12,7 @@ import { JSONSerializableData } from "../types/JSONSerializableData";
  * @category Server Packets
  */
 export interface SetReplyPacket {
-    readonly cmd: "SetReply"
+    readonly cmd: ServerPacketType.SetReply
 
     /** The key that was updated. */
     readonly key: string

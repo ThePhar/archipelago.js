@@ -1,3 +1,5 @@
+import { ClientPacketType } from "../enums/CommandPacketTypes";
+
 /**
  * Sent by the client to request the data package from the server. Does not require client authentication. Sent
  * automatically during {@link Client.connect}.
@@ -5,7 +7,7 @@
  * @category Client Packets
  */
 export interface GetDataPackagePacket {
-    readonly cmd: "GetDataPackage"
+    readonly cmd: ClientPacketType.GetDataPackage
 
     /**
      * Optional. If specified, will only send back the specified data.

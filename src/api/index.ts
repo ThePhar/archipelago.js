@@ -1,4 +1,3 @@
-import { CommonTags } from "./consts/CommonTags";
 import { ItemClassification } from "./consts/ItemClassification";
 import { ItemsHandlingFlags } from "./consts/ItemsHandlingFlags";
 import { ClientStatus } from "./enums/ClientStatus";
@@ -28,10 +27,22 @@ import { SlotData } from "./types/SlotData";
  * @namespace NetworkAPI
  * @internal
  */
-export default {
-    CommonTags,
+export {
+    AutoPermission,
+    ClientPacketType,
+    ClientStatus,
+    ConnectionError,
+    CreateAsHintMode,
+    DataStorageOperations,
     ItemClassification,
     ItemsHandlingFlags,
+    JSONMessageParts,
+    NetworkPackets,
+    PacketProblemType,
+    Permission,
+    PrintJSONType,
+    ServerPacketType,
+    SlotType,
 };
 
 /**
@@ -40,29 +51,16 @@ export default {
  * @internal
  */
 export type {
-    AutoPermission,
     ClientPacket,
-    ClientPacketType,
-    ClientStatus,
-    ConnectionError,
-    CreateAsHintMode,
     DataPackage,
-    DataStorageOperations,
     DeathLinkData,
     GamePackage,
-    JSONMessageParts,
     JSONSerializableData,
     NetworkHint,
     NetworkItem,
-    NetworkPackets,
     NetworkPlayer,
     NetworkSlot,
     NetworkVersion,
-    PacketProblemType,
-    Permission,
-    PrintJSONType,
     ServerPacket,
-    ServerPacketType,
     SlotData,
-    SlotType,
 };

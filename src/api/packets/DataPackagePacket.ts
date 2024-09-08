@@ -1,3 +1,4 @@
+import { ServerPacketType } from "../enums/CommandPacketTypes";
 import { DataPackage } from "../types/DataPackage";
 
 /**
@@ -8,7 +9,7 @@ import { DataPackage } from "../types/DataPackage";
  * @category Server Packets
  */
 export interface DataPackagePacket {
-    readonly cmd: "DataPackage"
+    readonly cmd: ServerPacketType.DataPackage
 
     /** The data package as an object of {@link DataPackage}. */
     readonly data: DataPackage

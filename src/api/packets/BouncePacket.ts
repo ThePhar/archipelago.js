@@ -1,3 +1,4 @@
+import { ClientPacketType } from "../enums/CommandPacketTypes";
 import { JSONSerializableData } from "../types/JSONSerializableData";
 
 /**
@@ -6,7 +7,7 @@ import { JSONSerializableData } from "../types/JSONSerializableData";
  * @category Client Packets
  */
 export interface BouncePacket {
-    readonly cmd: "Bounce"
+    readonly cmd: ClientPacketType.Bounce
 
     /** Any data you want to send. */
     readonly data: JSONSerializableData

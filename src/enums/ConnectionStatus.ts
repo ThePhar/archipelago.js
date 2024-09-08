@@ -1,7 +1,7 @@
 /**
  * A const of the current connection status to the Archipelago server.
  */
-export const enum CONNECTION_STATUS {
+export const enum ConnectionStatus {
     /** Currently not connected to any Archipelago server. */
     Disconnected = "Disconnected",
 

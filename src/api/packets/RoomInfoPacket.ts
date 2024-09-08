@@ -1,3 +1,4 @@
+import { ServerPacketType } from "../enums/CommandPacketTypes";
 import { AutoPermission, Permission } from "../enums/Permission";
 import { NetworkVersion } from "../types/NetworkVersion";
 
@@ -7,7 +8,7 @@ import { NetworkVersion } from "../types/NetworkVersion";
  * @category Server Packets
  */
 export interface RoomInfoPacket {
-    readonly cmd: "RoomInfo"
+    readonly cmd: ServerPacketType.RoomInfo
 
     /** Object denoting the version of Archipelago which the server is running. */
     readonly version: NetworkVersion

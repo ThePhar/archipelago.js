@@ -1,4 +1,5 @@
 import { CreateAsHintMode } from "../enums/CreateAsHintMode";
+import { ClientPacketType } from "../enums/CommandPacketTypes";
 
 /**
  * Sent by the client to inform the server of locations the client has seen, but not checked. Useful in cases in which
@@ -8,7 +9,7 @@ import { CreateAsHintMode } from "../enums/CreateAsHintMode";
  * @category Client Packets
  */
 export interface LocationScoutsPacket {
-    readonly cmd: "LocationScouts"
+    readonly cmd: ClientPacketType.LocationScouts
 
     /**
      * The ids of the locations seen by the client. May contain any number of locations, even ones sent before;

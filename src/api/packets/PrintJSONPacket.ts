@@ -1,9 +1,10 @@
+import { ServerPacketType } from "../enums/CommandPacketTypes";
 import { JSONMessagePart } from "../types/JSONMessagePart";
 import { NetworkItem } from "../types/NetworkItem";
 
 /** @internal */
 export interface ItemSendJSONPacket {
-    readonly cmd: "PrintJSON"
+    readonly cmd: ServerPacketType.PrintJSON
 
     /** May be present to indicate the nature of this message. Known types are specified in {@link PRINT_JSON_TYPE}. */
     readonly type: "ItemSend"
@@ -20,7 +21,7 @@ export interface ItemSendJSONPacket {
 
 /** @internal */
 export interface ItemCheatJSONPacket {
-    readonly cmd: "PrintJSON"
+    readonly cmd: ServerPacketType.PrintJSON
 
     /** May be present to indicate the nature of this message. Known types are specified in {@link PRINT_JSON_TYPE}. */
     readonly type: "ItemCheat"
@@ -40,7 +41,7 @@ export interface ItemCheatJSONPacket {
 
 /** @internal */
 export interface HintJSONPacket {
-    readonly cmd: "PrintJSON"
+    readonly cmd: ServerPacketType.PrintJSON
 
     /** May be present to indicate the nature of this message. Known types are specified in {@link PRINT_JSON_TYPE}. */
     readonly type: "Hint"
@@ -60,7 +61,7 @@ export interface HintJSONPacket {
 
 /** @internal */
 export interface JoinJSONPacket {
-    readonly cmd: "PrintJSON"
+    readonly cmd: ServerPacketType.PrintJSON
 
     /** May be present to indicate the nature of this message. Known types are specified in {@link PRINT_JSON_TYPE}. */
     readonly type: "Join"
@@ -80,7 +81,7 @@ export interface JoinJSONPacket {
 
 /** @internal */
 export interface PartJSONPacket {
-    readonly cmd: "PrintJSON"
+    readonly cmd: ServerPacketType.PrintJSON
 
     /** May be present to indicate the nature of this message. Known types are specified in {@link PRINT_JSON_TYPE}. */
     readonly type: "Part"
@@ -97,7 +98,7 @@ export interface PartJSONPacket {
 
 /** @internal */
 export interface ChatJSONPacket {
-    readonly cmd: "PrintJSON"
+    readonly cmd: ServerPacketType.PrintJSON
 
     /** May be present to indicate the nature of this message. Known types are specified in {@link PRINT_JSON_TYPE}. */
     readonly type: "Chat"
@@ -117,7 +118,7 @@ export interface ChatJSONPacket {
 
 /** @internal */
 export interface ServerChatJSONPacket {
-    readonly cmd: "PrintJSON"
+    readonly cmd: ServerPacketType.PrintJSON
 
     /** May be present to indicate the nature of this message. Known types are specified in {@link PRINT_JSON_TYPE}. */
     readonly type: "ServerChat"
@@ -131,7 +132,7 @@ export interface ServerChatJSONPacket {
 
 /** @internal */
 export interface TutorialJSONPacket {
-    readonly cmd: "PrintJSON"
+    readonly cmd: ServerPacketType.PrintJSON
 
     /** May be present to indicate the nature of this message. Known types are specified in {@link PRINT_JSON_TYPE}. */
     readonly type: "Tutorial"
@@ -142,7 +143,7 @@ export interface TutorialJSONPacket {
 
 /** @internal */
 export interface TagsChangedJSONPacket {
-    readonly cmd: "PrintJSON"
+    readonly cmd: ServerPacketType.PrintJSON
 
     /** May be present to indicate the nature of this message. Known types are specified in {@link PRINT_JSON_TYPE}. */
     readonly type: "TagsChanged"
@@ -162,7 +163,7 @@ export interface TagsChangedJSONPacket {
 
 /** @internal */
 export interface CommandResultJSONPacket {
-    readonly cmd: "PrintJSON"
+    readonly cmd: ServerPacketType.PrintJSON
 
     /** May be present to indicate the nature of this message. Known types are specified in {@link PRINT_JSON_TYPE}. */
     readonly type: "CommandResult"
@@ -173,7 +174,7 @@ export interface CommandResultJSONPacket {
 
 /** @internal */
 export interface AdminCommandResultJSONPacket {
-    readonly cmd: "PrintJSON"
+    readonly cmd: ServerPacketType.PrintJSON
 
     /** May be present to indicate the nature of this message. Known types are specified in {@link PRINT_JSON_TYPE}. */
     readonly type: "AdminCommandResult"
@@ -184,7 +185,7 @@ export interface AdminCommandResultJSONPacket {
 
 /** @internal */
 export interface GoalJSONPacket {
-    readonly cmd: "PrintJSON"
+    readonly cmd: ServerPacketType.PrintJSON
 
     /** May be present to indicate the nature of this message. Known types are specified in {@link PRINT_JSON_TYPE}. */
     readonly type: "Goal"
@@ -201,7 +202,7 @@ export interface GoalJSONPacket {
 
 /** @internal */
 export interface ReleaseJSONPacket {
-    readonly cmd: "PrintJSON"
+    readonly cmd: ServerPacketType.PrintJSON
 
     /** May be present to indicate the nature of this message. Known types are specified in {@link PRINT_JSON_TYPE}. */
     readonly type: "Release"
@@ -218,7 +219,7 @@ export interface ReleaseJSONPacket {
 
 /** @internal */
 export interface CollectJSONPacket {
-    readonly cmd: "PrintJSON"
+    readonly cmd: ServerPacketType.PrintJSON
 
     /** May be present to indicate the nature of this message. Known types are specified in {@link PRINT_JSON_TYPE}. */
     readonly type: "Collect"
@@ -235,7 +236,7 @@ export interface CollectJSONPacket {
 
 /** @internal */
 export interface CountdownJSONPacket {
-    readonly cmd: "PrintJSON"
+    readonly cmd: ServerPacketType.PrintJSON
 
     /** May be present to indicate the nature of this message. Known types are specified in {@link PRINT_JSON_TYPE}. */
     readonly type: "Countdown"
