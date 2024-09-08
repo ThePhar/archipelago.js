@@ -1,6 +1,0 @@
-# Ignore build directory for linting.
-dist
-
-# Ignore compiled javascript.
-*.js
-*.jsx

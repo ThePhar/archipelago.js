@@ -13,7 +13,7 @@ export default tslint.config(
     stylistic.configs["recommended-flat"],
     jsdoc.configs["flat/recommended-typescript"],
     {
-        ignores: ["node_modules", "dist"],
+        ignores: ["node_modules", "dist", "*.js"],
         plugins: {
             "@stylistic": stylistic,
             "simple-import-sort": importSort,

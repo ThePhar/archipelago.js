@@ -12,17 +12,13 @@ let IsomorphousWebSocket: typeof WebSocket | null = null;
 
 if (typeof window !== "undefined") {
     IsomorphousWebSocket = window.WebSocket || window.MozWebSocket;
-}
-else if (typeof global !== "undefined") {
+} else if (typeof global !== "undefined") {
     IsomorphousWebSocket = global.WebSocket || global.MozWebSocket;
-}
-else if (typeof self !== "undefined") {
+} else if (typeof self !== "undefined") {
     IsomorphousWebSocket = self.WebSocket || self.MozWebSocket;
-}
-else if (typeof WebSocket !== "undefined") {
+} else if (typeof WebSocket !== "undefined") {
     IsomorphousWebSocket = WebSocket;
-}
-else if (typeof MozWebSocket !== "undefined") {
+} else if (typeof MozWebSocket !== "undefined") {
     IsomorphousWebSocket = MozWebSocket as WebSocket;
 }
 

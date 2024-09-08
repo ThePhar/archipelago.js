@@ -1,5 +1,5 @@
-import { CreateAsHintMode } from "../enums/CreateAsHintMode";
 import { ClientPacketType } from "../enums/CommandPacketTypes";
+import { CreateAsHintMode } from "../enums/CreateAsHintMode";
 
 /**
  * Sent by the client to inform the server of locations the client has seen, but not checked. Useful in cases in which
