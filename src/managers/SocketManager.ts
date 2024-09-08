@@ -87,7 +87,7 @@ export class SocketManager {
                     });
                 };
                 this.#socket.onerror = () => {
-                    this.disconnect();
+                    this.disconnect(false); // Already being closed.
                     reject(new Error("Socket closed unexpectedly."));
                 };
                 this.#socket.onmessage = (event: MessageEvent<string>) => {
@@ -107,8 +107,10 @@ export class SocketManager {
      * Disconnect from the current Archipelago server and/or reset internal state.
      * @internal
      */
-    public disconnect(): void {
-        this.#socket?.close();
+    public disconnect(closeSocket = true): void {
+        if (closeSocket) {
+            this.#socket?.close();
+        }
         this.#socket = null;
         this.#status = ConnectionStatus.Disconnected;
 
