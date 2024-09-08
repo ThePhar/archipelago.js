@@ -1,13 +1,11 @@
-import { AutoPermission, Permission, ServerPacketType } from "../api/index.ts";
+import { AutoPermission, Permission } from "../api/index.ts";
 import { ArchipelagoClient } from "../ArchipelagoClient.ts";
-import { APEventEmitter } from "../utils/APEventEmitter.ts";
 
 /**
  * Manages room data such as room settings, containing games, data packages, etc.
  */
 export class RoomManager {
     #client: ArchipelagoClient;
-    #events: APEventEmitter;
     #serverVersion = { major: -1, minor: -1, build: -1 };
     #generatorVersion = { major: -1, minor: -1, build: -1 };
     #serverTags: string[] = [];
@@ -17,29 +15,27 @@ export class RoomManager {
     #games: string[] = [];
     #seed: string = "";
     #permissions: {
-        release: AutoPermission
-        collect: AutoPermission
-        remaining: Permission
+        release: AutoPermission | number
+        collect: AutoPermission | number
+        remaining: Permission | number
     } = { release: AutoPermission.Disabled, collect: AutoPermission.Disabled, remaining: Permission.Disabled };
 
     /**
      * Creates a new RoomManager.
      * @internal
      * @param client The {@link ArchipelagoClient} object this object is attached to.
-     * @param events The {@link APEventEmitter} object attached to {@link ArchipelagoClient}.
      */
-    public constructor(client: ArchipelagoClient, events: APEventEmitter) {
+    public constructor(client: ArchipelagoClient) {
         this.#client = client;
-        this.#events = events;
         this.#initializeFields();
 
         // If a disconnection event happens, reset all fields.
-        this.#events.addEventListener("_Disconnected", () => {
+        this.#client.socket.subscribe("onDisconnected", () => {
             this.#initializeFields();
         });
 
         // Update fields based on room info.
-        this.#client.socket.subscribe(ServerPacketType.RoomInfo, (packet) => {
+        this.#client.socket.subscribe("onRoomInfo", (packet) => {
             this.#serverVersion = {
                 major: packet.version.major,
                 minor: packet.version.minor,
@@ -102,18 +98,21 @@ export class RoomManager {
      * @returns The string representation of the current release option.
      * @remarks If the bit representation is required, use `permissionBitflags` property instead.
      */
-    public get releaseMode(): "enabled" | "disabled" | "goal" | "auto" | "auto-enabled" {
+    public get releaseMode(): "enabled" | "disabled" | "goal" | "auto" | "auto_enabled" | "unknown" {
         switch (this.#permissions.release) {
             case AutoPermission.Auto:
                 return "auto";
             case AutoPermission.AutoEnabled:
-                return "auto-enabled";
+                return "auto_enabled";
             case AutoPermission.Disabled:
                 return "disabled";
             case AutoPermission.Enabled:
                 return "enabled";
             case AutoPermission.Goal:
                 return "goal";
+            default:
+                console.warn(`[Archipelago] Unknown release permission mode: ${this.#permissions.release}`);
+                return "unknown";
         }
     }
 
@@ -122,18 +121,21 @@ export class RoomManager {
      * @returns The string representation of the current collect option.
      * @remarks If the bit representation is required, use `permissionBitflags` property instead.
      */
-    public get collectMode(): "enabled" | "disabled" | "goal" | "auto" | "auto-enabled" {
+    public get collectMode(): "enabled" | "disabled" | "goal" | "auto" | "auto_enabled" | "unknown" {
         switch (this.#permissions.collect) {
             case AutoPermission.Auto:
                 return "auto";
             case AutoPermission.AutoEnabled:
-                return "auto-enabled";
+                return "auto_enabled";
             case AutoPermission.Disabled:
                 return "disabled";
             case AutoPermission.Enabled:
                 return "enabled";
             case AutoPermission.Goal:
                 return "goal";
+            default:
+                console.warn(`[Archipelago] Unknown collect permission mode: ${this.#permissions.collect}`);
+                return "unknown";
         }
     }
 
@@ -142,7 +144,7 @@ export class RoomManager {
      * @returns The string representation of the current remaining option.
      * @remarks If the bit representation is required, use `permissionBitflags` property instead.
      */
-    public get remainingMode(): "enabled" | "disabled" | "goal" {
+    public get remainingMode(): "enabled" | "disabled" | "goal" | "unknown" {
         switch (this.#permissions.remaining) {
             case Permission.Disabled:
                 return "disabled";
@@ -150,6 +152,9 @@ export class RoomManager {
                 return "enabled";
             case Permission.Goal:
                 return "goal";
+            default:
+                console.warn(`[Archipelago] Unknown remaining permission mode: ${this.#permissions.remaining}`);
+                return "unknown";
         }
     }
 

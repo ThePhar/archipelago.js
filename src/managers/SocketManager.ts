@@ -77,10 +77,12 @@ export class SocketManager {
                     // Wait for RoomInfo packet or timeout after 10 seconds with no packet.
                     const timeout = setTimeout(() => {
                         unsub();
-                        reject(new Error("Client did not receive RoomInfo packet within 10 seconds of establishing " +
-                            "connection. Is this an Archipelago server?"));
+                        reject(new Error(
+                            "Client did not receive RoomInfo packet within 10 seconds of establishing connection. " +
+                            "Is this an Archipelago server?"
+                        ));
                     }, 10_000);
-                    const unsub = this.subscribe(ServerPacketType.RoomInfo, () => {
+                    const unsub = this.subscribe("onRoomInfo", () => {
                         clearTimeout(timeout);
                         unsub();
                         resolve();
@@ -106,6 +108,7 @@ export class SocketManager {
     /**
      * Disconnect from the current Archipelago server and/or reset internal state.
      * @internal
+     * @param closeSocket
      */
     public disconnect(closeSocket = true): void {
         if (closeSocket) {
@@ -114,7 +117,7 @@ export class SocketManager {
         this.#socket = null;
         this.#status = ConnectionStatus.Disconnected;
 
-        this.#events.dispatchEvent(new Event("_Disconnected"));
+        this.#events.dispatchEvent(new Event("onDisconnected"));
     }
 
     /**
@@ -131,29 +134,33 @@ export class SocketManager {
         this.#socket.send(JSON.stringify(packets));
     }
 
-    public subscribe(type: ServerPacketType.Bounced, callback: (packet: NP.BouncedPacket) => void): APEventUnsubscribe;
-    public subscribe(type: ServerPacketType.Connected, callback: (packet: NP.ConnectedPacket) => void): APEventUnsubscribe;
-    public subscribe(type: ServerPacketType.ConnectionRefused, callback: (packet: NP.ConnectionRefusedPacket) => void): APEventUnsubscribe;
-    public subscribe(type: ServerPacketType.DataPackage, callback: (packet: NP.DataPackagePacket) => void): APEventUnsubscribe;
-    public subscribe(type: ServerPacketType.InvalidPacket, callback: (packet: NP.InvalidPacketPacket) => void): APEventUnsubscribe;
-    public subscribe(type: ServerPacketType.LocationInfo, callback: (packet: NP.LocationInfoPacket) => void): APEventUnsubscribe;
-    public subscribe(type: ServerPacketType.PrintJSON, callback: (packet: NP.PrintJSONPacket) => void): APEventUnsubscribe;
-    public subscribe(type: ServerPacketType.ReceivedItems, callback: (packet: NP.ReceivedItemsPacket) => void): APEventUnsubscribe;
-    public subscribe(type: ServerPacketType.Retrieved, callback: (packet: NP.RetrievedPacket) => void): APEventUnsubscribe;
-    public subscribe(type: ServerPacketType.RoomInfo, callback: (packet: NP.RoomInfoPacket) => void): APEventUnsubscribe;
-    public subscribe(type: ServerPacketType.RoomUpdate, callback: (packet: NP.RoomUpdatePacket) => void): APEventUnsubscribe;
-    public subscribe(type: ServerPacketType.SetReply, callback: (packet: NP.SetReplyPacket) => void): APEventUnsubscribe;
-    public subscribe(type: "Any", callback: (packet: ServerPacket) => void): APEventUnsubscribe;
+    public subscribe(type: "onBounced", callback: (packet: NP.BouncedPacket) => void): APEventUnsubscribe;
+    public subscribe(type: "onConnected", callback: (packet: NP.ConnectedPacket) => void): APEventUnsubscribe;
+    public subscribe(type: "onConnectionRefused", callback: (packet: NP.ConnectionRefusedPacket) => void): APEventUnsubscribe;
+    public subscribe(type: "onDataPackage", callback: (packet: NP.DataPackagePacket) => void): APEventUnsubscribe;
+    public subscribe(type: "onInvalidPacket", callback: (packet: NP.InvalidPacketPacket) => void): APEventUnsubscribe;
+    public subscribe(type: "onLocationInfo", callback: (packet: NP.LocationInfoPacket) => void): APEventUnsubscribe;
+    public subscribe(type: "onPrintJSON", callback: (packet: NP.PrintJSONPacket) => void): APEventUnsubscribe;
+    public subscribe(type: "onReceivedItems", callback: (packet: NP.ReceivedItemsPacket) => void): APEventUnsubscribe;
+    public subscribe(type: "onRetrieved", callback: (packet: NP.RetrievedPacket) => void): APEventUnsubscribe;
+    public subscribe(type: "onRoomInfo", callback: (packet: NP.RoomInfoPacket) => void): APEventUnsubscribe;
+    public subscribe(type: "onRoomUpdate", callback: (packet: NP.RoomUpdatePacket) => void): APEventUnsubscribe;
+    public subscribe(type: "onSetReply", callback: (packet: NP.SetReplyPacket) => void): APEventUnsubscribe;
+    public subscribe(type: "onAnyPacket", callback: (packet: ServerPacket) => void): APEventUnsubscribe;
+    public subscribe(type: "onDisconnected", callback: () => void): APEventUnsubscribe;
 
     /**
-     * Subscribe to an incoming server packet event.
+     * Subscribe to an incoming server event.
      * @internal
-     * @param type The type of packet to listen for. If given `Any`, callback will fire when any server packet is
-     * received (fires after individual packets are processed).
-     * @param callback The callback to run when the event fires. Callback argument includes packet.
+     * @param type The type of packet/event to listen for.
+     *
+     * Recognized events includes any individual Network Protocol packet, `Any` which fires whenever any network
+     * protocol packet is received, or `OnDisconnect` which fires if the socket closes for whatever reason.
+     * @param callback The callback to run when the event fires. Callback argument includes packet (excluding
+     * `OnDisconnect`).
      * @returns An unsubscribe function to remove event listener, when no longer needed.
      */
-    public subscribe(type: ServerPacketType | "Any", callback: (packet: never) => void): APEventUnsubscribe {
+    public subscribe(type: SubscriptionEvent, callback: (packet: never) => void | (() => void)): APEventUnsubscribe {
         const subscribe = this.#events.createSubscriber<ServerPacket>(type);
         return subscribe(callback as (packet: ServerPacket) => void);
     }
@@ -169,3 +176,19 @@ export class SocketManager {
         this.#events.dispatchEvent(new CustomEvent<ServerPacket>(type, { detail: packet }));
     }
 }
+
+type SubscriptionEvent =
+    | "onBounced"
+    | "onConnected"
+    | "onConnectionRefused"
+    | "onDataPackage"
+    | "onInvalidPacket"
+    | "onLocationInfo"
+    | "onPrintJSON"
+    | "onReceivedItems"
+    | "onRetrieved"
+    | "onRoomInfo"
+    | "onRoomUpdate"
+    | "onSetReply"
+    | "onAnyPacket"
+    | "onDisconnected";

@@ -21,7 +21,7 @@ export class ArchipelagoClient {
     /**
      * Manages room data such as room settings, containing games, data packages, etc.
      */
-    public readonly room: RoomManager = new RoomManager(this, this.#events);
+    public readonly room: RoomManager = new RoomManager(this);
 
     /**
      * Send a chat message to the server.
