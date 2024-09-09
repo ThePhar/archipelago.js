@@ -1,8 +1,9 @@
-import { ClientPacket, ServerPacket } from "../api/index.ts";
+import { ClientPacket, ClientPacketType, ItemsHandlingFlags, ServerPacket } from "../api";
 import {
     BouncedPacket,
     ConnectedPacket,
     ConnectionRefusedPacket,
+    ConnectPacket,
     DataPackagePacket,
     InvalidPacketPacket,
     LocationInfoPacket,
@@ -12,8 +13,10 @@ import {
     RoomInfoPacket,
     RoomUpdatePacket,
     SetReplyPacket,
-} from "../api/packets/index.ts";
+} from "../api/packets";
+import { CommonTags } from "../consts/CommonTags.ts";
 import { ConnectionStatus } from "../enums/ConnectionStatus.ts";
+import { ConnectArguments } from "../types/ConnectArguments.ts";
 import { APEventEmitter, APEventUnsubscribe } from "../utils/APEventEmitter.ts";
 import { IsomorphousWebSocket } from "../utils/IsomorphousWebSocket.ts";
 
@@ -120,6 +123,88 @@ export class SocketManager {
     }
 
     /**
+     * Attempt to authenticate and connect to a slot on an already connected Archipelago server.
+     * @internal
+     * @param name The slot name chosen by the player prior to generation.
+     * @param game The name of the game the player is connecting from. Validation is skipped if connecting with a
+     * supported tag (e.g., `TextOnly`, `Tracker`, or `HintGame`).
+     * @param options Additional optional connection arguments, see {@link ConnectArguments} for more details.
+     */
+    public async authenticate(name: string, game: string, options: ConnectArguments = {}): Promise<void> {
+        if (this.#status === ConnectionStatus.Disconnected) {
+            throw Error("Cannot authenticate until connected to server.");
+        }
+
+        if (name === "") {
+            throw Error("Slot name cannot be blank.");
+        }
+
+        const password = options.password || "";
+        const uuid = options.uuid || this.#genUUIDv4();
+        const tags = new Set(options.tags || []);
+        const version = options.targetVersion || { major: 0, minor: 5, build: 0 }; // Targeted version for this library.
+        const slotData = options.requestSlotData || true;
+
+        // Tag shortcuts.
+        if (options.isHintGame) {
+            tags.add(CommonTags.HINT_GAME);
+        } else if (options.isTracker) {
+            tags.add(CommonTags.TRACKER);
+        } else if (options.isTextOnly) {
+            tags.add(CommonTags.TEXT_ONLY);
+        }
+
+        // Items handling shorthands.
+        let itemsHandling: number = ItemsHandlingFlags.REMOTE_MINIMAL;
+        switch (options.subscribedItemEvents || "all") {
+            case "all":
+                itemsHandling = ItemsHandlingFlags.REMOTE_ALL;
+                break;
+            case "exclude-self":
+                itemsHandling = ItemsHandlingFlags.REMOTE_DIFFERENT_WORLDS & ItemsHandlingFlags.REMOTE_STARTING_INVENTORY;
+                break;
+            case "exclude-starting-inventory":
+                itemsHandling = ItemsHandlingFlags.REMOTE_DIFFERENT_WORLDS & ItemsHandlingFlags.REMOTE_OWN_WORLD;
+                break;
+            case "external-only":
+                itemsHandling = ItemsHandlingFlags.REMOTE_DIFFERENT_WORLDS;
+                break;
+            case "minimal":
+                itemsHandling = ItemsHandlingFlags.REMOTE_MINIMAL;
+                break;
+        }
+
+        const connectPacket: ConnectPacket = {
+            cmd: ClientPacketType.Connect,
+            game,
+            name,
+            password,
+            slot_data: slotData,
+            items_handling: itemsHandling,
+            tags: Array.from(tags),
+            uuid,
+            version: { ...version, class: "Version" },
+        };
+
+        await new Promise<void>((resolve, reject) => {
+            // Setup event handlers.
+            const unsubConnect = this.subscribe("onConnected", () => {
+                this.#status = ConnectionStatus.Connected;
+                unsubConnect();
+                unsubRefused();
+                resolve(); // TODO: Should return self-player information.
+            });
+            const unsubRefused = this.subscribe("onConnectionRefused", (packet) => {
+                unsubConnect();
+                unsubRefused();
+                reject(new Error(`Connection was refused. Reason(s): [${packet.errors?.join(", ")}]`));
+            });
+
+            this.send(connectPacket);
+        });
+    }
+
+    /**
      * Disconnect from the current Archipelago server and/or reset internal state.
      * @internal
      * @param closeSocket Should an attempt be made to close socket? Leave as default unless you know what you're doing.
@@ -191,6 +276,19 @@ export class SocketManager {
 
     #dispatchPacketEvent(type: SubscriptionEvent, packet: ServerPacket): void {
         this.#events.dispatchEvent(new CustomEvent<ServerPacket>(type, { detail: packet }));
+    }
+
+    #genUUIDv4(): string {
+        const uuid: (number | string)[] = [];
+        for (let i = 0; i < 36; i++) {
+            uuid.push(Math.floor(Math.random() * 16));
+        }
+
+        uuid[14] = 4;
+        uuid[19] = (uuid[19] as number) &= ~(1 << 2);
+        uuid[19] = uuid[19] |= (1 << 3);
+        uuid[8] = uuid[13] = uuid[18] = uuid[23] = "-"; // Separators.
+        return uuid.map((d) => d.toString(16)).join("");
     }
 }
 

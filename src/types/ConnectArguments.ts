@@ -50,6 +50,7 @@ export type ConnectArguments = {
      * - `exclude-starting-inventory` - Sends item events from all worlds (including own), but does not include starting
      * inventory.
      * - `all` - All item events are sent to the client.
+     * @default "all"
      */
     readonly subscribedItemEvents?: "minimal" | "external-only" | "exclude-self" | "exclude-starting-inventory" | "all"
 
