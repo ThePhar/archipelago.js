@@ -1,7 +1,7 @@
 import { ServerPacketType } from "../enums/CommandPacketTypes.ts";
 import { NetworkPlayer } from "../types/NetworkPlayer.ts";
 import { NetworkSlot } from "../types/NetworkSlot.ts";
-import { SlotData } from "../types/SlotData.ts";
+import { AbstractSlotData } from "../types/AbstractSlotData.ts";
 
 /**
  * Sent to clients when the connection handshake is successfully completed.
@@ -30,7 +30,7 @@ export interface ConnectedPacket {
     readonly checked_locations: number[]
 
     /** Contains a json object for slot related data, differs per game. Empty if not required. */
-    readonly slot_data: SlotData
+    readonly slot_data: AbstractSlotData
 
     /** Object of each slot with their {@link NetworkSlot} information. */
     readonly slot_info: { [slot: number]: NetworkSlot }

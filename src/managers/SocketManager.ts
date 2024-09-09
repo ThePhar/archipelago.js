@@ -1,4 +1,4 @@
-import { ClientPacket, ClientPacketType, ItemsHandlingFlags, ServerPacket } from "../api";
+import { AbstractSlotData, ClientPacket, ClientPacketType, ItemsHandlingFlags, ServerPacket } from "../api";
 import {
     BouncedPacket,
     ConnectedPacket,
@@ -19,6 +19,7 @@ import { ConnectionStatus } from "../enums/ConnectionStatus.ts";
 import { ConnectArguments } from "../types/ConnectArguments.ts";
 import { APEventEmitter, APEventUnsubscribe } from "../utils/APEventEmitter.ts";
 import { IsomorphousWebSocket } from "../utils/IsomorphousWebSocket.ts";
+import { ArchipelagoClient } from "../ArchipelagoClient.ts";
 
 /**
  * Manages the web socket and API-level communication.
@@ -26,7 +27,8 @@ import { IsomorphousWebSocket } from "../utils/IsomorphousWebSocket.ts";
  * or socket directly, but it is exposed if necessary.
  */
 export class SocketManager {
-    #events: APEventEmitter;
+    readonly #client: ArchipelagoClient<AbstractSlotData>;
+    readonly #events: APEventEmitter;
     #socket: WebSocket | null = null;
     #status: ConnectionStatus = ConnectionStatus.Disconnected;
 
@@ -53,9 +55,11 @@ export class SocketManager {
     /**
      * Creates a new SocketManager.
      * @internal
+     * @param client The Archipelago client.
      * @param events The {@link APEventEmitter} object attached to {@link ArchipelagoClient}.
      */
-    public constructor(events: APEventEmitter) {
+    public constructor(client: ArchipelagoClient<AbstractSlotData>, events: APEventEmitter) {
+        this.#client = client;
         this.#events = events;
     }
 
@@ -126,11 +130,9 @@ export class SocketManager {
      * Attempt to authenticate and connect to a slot on an already connected Archipelago server.
      * @internal
      * @param name The slot name chosen by the player prior to generation.
-     * @param game The name of the game the player is connecting from. Validation is skipped if connecting with a
-     * supported tag (e.g., `TextOnly`, `Tracker`, or `HintGame`).
      * @param options Additional optional connection arguments, see {@link ConnectArguments} for more details.
      */
-    public async authenticate(name: string, game: string, options: ConnectArguments = {}): Promise<void> {
+    public async authenticate(name: string, options: ConnectArguments = {}): Promise<void> {
         if (this.#status === ConnectionStatus.Disconnected) {
             throw Error("Cannot authenticate until connected to server.");
         }
@@ -144,6 +146,10 @@ export class SocketManager {
         const tags = new Set(options.tags || []);
         const version = options.targetVersion || { major: 0, minor: 5, build: 0 }; // Targeted version for this library.
         const slotData = options.requestSlotData || true;
+
+        if (this.#client.room.password && password === "") {
+            throw Error("Room requires a password to authenticate and none was provided.");
+        }
 
         // Validate version.
         if (
@@ -188,7 +194,7 @@ export class SocketManager {
 
         const connectPacket: ConnectPacket = {
             cmd: ClientPacketType.Connect,
-            game,
+            game: this.#client.game,
             name,
             password,
             slot_data: slotData,

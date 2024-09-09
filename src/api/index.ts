@@ -20,7 +20,7 @@ import { NetworkItem } from "./types/NetworkItem.ts";
 import { NetworkPlayer } from "./types/NetworkPlayer.ts";
 import { NetworkSlot } from "./types/NetworkSlot.ts";
 import { NetworkVersion } from "./types/NetworkVersion.ts";
-import { SlotData } from "./types/SlotData.ts";
+import { AbstractSlotData } from "./types/AbstractSlotData.ts";
 
 export {
     AutoPermission,
@@ -52,5 +52,5 @@ export type {
     NetworkSlot,
     NetworkVersion,
     ServerPacket,
-    SlotData,
+    AbstractSlotData,
 };

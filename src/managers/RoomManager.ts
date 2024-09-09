@@ -1,4 +1,4 @@
-import { AutoPermission, NetworkPlayer, NetworkSlot, Permission, SlotType } from "../api";
+import { AbstractSlotData, AutoPermission, NetworkPlayer, NetworkSlot, Permission, SlotType } from "../api";
 import { ArchipelagoClient } from "../ArchipelagoClient.ts";
 import { PlayerInfo } from "../PlayerInfo.ts";
 
@@ -6,7 +6,7 @@ import { PlayerInfo } from "../PlayerInfo.ts";
  * Manages room data such as room settings, containing games, data packages, etc.
  */
 export class RoomManager {
-    #client: ArchipelagoClient;
+    readonly #client: ArchipelagoClient<AbstractSlotData>;
     #serverVersion = { major: -1, minor: -1, build: -1 };
     #generatorVersion = { major: -1, minor: -1, build: -1 };
     #serverTags: string[] = [];
@@ -28,9 +28,8 @@ export class RoomManager {
      * @internal
      * @param client The {@link ArchipelagoClient} object this object is attached to.
      */
-    public constructor(client: ArchipelagoClient) {
+    public constructor(client: ArchipelagoClient<AbstractSlotData>) {
         this.#client = client;
-        this.#initializeFields();
 
         // If a disconnection event happens, reset all fields.
         this.#client.socket.subscribe("onDisconnected", () => {
