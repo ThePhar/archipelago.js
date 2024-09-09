@@ -89,7 +89,7 @@ export class RoomManager {
                 const result = /.+_(\d+)_(\d+)/.exec(key) as RegExpExecArray;
                 this.#statuses.set(`${result[1]}_${result[2]}`, value as ClientStatus);
             });
-            this.#client.data.get(...statusKeys)
+            void this.#client.data.get(...statusKeys)
                 .then((data) => {
                     for (const key in data) {
                         const result = /.+_(\d+)_(\d+)/.exec(key) as RegExpExecArray;
