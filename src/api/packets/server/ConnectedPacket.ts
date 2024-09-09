@@ -1,6 +1,6 @@
+import { AbstractSlotData } from "../../types/AbstractSlotData.ts";
 import { NetworkPlayer } from "../../types/NetworkPlayer.ts";
 import { NetworkSlot } from "../../types/NetworkSlot.ts";
-import { AbstractSlotData } from "../../types/AbstractSlotData.ts";
 
 /**
  * Sent to clients when the connection handshake is successfully completed.
@@ -35,4 +35,4 @@ export type ConnectedPacket = {
 
     /** Number of hint points that the current player has. */
     readonly hint_points: number
-}
+};

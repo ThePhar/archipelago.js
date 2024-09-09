@@ -33,4 +33,4 @@ export type ConnectPacket = {
 
     /** If `true`, the {@link ConnectedPacket} will contain slot data. */
     readonly slot_data: boolean
-}
+};

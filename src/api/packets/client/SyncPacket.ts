@@ -5,4 +5,4 @@
  */
 export type SyncPacket = {
     readonly cmd: "Sync"
-}
+};

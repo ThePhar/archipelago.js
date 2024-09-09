@@ -8,4 +8,4 @@ export type SetNotifyPacket = {
 
     /** Keys to receive all {@link SetReplyPacket}s for. */
     readonly keys: string[]
-}
+};

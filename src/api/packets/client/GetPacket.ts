@@ -25,4 +25,4 @@ export type GetPacket = {
 
     /** Additional arguments to be returned in {@link RetrievedPacket}. */
     readonly [p: string]: JSONSerializableData
-}
+};

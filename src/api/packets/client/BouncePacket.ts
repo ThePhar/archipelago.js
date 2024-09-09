@@ -18,4 +18,4 @@ export type BouncePacket = {
 
     /** Optional. Client tags that should receive this message. */
     readonly tags?: string[]
-}
+};

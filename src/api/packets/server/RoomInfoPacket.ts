@@ -46,4 +46,4 @@ export type RoomInfoPacket = {
      * {@link BouncePacket}.
      */
     readonly time: number
-}
+};

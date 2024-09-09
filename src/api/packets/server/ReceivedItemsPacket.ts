@@ -12,4 +12,4 @@ export type ReceivedItemsPacket = {
 
     /** The items which the client is receiving. */
     readonly items: NetworkItem[]
-}
+};

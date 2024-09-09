@@ -11,4 +11,4 @@ export type LocationChecksPacket = {
      * duplicates do not cause issues with the Archipelago server.
      */
     readonly locations: number[]
-}
+};

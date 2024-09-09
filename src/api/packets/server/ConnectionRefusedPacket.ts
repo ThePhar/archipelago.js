@@ -8,8 +8,8 @@ export type ConnectionRefusedPacket = {
     readonly cmd: "ConnectionRefused"
 
     /**
-     * Optional. When provided, should contain any one of the following {@link ConnectionError} enumerations or other
-     * errors. See {@link ConnectionError} for additional information on what each error means.
+     * Optional. When provided, should contain one or more {@link ConnectionError} values. See {@link ConnectionError}
+     * for additional information on what each error means.
      */
-    readonly errors?: (string | ConnectionError)[]
-}
+    readonly errors?: ConnectionError[]
+};

@@ -7,4 +7,4 @@ export type SayPacket = {
 
     /** Text to send to others. */
     readonly text: string
-}
+};

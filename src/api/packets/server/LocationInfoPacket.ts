@@ -10,4 +10,4 @@ export type LocationInfoPacket = {
 
     /** Contains the list of item(s) in the location(s) scouted. */
     readonly locations: NetworkItem[]
-}
+};

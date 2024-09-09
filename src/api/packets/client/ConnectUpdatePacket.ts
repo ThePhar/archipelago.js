@@ -13,4 +13,4 @@ export type ConnectUpdatePacket = {
 
     /** Denotes special features or capabilities that the sender is currently capable of. */
     readonly tags: string[]
-}
+};

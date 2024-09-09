@@ -9,4 +9,4 @@ export type StatusUpdatePacket = {
 
     /** One of {@link ClientStatus} enumerations. See link for more information. */
     readonly status: ClientStatus
-}
+};

@@ -29,4 +29,4 @@ export type SetPacket = {
 
     /** Additional arguments to be returned in {@link SetReplyPacket}. */
     readonly [p: string]: JSONSerializableData
-}
+};

@@ -11,4 +11,4 @@ export type DataPackagePacket = {
 
     /** The data package as an object of {@link DataPackage}. */
     readonly data: DataPackage
-}
+};

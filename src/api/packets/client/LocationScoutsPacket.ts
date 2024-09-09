@@ -20,4 +20,4 @@ export type LocationScoutsPacket = {
      * {@link CreateAsHintMode} for more information.
      */
     readonly create_as_hint: CreateAsHintMode
-}
+};
