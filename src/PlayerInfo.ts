@@ -1,11 +1,12 @@
-import { NetworkPlayer, NetworkSlot, SlotType } from "./api";
+import { AbstractSlotData, ClientStatus, NetworkPlayer, NetworkSlot, SlotType } from "./api";
 import { ArchipelagoClient } from "./ArchipelagoClient.ts";
 
 /**
  * An object that contains metadata about its slot and player.s
  */
 export class PlayerInfo {
-    #client: ArchipelagoClient;
+    #client: ArchipelagoClient<AbstractSlotData>;
+    #statusMap: Map<string, ClientStatus>;
     #name: string;
     #alias: string;
     #slot: number;
@@ -44,6 +45,25 @@ export class PlayerInfo {
         return this.#type;
     }
 
+    /** A human-readable status for this slot. */
+    public get status(): "disconnected" | "connected" | "ready" | "playing" | "goaled" | "unknown" {
+        const status = this.#statusMap.get(`${this.team}_${this.slot}`) as ClientStatus;
+        switch (status) {
+            case ClientStatus.Disconnected:
+                return "disconnected";
+            case ClientStatus.Connected:
+                return "connected";
+            case ClientStatus.Ready:
+                return "ready";
+            case ClientStatus.Playing:
+                return "playing";
+            case ClientStatus.Goal:
+                return "goaled";
+            default:
+                return "unknown";
+        }
+    }
+
     /** If this player is a group, these are the members of that group. For all other types, this is `null`. */
     public get members(): PlayerInfo[] | null {
         if (this.#type !== SlotType.Group) {
@@ -60,9 +80,16 @@ export class PlayerInfo {
      * @param client The Archipelago client.
      * @param player The NetworkPlayer object associated with this slot.
      * @param slot The NetworkSlot object associated with this slot.
+     * @param statusMap
      */
-    public constructor(client: ArchipelagoClient, player: NetworkPlayer, slot: NetworkSlot) {
+    public constructor(
+        client: ArchipelagoClient<AbstractSlotData>,
+        player: NetworkPlayer,
+        slot: NetworkSlot,
+        statusMap: Map<string, ClientStatus>
+    ) {
         this.#client = client;
+        this.#statusMap = statusMap;
         this.#name = player.name;
         this.#alias = player.alias;
         this.#slot = player.slot;

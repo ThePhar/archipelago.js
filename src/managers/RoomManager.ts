@@ -1,6 +1,15 @@
-import { AbstractSlotData, AutoPermission, NetworkPlayer, NetworkSlot, Permission, SlotType } from "../api";
+import {
+    AbstractSlotData,
+    AutoPermission,
+    ClientStatus,
+    NetworkPlayer,
+    NetworkSlot,
+    Permission,
+    SlotType,
+} from "../api";
 import { ArchipelagoClient } from "../ArchipelagoClient.ts";
 import { PlayerInfo } from "../PlayerInfo.ts";
+import { APEventUnsubscribe } from "../utils/APEventEmitter.ts";
 
 /**
  * Manages room data such as room settings, containing games, data packages, etc.
@@ -17,6 +26,8 @@ export class RoomManager {
     #seed: string = "";
     #slotInfo: { [slot: number]: NetworkSlot } = {};
     #players: PlayerInfo[][] = []; // [team][slot]
+    #statuses: Map<string, ClientStatus> = new Map();
+    #subscriptions: APEventUnsubscribe[] = [];
     #permissions: {
         release: AutoPermission
         collect: AutoPermission
@@ -60,6 +71,31 @@ export class RoomManager {
         this.#client.socket.subscribe("onConnected", (packet) => {
             this.#slotInfo = packet.slot_info;
             this.#initializePlayers(packet.players);
+
+            const statusKeys: string[] = [];
+            for (const team in this.#players) {
+                for (const slot in this.#players[team]) {
+                    if (slot === "0") {
+                        return;
+                    }
+
+                    const key = `_read_client_status_${team}_${slot}`;
+                    statusKeys.push(key);
+                }
+            }
+
+            // Update and Get Current
+            this.#client.data.notify(statusKeys, (key, value) => {
+                const result = /.+_(\d+)_(\d+)/.exec(key) as RegExpExecArray;
+                this.#statuses.set(`${result[1]}_${result[2]}`, value as ClientStatus);
+            });
+            this.#client.data.get(...statusKeys)
+                .then((data) => {
+                    for (const key in data) {
+                        const result = /.+_(\d+)_(\d+)/.exec(key) as RegExpExecArray;
+                        this.#statuses.set(`${result[1]}_${result[2]}`, data[key] as ClientStatus);
+                    }
+                });
         });
 
         this.#client.socket.subscribe("onRoomUpdate", (packet) => {
@@ -243,6 +279,10 @@ export class RoomManager {
     }
 
     #initializeFields(): void {
+        for (const unsub of this.#subscriptions) {
+            unsub();
+        }
+
         this.#serverVersion = { major: -1, minor: -1, build: -1 };
         this.#generatorVersion = { major: -1, minor: -1, build: -1 };
         this.#serverTags = [];
@@ -253,6 +293,8 @@ export class RoomManager {
         this.#seed = "";
         this.#slotInfo = {};
         this.#players = [];
+        this.#statuses = new Map();
+        this.#subscriptions = [];
         this.#permissions = {
             release: AutoPermission.Disabled,
             collect: AutoPermission.Disabled,
@@ -274,12 +316,13 @@ export class RoomManager {
                         this.#client,
                         { slot: 0, team: networkPlayer.team, alias: "Archipelago", name: "Archipelago" },
                         { type: SlotType.Spectator, game: "Archipelago", group_members: [], name: "Archipelago" },
+                        this.#statuses,
                     ),
                 ];
             }
 
             const team = this.#players[networkPlayer.team] as PlayerInfo[];
-            team[networkPlayer.slot] = new PlayerInfo(this.#client, networkPlayer, networkSlot);
+            team[networkPlayer.slot] = new PlayerInfo(this.#client, networkPlayer, networkSlot, this.#statuses);
         }
     }
 }
