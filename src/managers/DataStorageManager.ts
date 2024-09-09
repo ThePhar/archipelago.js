@@ -89,6 +89,7 @@ export class DataStorageManager {
     ): void {
         // No need to return unsub function, since the server will still send packets anyway. Upto lib-user to deal with
         // it.
+        this.#client.socket.send({ cmd: ClientPacketType.SetNotify, keys });
         this.#client.socket.subscribe("onSetReply", (packet) => {
             if (!keys.includes(packet.key)) {
                 return;

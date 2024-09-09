@@ -76,7 +76,7 @@ export class RoomManager {
             for (const team in this.#players) {
                 for (const slot in this.#players[team]) {
                     if (slot === "0") {
-                        return;
+                        continue;
                     }
 
                     const key = `_read_client_status_${team}_${slot}`;
