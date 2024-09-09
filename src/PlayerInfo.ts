@@ -41,8 +41,15 @@ export class PlayerInfo {
     }
 
     /** The type of player this is. */
-    public get type(): SlotType {
-        return this.#type;
+    public get type(): "spectator" | "player" | "group" {
+        switch (this.#type) {
+            case SlotType.Spectator:
+                return "spectator";
+            case SlotType.Player:
+                return "player";
+            case SlotType.Group:
+                return "group";
+        }
     }
 
     /** A human-readable status for this slot. */
