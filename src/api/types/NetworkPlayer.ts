@@ -1,6 +1,5 @@
 /**
- * An object that contains information about a player on the network.
- * @internal
+ * An object that contains metadata about an individual player on the network.
  */
 export type NetworkPlayer = {
     /** Determines the team the player is on. Useful for competitive seeds. Team numbers start at `0`. */

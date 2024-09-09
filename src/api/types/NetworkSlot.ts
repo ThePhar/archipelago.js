@@ -1,8 +1,7 @@
 import { SlotType } from "../enums/SlotType.ts";
 
 /**
- * An object representing static information about a slot.
- * @internal
+ * An object representing metadata about a given slot on each team.
  */
 export type NetworkSlot = {
     /**
@@ -17,7 +16,7 @@ export type NetworkSlot = {
     readonly type: SlotType
 
     /**
-     * Contains a list of player ids, if the `type` is {@link SlotType.GROUP}. Used for item links, otherwise empty.
+     * Contains a list of player ids, if the `type` is {@link SlotType.Group}. Used for item links, otherwise empty.
      */
     readonly group_members: number[]
 };

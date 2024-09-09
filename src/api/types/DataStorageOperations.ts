@@ -2,7 +2,7 @@ import { JSONSerializableData } from "./JSONSerializableData.ts";
 
 /**
  * Sets the current value of the key to `value`.
- * @internal
+ * @see {@link DataStorageOperation} for all possible operation subtypes.
  * @category Data Storage Operation
  */
 export type ReplaceDataStorageOperation = {
@@ -13,22 +13,22 @@ export type ReplaceDataStorageOperation = {
 };
 
 /**
- * If the key has no value yet, sets the current value of the key to `default` of the {@link SetPacket}'s (`value`
- * is ignored).
- * @internal
+ * If the key has no value yet, sets the current value of the key to `default` of the {@link NetworkPackets.SetPacket}'s
+ * (`value` is ignored).
+ * @see {@link DataStorageOperation} for all possible operation subtypes.
  * @category Data Storage Operation
  */
 export type DefaultDataStorageOperation = {
     readonly operation: "default"
 
     /** A value for the operation to apply against the current data storage value. */
-    readonly value: JSONSerializableData
+    readonly value: null
 };
 
 /**
  * Adds `value` to the current value of the key, if both the current value and `value` are arrays then `value` will
  * be appended to the current value.
- * @internal
+ * @see {@link DataStorageOperation} for all possible operation subtypes.
  * @category Data Storage Operation
  */
 export type AddDataStorageOperation = {
@@ -40,7 +40,7 @@ export type AddDataStorageOperation = {
 
 /**
  * Multiplies the current value of the key by `value`.
- * @internal
+ * @see {@link DataStorageOperation} for all possible operation subtypes.
  * @category Data Storage Operation
  */
 export type MultiplyDataStorageOperation = {
@@ -52,7 +52,7 @@ export type MultiplyDataStorageOperation = {
 
 /**
  * Multiplies the current value of the key to the power of `value`.
- * @internal
+ * @see {@link DataStorageOperation} for all possible operation subtypes.
  * @category Data Storage Operation
  */
 export type PowerDataStorageOperation = {
@@ -64,7 +64,7 @@ export type PowerDataStorageOperation = {
 
 /**
  * Sets the current value of the key to the remainder after division by `value`.
- * @internal
+ * @see {@link DataStorageOperation} for all possible operation subtypes.
  * @category Data Storage Operation
  */
 export type ModuloDataStorageOperation = {
@@ -76,7 +76,7 @@ export type ModuloDataStorageOperation = {
 
 /**
  * Rounds down the current value to the nearest integer.
- * @internal
+ * @see {@link DataStorageOperation} for all possible operation subtypes.
  * @category Data Storage Operation
  */
 export type FloorDataStorageOperation = {
@@ -88,7 +88,7 @@ export type FloorDataStorageOperation = {
 
 /**
  * Rounds up the current value to the nearest integer.
- * @internal
+ * @see {@link DataStorageOperation} for all possible operation subtypes.
  * @category Data Storage Operation
  */
 export type CeilingDataStorageOperation = {
@@ -100,7 +100,7 @@ export type CeilingDataStorageOperation = {
 
 /**
  * Sets the current value of the key to `value` if `value` is bigger.
- * @internal
+ * @see {@link DataStorageOperation} for all possible operation subtypes.
  * @category Data Storage Operation
  */
 export type MaxDataStorageOperation = {
@@ -112,7 +112,7 @@ export type MaxDataStorageOperation = {
 
 /**
  * Sets the current value of the key to `value` if `value` is lower.
- * @internal
+ * @see {@link DataStorageOperation} for all possible operation subtypes.
  * @category Data Storage Operation
  */
 export type MinDataStorageOperation = {
@@ -124,7 +124,7 @@ export type MinDataStorageOperation = {
 
 /**
  * Applies a bitwise **AND** to the current value of the key with `value`.
- * @internal
+ * @see {@link DataStorageOperation} for all possible operation subtypes.
  * @category Data Storage Operation
  */
 export type AndDataStorageOperation = {
@@ -136,7 +136,7 @@ export type AndDataStorageOperation = {
 
 /**
  * Applies a bitwise **OR** to the current value of the key with value.
- * @internal
+ * @see {@link DataStorageOperation} for all possible operation subtypes.
  * @category Data Storage Operation
  */
 export type OrDataStorageOperation = {
@@ -148,7 +148,7 @@ export type OrDataStorageOperation = {
 
 /**
  * Applies a bitwise **XOR** to the current value of the key with `value`.
- * @internal
+ * @see {@link DataStorageOperation} for all possible operation subtypes.
  * @category Data Storage Operation
  */
 export type XorDataStorageOperation = {
@@ -160,7 +160,7 @@ export type XorDataStorageOperation = {
 
 /**
  * Applies a bitwise left-shift to the current value of the key by `value`.
- * @internal
+ * @see {@link DataStorageOperation} for all possible operation subtypes.
  * @category Data Storage Operation
  */
 export type LeftShiftDataStorageOperation = {
@@ -172,7 +172,7 @@ export type LeftShiftDataStorageOperation = {
 
 /**
  * Applies a bitwise right-shift to the current value of the key by `value`.
- * @internal
+ * @see {@link DataStorageOperation} for all possible operation subtypes.
  * @category Data Storage Operation
  */
 export type RightShiftDataStorageOperation = {
@@ -184,7 +184,7 @@ export type RightShiftDataStorageOperation = {
 
 /**
  * List only: removes the first instance of `value` found in the list.
- * @internal
+ * @see {@link DataStorageOperation} for all possible operation subtypes.
  * @category Data Storage Operation
  */
 export type RemoveDataStorageOperation = {
@@ -197,7 +197,7 @@ export type RemoveDataStorageOperation = {
 /**
  * List or Dict only: for `lists` it will remove the index of the `value` given. For `dicts` it removes the element with
  * the specified key of `value`.
- * @internal
+ * @see {@link DataStorageOperation} for all possible operation subtypes.
  * @category Data Storage Operation
  */
 export type PopDataStorageOperation = {
@@ -210,7 +210,7 @@ export type PopDataStorageOperation = {
 /**
  * Dict only: Updates the dictionary with the specified elements given in `value` creating new keys, or updating old
  * ones if they previously existed.
- * @internal
+ * @see {@link DataStorageOperation} for all possible operation subtypes.
  * @category Data Storage Operation
  */
 export type UpdateDataStorageOperation = {
@@ -221,16 +221,17 @@ export type UpdateDataStorageOperation = {
 };
 
 /**
- * A {@link DataStorageOperation} manipulates or alters the value of a key in the data storage. If the operation
- * transforms the value from one state to another then the current value of the key is used as the starting point
- * otherwise the {@link SetPacket}'s default is used if the key does not exist on the server already.
+ * A union of all possible data storage operations. An operation manipulates or alters the value of a key in the data
+ * storage. If the operation transforms the value from one state to another then the current value of the key is used
+ * as the starting point otherwise the {@link NetworkPackets.SetPacket}'s default is used if the key does not exist on
+ * the server already.
  *
- * {@link DataStorageOperation}s consist of an object containing both the operation to be applied, provided in the
- * form of a string, and the value to be used for that operation,
- * @internal
+ * Each operation object consists of an object containing both the operation to be applied, provided in the form of a
+ * `string`, and the `value` to be used for that operation,
+ * @remarks See each data storage operation subtype for more details.
  * @example
- * ```js
- * { operation: "add", value: 12 }
+ * ```json
+ * { "operation": "add", "value": 12 }
  * ```
  * @category Data Storage Operation
  */

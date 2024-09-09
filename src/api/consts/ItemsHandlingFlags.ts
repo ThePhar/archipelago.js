@@ -1,6 +1,5 @@
 /**
  * Bit flags configuring which items should be sent by the server to this client.
- * @internal
  */
 export const ItemsHandlingFlags = {
     /** Indicates the client only receives items created by cheat commands. */

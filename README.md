@@ -1,67 +1,29 @@
-# [Archipelago.JS](https://github.com/ThePhar/archipelago.js)
+# Archipelago JS Library (Archipelago.JS)
 
-![GitHub](https://img.shields.io/github/license/thephar/archipelago.js?style=flat-square)
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/thephar/archipelago.js/Lint%20and%20Build?style=flat-square)
-![npm type definitions](https://img.shields.io/npm/types/archipelago.js?style=flat-square)
-![npm](https://img.shields.io/npm/v/archipelago.js?style=flat-square)
-![npm](https://img.shields.io/npm/dm/archipelago.js?style=flat-square)
+![GitHub License](https://img.shields.io/github/license/thephar/archipelago.js?style=flat-square)
+![NPM Version](https://img.shields.io/npm/v/%40pharware%2Farchipelago?style=flat-square)
+![JSR Version](https://img.shields.io/jsr/v/%40pharware/archipelago?style=flat-square)
+![NPM Downloads](https://img.shields.io/npm/dm/%40pharware%2Farchipelago?style=flat-square)
+![Static Badge](https://img.shields.io/badge/bsky-%40pharware.com-gray?style=flat-square&labelColor=%233b78fc&link=https%3A%2F%2Fbsky.app%2Fprofile%2Fpharware.com)
 
-A general purpose library for communicating with Archipelago servers in Node.js or in the browser.
+A runtime-agnostic and zero dependency TypeScript/JavaScript library for communicating with Archipelago servers. 
 
-You can install it from npm or use a CDN to use it in browser.
+Works on all major desktop and mobile browsers ([Firefox](https://www.mozilla.org/en-US/firefox/), 
+[Chromium](https://www.chromium.org/), and [Safari](https://www.apple.com/safari/)) and server-side runtimes such as 
+[Node.js](https://nodejs.org/en), [Bun](https://bun.sh/), and [Deno](https://deno.com/).
 
--   NPM: `npm install @pharware/archipelago`
+## Installation
 
-## Archipelago.js Node.js Quick Start Guide
+    // TODO: Rewrite this whole section.
 
-Archipelago.js is a JavaScript library that runs in Node or the browser that allows you to connect to an Archipelago
-server and communicate with it for your JavaScript-based games or tools. This guide will walk you through the process of
-setting up a client and connecting to an Archipelago server.
+## Basic Usage
 
-### Prerequisites
+    // TODO: Rewrite this whole section.
 
-Before you begin, make sure you have the following prerequisites:
+## Documentation
 
--   Node.js installed on your machine.
--   Basic knowledge of JavaScript (or TypeScript).
+    // TODO: Rewrite this whole section.
 
-### Installation
+## Contribution
 
-To start a new project with Archipelago.js follow these steps:
-
-1. Create a new directory for your project.
-2. Open a terminal or command prompt and navigate to the project directory.
-3. Run the following command to initialize a new Node.js project: `npm install archipelago.js`.
-4. If you plan to use TypeScript, also install typescript dependencies and nice to haves: `npm install -D typescript`.
-    - Replace any instances of "`.js`" with "`.ts`" in this quick start guide.
-
-### Getting Started
-
-TODO: Rewrite the getting started.
-
-## Contributing / Development
-
-To develop further or contribute to **Archipelago.JS** itself, just clone this repository to a desired location on your
-computer:
-
-```
-git clone https://github.com/ThePhar/archipelago.js && cd archipelago.js
-```
-
-Then run `npm install` to install all dependencies.
-
-**Archipelago.JS** is written in TypeScript and includes a strong ESLint and Prettier config file to ensure code
-consistency. Be sure to follow the code standards and check your work with `npm run lint`. You can build your code by
-running `npm run pack` (to package in a `.tgz` file) or `npm run build` (for a full `dist/` folder).
-
-It is recommended to work in a branch other than `main`, even if you fork, to avoid merge conflicts with GitHub when
-pull requests and squash merges happen.
-
-## API Documentation & Other Links
-
-The full API documentation is located [here](https://thephar.github.io/archipelago.js/). Please be sure to reference it,
-while you are developing your JavaScript-based clients.
-
-This library supports 100% of the Archipelago network protocol referenced at
-[here](https://github.com/ArchipelagoMW/Archipelago/blob/main/docs/network%20protocol.md) as of **2023-07-08**. See more
-information about [Archipelago](https://archipelago.gg) at their website.
+    // TODO: Rewrite this whole section.

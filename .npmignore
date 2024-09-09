@@ -1,6 +1,10 @@
 # Ignore everything except those we manually allow
 *
 
-# JavaScript and Type Definitions
-!dist/**/*.d.ts
-!dist/**/*.js
+# Source files.
+!src/**/*.ts
+!package.json
+!LICENSE
+
+# Ignore tests.
+src/**/__test__/*

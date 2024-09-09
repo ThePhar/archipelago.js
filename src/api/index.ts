@@ -1,49 +1,32 @@
 import { ItemClassification } from "./consts/ItemClassification.ts";
 import { ItemsHandlingFlags } from "./consts/ItemsHandlingFlags.ts";
 import { ClientStatus } from "./enums/ClientStatus.ts";
-import { ClientPacketType, ServerPacketType } from "./enums/CommandPacketTypes.ts";
-import { ConnectionError } from "./enums/ConnectionError.ts";
 import { CreateAsHintMode } from "./enums/CreateAsHintMode.ts";
-import { PacketProblemType } from "./enums/PacketProblemType.ts";
-import { AutoPermission, Permission } from "./enums/Permission.ts";
-import { PrintJSONType } from "./enums/PrintJSONType.ts";
+import { Permission, PermissionTable } from "./enums/Permission.ts";
 import { SlotType } from "./enums/SlotType.ts";
-import * as NetworkPackets from "./packets/index.ts";
-import { ClientPacket, ServerPacket } from "./packets/index.ts";
+import { AbstractSlotData } from "./types/AbstractSlotData.ts";
+import { ConnectionError } from "./types/ConnectionError.ts";
 import { DataPackage, GamePackage } from "./types/DataPackage.ts";
-import * as DataStorageOperations from "./types/DataStorageOperations.ts";
-import { DeathLinkData } from "./types/DeathLinkData.ts";
-import * as JSONMessageParts from "./types/JSONMessagePart.ts";
 import { JSONSerializableData } from "./types/JSONSerializableData.ts";
 import { NetworkHint } from "./types/NetworkHint.ts";
 import { NetworkItem } from "./types/NetworkItem.ts";
 import { NetworkPlayer } from "./types/NetworkPlayer.ts";
 import { NetworkSlot } from "./types/NetworkSlot.ts";
 import { NetworkVersion } from "./types/NetworkVersion.ts";
-import { AbstractSlotData } from "./types/AbstractSlotData.ts";
 
 export {
-    AutoPermission,
-    ClientPacketType,
     ClientStatus,
-    ConnectionError,
     CreateAsHintMode,
-    DataStorageOperations,
     ItemClassification,
     ItemsHandlingFlags,
-    JSONMessageParts,
-    NetworkPackets,
-    PacketProblemType,
     Permission,
-    PrintJSONType,
-    ServerPacketType,
     SlotType,
 };
 
 export type {
-    ClientPacket,
+    AbstractSlotData,
+    ConnectionError,
     DataPackage,
-    DeathLinkData,
     GamePackage,
     JSONSerializableData,
     NetworkHint,
@@ -51,6 +34,23 @@ export type {
     NetworkPlayer,
     NetworkSlot,
     NetworkVersion,
-    ServerPacket,
-    AbstractSlotData,
+    PermissionTable,
 };
+
+/**
+ * A collection of network protocol packets that can be sent over the network and their types.
+ * @namespace
+ */
+export * as NetworkPackets from "./packets";
+
+/**
+ * A collection of base data storage operation types for use in a {@link NetworkPackets.SetPacket}.
+ * @namespace
+ */
+export * as DataStorageOperations from "./types/DataStorageOperations.ts";
+
+/**
+ * A collection of message part types for use in a {@link NetworkPackets.PrintJSONPacket}.
+ * @namespace
+ */
+export * as JSONMessageParts from "./types/JSONMessagePart.ts";

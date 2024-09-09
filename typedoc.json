@@ -1,12 +1,13 @@
 {
-    "name": "archipelago.js",
+    "$schema": "https://typedoc.org/schema.json",
+    "name": "@pharware/archipelago",
     "cleanOutputDir": true,
     "excludePrivate": true,
-    "excludeInternal": false,
+    "excludeInternal": true,
     "tsconfig": "tsconfig.json",
     "entryPoints": ["src/index.ts"],
     "out": "docs",
-    "categorizeByGroup": true,
+    "categorizeByGroup": false,
     "gitRemote": "origin",
     "includeVersion": true
 }

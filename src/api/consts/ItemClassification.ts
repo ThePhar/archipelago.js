@@ -1,6 +1,5 @@
 /**
  * Bit flags that determine if an item is progression, "nice to have", filler, or a trap.
- * @internal
  */
 export const ItemClassification = {
     /** Nothing special about this item. */

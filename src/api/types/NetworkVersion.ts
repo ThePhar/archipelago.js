@@ -1,12 +1,11 @@
 /**
- * An object representing software versioning. Used in the {@link ConnectPacket} to allow the client to inform the
- * server the minimum Archipelago version it supports.
- * @internal
- * @remarks Does not strictly follow semver versioning.
+ * An object representing software versioning. Used in the {@link NetworkPackets.ConnectPacket} to allow the client to
+ * inform the server the minimum Archipelago version it supports.
+ * @remarks Archipelago does not follow a semver versioning standard.
  */
 export type NetworkVersion = {
-    /** Always required by the Archipelago server to parse NetworkVersion data. */
-    class: "Version"
+    /** Always required to be present to ensure the Archipelago server parses this object correctly. */
+    readonly class: "Version"
 
     /** The major component of the version number. (e.g., X.0.0) */
     readonly major: number

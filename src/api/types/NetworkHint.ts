@@ -1,6 +1,5 @@
 /**
  * An object representing a hint information for a particular item and location that contains it.
- * @internal
  */
 export type NetworkHint = {
     /** The id of the player who owns this item. */
@@ -21,6 +20,6 @@ export type NetworkHint = {
     /** The name of the entrance to the location where this item is located. */
     readonly entrance: string
 
-    /** The {@link ItemFlags} for this item. */
+    /** The {@link ItemsHandlingFlags} bit flags for this item. */
     readonly item_flags: number
 };

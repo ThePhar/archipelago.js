@@ -1,6 +1,5 @@
 /**
- * The hint type for `create_as_hint` in {@link LocationScoutsPacket}.
- * @internal
+ * The hint type for `create_as_hint` in {@link NetworkPackets.LocationScoutsPacket}.
  */
 export const enum CreateAsHintMode {
     /** Does not mark scouted location to be hinted and broadcast to clients. */

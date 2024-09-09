@@ -1,4 +1,7 @@
-/** @internal */
+/**
+ * A textual node containing item metadata.
+ * @see {@link JSONMessagePart} for all possible message part node subtypes.
+ */
 export type ItemJSONMessagePart = {
     /** Used to denote the intent of the message part. */
     readonly type: "item_id" | "item_name"
@@ -13,7 +16,10 @@ export type ItemJSONMessagePart = {
     readonly player: number
 };
 
-/** @internal */
+/**
+ * A textual node containing location metadata.
+ * @see {@link JSONMessagePart} for all possible message part node subtypes.
+ */
 export type LocationJSONMessagePart = {
     /** Used to denote the intent of the message part. */
     readonly type: "location_id" | "location_name"
@@ -25,7 +31,10 @@ export type LocationJSONMessagePart = {
     readonly player: number
 };
 
-/** @internal */
+/**
+ * A textual node containing color metadata.
+ * @see {@link JSONMessagePart} for all possible message part node subtypes.
+ */
 export type ColorJSONMessagePart = {
     /** Used to denote the intent of the message part. */
     readonly type: "color"
@@ -37,9 +46,15 @@ export type ColorJSONMessagePart = {
     readonly color: ValidJSONColorType
 };
 
-/** @internal */
-export type MiscJSONMessagePart = {
-    /** Used to denote the intent of the message part. */
+/**
+ * A textual node containing plaintext metadata.
+ * @see {@link JSONMessagePart} for all possible message part node subtypes.
+ */
+export type TextJSONMessagePart = {
+    /**
+     * Used to denote the intent of the message part.
+     * @remarks If `type` is omitted, it should be treated as the `text` type.
+     */
     readonly type?: "text" | "entrance_name" | "player_id" | "player_name"
 
     /** Used to supply text data for this node. */
@@ -47,21 +62,21 @@ export type MiscJSONMessagePart = {
 };
 
 /**
- * Message nodes sent along with {@link PrintJSONPacket} to be reconstructed into a legible message. The nodes are
- * intended to be read in the order they are listed in the packet.
- * @internal
+ * A union of all message node subtypes sent along with {@link NetworkPackets.PrintJSONPacket}, which can be
+ * reconstructed into a legible message. Each node is intended to be read in the order provided in the packet.
+ * @remarks See each subtype for more specific information.
  */
 export type JSONMessagePart =
     | ItemJSONMessagePart
     | LocationJSONMessagePart
     | ColorJSONMessagePart
-    | MiscJSONMessagePart;
+    | TextJSONMessagePart;
 
 /**
- * This is a const of all supported message types for denoting the intent of the message part. This can be used to
+ * This is a type union of all supported message types for denoting the intent of the message part. This can be used to
  * indicate special information which may be rendered differently depending on client.
  *
- * - `text`: Regular text content. Is the default type and as such may be omitted.
+ * - `text`: Regular text content. This is also the default type and is often omitted.
  * - `player_id`: Player id of someone on your team, should be resolved to player Name.
  * - `player_name`: Player Name, could be a player within a multiplayer game or from another team, not id resolvable.
  * - `item_id`: Item id, should be resolved to an item name.
@@ -70,46 +85,40 @@ export type JSONMessagePart =
  * - `location_name`: Location name, not currently used over network, but supported by reference clients.
  * - `entrance_name`: Entrance name. No id mapping exists.
  * - `color`: Regular text that should be colored. Only type that will contain color data.
- * @internal
  */
-export const enum ValidJSONMessagePartType {
-    Text = "text",
-    PlayerId = "player_id",
-    PlayerName = "player_name",
-    ItemId = "item_id",
-    ItemName = "item_name",
-    LocationId = "location_id",
-    LocationName = "location_name",
-    EntranceName = "entrance_name",
-    Color = "color",
-}
+export type ValidJSONMessagePartType =
+    | "text"
+    | "player_id"
+    | "player_name"
+    | "item_id"
+    | "item_name"
+    | "location_id"
+    | "location_name"
+    | "entrance_name"
+    | "color";
 
 /**
- * This is a const of all supported "colors" denoting a console color to display the message part with and is only
+ * This is a type union of all supported "colors" denoting a console color to display the message part with and is only
  * sent if the `type` is `color`. This is limited to console colors due to backwards compatibility needs with games such
  * as `A Link to the Past`. Although background colors as well as foreground colors are listed, only one may be applied
  * to a {@link JSONMessagePart} at a time.
- * @internal
  */
-export const enum ValidJSONColorType {
-    // Yes, 'bold' and 'underline' are colors. Deal with it.
-    Bold = "bold",
-    Underline = "underline",
-
-    Black = "black",
-    Red = "red",
-    Green = "green",
-    Yellow = "yellow",
-    Blue = "blue",
-    Magenta = "magenta",
-    Cyan = "cyan",
-    White = "white",
-    BlackBackground = "black_bg",
-    RedBackground = "red_bg",
-    GreenBackground = "green_bg",
-    YellowBackground = "yellow_bg",
-    BlueBackground = "blue_bg",
-    PurpleBackground = "purple_bg",
-    CyanBackground = "cyan_bg",
-    WhiteBackground = "white_bg",
-}
+export type ValidJSONColorType =
+    | "bold"
+    | "underline"
+    | "black"
+    | "red"
+    | "green"
+    | "yellow"
+    | "blue"
+    | "magenta"
+    | "cyan"
+    | "white"
+    | "black_bg"
+    | "red_bg"
+    | "green_bg"
+    | "yellow_bg"
+    | "blue_bg"
+    | "purple_bg"
+    | "cyan_bg"
+    | "white_bg";

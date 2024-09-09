@@ -307,7 +307,6 @@ $RECYCLE.BIN/
 docs
 
 ### Extra stuff
-eslint.config.d.mts
-eslint.config.d.mts.map
+_ignore/
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,linux,intellij+all,node
