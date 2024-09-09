@@ -22,7 +22,6 @@ export class DataStorageManager {
     /**
      * Create a new transaction for setting a data storage key by returning an {@link IntermediateDataOperation}. To
      * perform certain operations, just chain additional methods until finished, then `commit()`.
-     * @template T The type of value being manipulated.
      * @param key The key to manipulate.
      * @param _default A default value to be used if a `default()` operation is performed.
      * @example
@@ -44,8 +43,12 @@ export class DataStorageManager {
      *     .max(0)
      *     .commit(true); // Returns a promise with new value once fulfilled.
      */
-    public set<T extends JSONSerializableData>(key: string, _default: Exclude<T, undefined>): IntermediateDataOperation<T> {
-        return new IntermediateDataOperation<T>(this.#client, key, _default);
+    public set(key: string, _default: Exclude<JSONSerializableData, undefined>): IntermediateDataOperation<JSONSerializableData> {
+        if (key.startsWith("_read_")) {
+            throw Error("Cannot manipulate read only keys.");
+        }
+
+        return new IntermediateDataOperation<JSONSerializableData>(this.#client, key, _default);
     }
 
     /**

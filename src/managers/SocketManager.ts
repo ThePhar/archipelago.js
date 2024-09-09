@@ -95,6 +95,7 @@ export class SocketManager {
 
                 // Establish a connection and setup basic handlers.
                 this.#socket = new IsomorphousWebSocket(url);
+                this.#socket.onclose = () => this.disconnect(false);
                 this.#socket.onopen = () => {
                     this.#status = ConnectionStatus.Unauthenticated;
 
@@ -235,14 +236,14 @@ export class SocketManager {
             return;
         }
 
-        if (closeSocket) {
-            // If this fails for whatever reason, we don't want to completely crash, but still set status.
-            try {
-                this.#socket?.close();
-            } finally { /* empty */ }
-        }
-        this.#socket = null;
         this.#status = ConnectionStatus.Disconnected;
+        try {
+            if (closeSocket) {
+                this.#socket?.close();
+            }
+        } finally {
+            this.#socket = null;
+        }
 
         this.#events.dispatchEvent(new Event("onDisconnected"));
     }
