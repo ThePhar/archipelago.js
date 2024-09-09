@@ -145,6 +145,18 @@ export class SocketManager {
         const version = options.targetVersion || { major: 0, minor: 5, build: 0 }; // Targeted version for this library.
         const slotData = options.requestSlotData || true;
 
+        // Validate version.
+        if (
+            !Number.isSafeInteger(version.major)
+            || !Number.isSafeInteger(version.minor)
+            || !Number.isSafeInteger(version.build)
+            || version.major < 0
+            || version.minor < 0
+            || version.build < 0
+        ) {
+            throw RangeError("Each component of `targetVersion` must be a non-negative integer.");
+        }
+
         // Tag shortcuts.
         if (options.isHintGame) {
             tags.add(CommonTags.HINT_GAME);

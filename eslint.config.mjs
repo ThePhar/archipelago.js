@@ -28,6 +28,7 @@ export default tslint.config(
             "jsdoc/check-tag-names": ["warn", { definedTags: ["remarks", "category"] }],
             "jsdoc/require-description": 1,
             "jsdoc/require-template": 1,
+            "jsdoc/require-returns": 0,
             "jsdoc/require-throws": 1,
             "jsdoc/sort-tags": 1,
             "simple-import-sort/imports": "error",
