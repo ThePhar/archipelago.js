@@ -35,7 +35,7 @@ export type AddDataStorageOperation = {
     readonly operation: "add"
 
     /** A value for the operation to apply against the current data storage value. */
-    readonly value: number | number[]
+    readonly value: number | JSONSerializableData[]
 };
 
 /**

@@ -28,4 +28,7 @@ export interface SetPacket {
 
     /** If set, the server will send a {@link SetReplyPacket} back to the client. */
     readonly want_reply: boolean
+
+    /** Additional arguments to be returned in {@link SetReplyPacket}. */
+    readonly [p: string]: JSONSerializableData
 }

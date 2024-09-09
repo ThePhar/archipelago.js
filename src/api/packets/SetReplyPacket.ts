@@ -22,4 +22,7 @@ export interface SetReplyPacket {
 
     /** The value the key had before it was updated. */
     readonly original_value: JSONSerializableData
+
+    /** Additional arguments that were passed in from {@link SetPacket}. */
+    readonly [p: string]: JSONSerializableData
 }

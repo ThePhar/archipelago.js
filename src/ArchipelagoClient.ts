@@ -1,8 +1,8 @@
 import { AbstractSlotData, ClientPacketType } from "./api";
 import { ConnectionStatus } from "./enums/ConnectionStatus.ts";
+import { DataStorageManager } from "./managers/DataStorageManager.ts";
 import { RoomManager } from "./managers/RoomManager.ts";
 import { SocketManager } from "./managers/SocketManager.ts";
-import { APEventEmitter } from "./utils/APEventEmitter.ts";
 import { PlayerInfo } from "./PlayerInfo.ts";
 
 /**
@@ -11,7 +11,6 @@ import { PlayerInfo } from "./PlayerInfo.ts";
  * @template TSlotData If slot data is requested, the type for that slot data.
  */
 export class ArchipelagoClient<TSlotData extends AbstractSlotData> {
-    readonly #events: APEventEmitter = new APEventEmitter();
     readonly #game: string;
     #team: number = -1;
     #slot: number = -1;
@@ -25,7 +24,7 @@ export class ArchipelagoClient<TSlotData extends AbstractSlotData> {
      * @remarks Library subscribers should use the abstracted helper functions/structs instead of interacting with the
      * api or socket directly, but it is exposed if necessary.
      */
-    public readonly socket: SocketManager = new SocketManager(this, this.#events);
+    public readonly socket: SocketManager = new SocketManager(this);
 
     /**
      * Manages room data such as room settings, containing games, data packages, etc.
@@ -33,8 +32,13 @@ export class ArchipelagoClient<TSlotData extends AbstractSlotData> {
     public readonly room: RoomManager = new RoomManager(this);
 
     /**
+     * Manages communication with the data storage.
+     */
+    public readonly data: DataStorageManager = new DataStorageManager(this);
+
+    /**
      * Creates a new Archipelago client for a specified game.
-     * @param game
+     * @param game The name of the game to be associated with this client (cannot be changed after instantiation).
      */
     public constructor(game: string) {
         this.#game = game;
@@ -65,7 +69,7 @@ export class ArchipelagoClient<TSlotData extends AbstractSlotData> {
                     }
                 }
             }
-        })
+        });
     }
 
     /**
@@ -126,6 +130,7 @@ export class ArchipelagoClient<TSlotData extends AbstractSlotData> {
     /**
      * Set or clear the alias for the current client.
      * @param value The value to change the alias to. If empty/omitted, any existing alias will be cleared.
+     * @throws Error If not connected and authenticated to an Archipelago server.
      */
     public setAlias(value: string = ""): void {
         if (this.socket.status !== ConnectionStatus.Connected) {
@@ -133,6 +138,20 @@ export class ArchipelagoClient<TSlotData extends AbstractSlotData> {
         }
 
         this.socket.send({ cmd: ClientPacketType.Say, text: `!alias ${value.trim()}` });
+    }
+
+    /**
+     * Check a series of locations and send their items out.
+     * @param locations A list of location ids.
+     * @throws Error If not connected and authenticated to an Archipelago server.
+     * @remarks Once a location is checked, it cannot be unchecked.
+     */
+    public check(...locations: number[]): void {
+        if (this.socket.status !== ConnectionStatus.Connected) {
+            throw new Error("Cannot check locations while not connected and authenticated to server.");
+        }
+
+        this.socket.send({ cmd: ClientPacketType.LocationChecks, locations });
     }
 
     #initializeFields(): void {

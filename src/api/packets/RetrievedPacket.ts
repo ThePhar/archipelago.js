@@ -14,4 +14,7 @@ export interface RetrievedPacket {
 
     /** A key-value collection containing all the values for the keys requested in the {@link GetPacket}. */
     readonly keys: { [key: string]: JSONSerializableData }
+
+    /** Additional arguments that were passed in from {@link GetPacket}. */
+    readonly [p: string]: JSONSerializableData
 }

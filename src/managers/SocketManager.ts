@@ -14,12 +14,13 @@ import {
     RoomUpdatePacket,
     SetReplyPacket,
 } from "../api/packets";
+import { ArchipelagoClient } from "../ArchipelagoClient.ts";
 import { CommonTags } from "../consts/CommonTags.ts";
 import { ConnectionStatus } from "../enums/ConnectionStatus.ts";
 import { ConnectArguments } from "../types/ConnectArguments.ts";
 import { APEventEmitter, APEventUnsubscribe } from "../utils/APEventEmitter.ts";
 import { IsomorphousWebSocket } from "../utils/IsomorphousWebSocket.ts";
-import { ArchipelagoClient } from "../ArchipelagoClient.ts";
+import { generateUUIDv4 } from "../utils/UUIDGenerator.ts";
 
 /**
  * Manages the web socket and API-level communication.
@@ -28,7 +29,7 @@ import { ArchipelagoClient } from "../ArchipelagoClient.ts";
  */
 export class SocketManager {
     readonly #client: ArchipelagoClient<AbstractSlotData>;
-    readonly #events: APEventEmitter;
+    readonly #events: APEventEmitter = new APEventEmitter();
     #socket: WebSocket | null = null;
     #status: ConnectionStatus = ConnectionStatus.Disconnected;
 
@@ -56,11 +57,9 @@ export class SocketManager {
      * Creates a new SocketManager.
      * @internal
      * @param client The Archipelago client.
-     * @param events The {@link APEventEmitter} object attached to {@link ArchipelagoClient}.
      */
-    public constructor(client: ArchipelagoClient<AbstractSlotData>, events: APEventEmitter) {
+    public constructor(client: ArchipelagoClient<AbstractSlotData>) {
         this.#client = client;
-        this.#events = events;
     }
 
     /**
@@ -71,6 +70,11 @@ export class SocketManager {
      * to connect, it will not automatically reattempt with another supported protocol.
      */
     public async connect(url: URL | string): Promise<void> {
+        // Disconnect before establishing a new connection.
+        if (this.status !== ConnectionStatus.Disconnected) {
+            this.disconnect();
+        }
+
         if (typeof url === "string") {
             url = new URL(url);
         }
@@ -83,7 +87,6 @@ export class SocketManager {
             throw new TypeError(`Connection supports ws:// or wss:// protocol only: ${url.protocol}// is not valid.`);
         }
 
-        this.disconnect();
         try {
             await new Promise<void>((resolve, reject) => {
                 if (IsomorphousWebSocket === null) {
@@ -142,7 +145,7 @@ export class SocketManager {
         }
 
         const password = options.password || "";
-        const uuid = options.uuid || this.#genUUIDv4();
+        const uuid = options.uuid || generateUUIDv4();
         const tags = new Set(options.tags || []);
         const version = options.targetVersion || { major: 0, minor: 5, build: 0 }; // Targeted version for this library.
         const slotData = options.requestSlotData || true;
@@ -228,6 +231,10 @@ export class SocketManager {
      * @param closeSocket Should an attempt be made to close socket? Leave as default unless you know what you're doing.
      */
     public disconnect(closeSocket = true): void {
+        if (this.status === ConnectionStatus.Disconnected) {
+            return;
+        }
+
         if (closeSocket) {
             // If this fails for whatever reason, we don't want to completely crash, but still set status.
             try {
@@ -294,19 +301,6 @@ export class SocketManager {
 
     #dispatchPacketEvent(type: SubscriptionEvent, packet: ServerPacket): void {
         this.#events.dispatchEvent(new CustomEvent<ServerPacket>(type, { detail: packet }));
-    }
-
-    #genUUIDv4(): string {
-        const uuid: (number | string)[] = [];
-        for (let i = 0; i < 36; i++) {
-            uuid.push(Math.floor(Math.random() * 16));
-        }
-
-        uuid[14] = 4;
-        uuid[19] = (uuid[19] as number) &= ~(1 << 2);
-        uuid[19] = uuid[19] |= (1 << 3);
-        uuid[8] = uuid[13] = uuid[18] = uuid[23] = "-"; // Separators.
-        return uuid.map((d) => d.toString(16)).join("");
     }
 }
 

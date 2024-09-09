@@ -1,4 +1,5 @@
 import { ClientPacketType } from "../enums/CommandPacketTypes.ts";
+import { JSONSerializableData } from "../types/JSONSerializableData.ts";
 
 /**
  * Sent by the client to request a single or multiple values from the server's data storage, see the {@link SetPacket}
@@ -23,4 +24,7 @@ export interface GetPacket {
 
     /** Keys to retrieve the values for. */
     readonly keys: string[]
+
+    /** Additional arguments to be returned in {@link RetrievedPacket}. */
+    readonly [p: string]: JSONSerializableData
 }
