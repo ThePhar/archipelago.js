@@ -1,16 +1,16 @@
-import { ClientStatus, ItemsHandlingFlags } from "./api";
-import { ClientPacket, ConnectPacket, ServerPacket } from "./api/packets";
-import { CommonTags } from "./consts/CommonTags.ts";
-import { APSocketError } from "./errors.ts";
-import { APIManager } from "./managers/APIManager.ts";
-import { ChatManager } from "./managers/ChatManager.ts";
-import { DataStorageManager } from "./managers/DataStorageManager.ts";
-import { ItemsManager } from "./managers/ItemsManager.ts";
-import { LocationsManager } from "./managers/LocationsManager.ts";
-import { PlayersManager } from "./managers/PlayersManager.ts";
-import { RoomManager } from "./managers/RoomManager.ts";
-import { ConnectionArguments } from "./types/ConnectionArguments.ts";
-import { createDefaultConnectionArgs, findWebSocket } from "./utils.ts";
+import { ClientStatus, ItemsHandlingFlags } from "../api";
+import { ClientPacket, ConnectPacket, ServerPacket } from "../api/packets";
+import { CommonTags } from "../consts/CommonTags.ts";
+import { APSocketError } from "../errors.ts";
+import { APIManager } from "../managers/APIManager.ts";
+import { ChatManager } from "../managers/ChatManager.ts";
+import { DataManager } from "../managers/DataManager.ts";
+import { ItemsManager } from "../managers/ItemsManager.ts";
+import { LocationsManager } from "../managers/LocationsManager.ts";
+import { PlayersManager } from "../managers/PlayersManager.ts";
+import { RoomManager } from "../managers/RoomManager.ts";
+import { ConnectionArguments } from "../types/ConnectionArguments.ts";
+import { createDefaultConnectionArgs, findWebSocket } from "../utils.ts";
 
 /**
  * The client that connects to an Archipelago server, facilitates communication, and keeps track of room/player state.
@@ -29,8 +29,8 @@ export class ArchipelagoClient {
 
     /** A helper object for logging and sending messages via the Archipelago chat. */
     public readonly chat: ChatManager = new ChatManager(this);
-    /** A helper object for tracking and communciating to/from the AP data storage API. */
-    public readonly data: DataStorageManager = new DataStorageManager(this);
+    /** A helper object for tracking and communciating to/from the AP data storage and data package. */
+    public readonly data: DataManager = new DataManager(this);
     /** A helper object for tracking received items in the session. */
     public readonly items: ItemsManager = new ItemsManager(this);
     /** A helper object for tracking, scouting, and checking locations in the session. */

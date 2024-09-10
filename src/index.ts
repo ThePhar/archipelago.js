@@ -17,15 +17,16 @@ export * as NetworkProtocol from "./api";
 export * as ArchipelagoErrors from "./errors.ts";
 
 // Normal exports.
-export { ArchipelagoClient } from "./ArchipelagoClient.ts";
 export { CommonTags } from "./consts/CommonTags.ts";
 export { APIManager } from "./managers/APIManager.ts";
 export { ChatManager } from "./managers/ChatManager.ts";
-export { DataStorageManager } from "./managers/DataStorageManager.ts";
+export { DataManager } from "./managers/DataManager.ts";
 export { ItemsManager } from "./managers/ItemsManager.ts";
 export { LocationsManager } from "./managers/LocationsManager.ts";
 export { PlayersManager } from "./managers/PlayersManager.ts";
 export { RoomManager } from "./managers/RoomManager.ts";
+export { ArchipelagoClient } from "./structs/ArchipelagoClient.ts";
+export { IntermediateDataOperation } from "./structs/IntermediateDataOperation.ts";
 
 // Typed exports.
 import type { ConnectionArguments } from "./types/ConnectionArguments.ts";
@@ -38,6 +39,6 @@ export type {
 };
 
 // Default export can be the client as that will be the majority of the usage.
-import { ArchipelagoClient } from "./ArchipelagoClient.ts";
+import { ArchipelagoClient } from "./structs/ArchipelagoClient.ts";
 
 export default ArchipelagoClient;

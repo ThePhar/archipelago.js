@@ -1,4 +1,4 @@
-import { ArchipelagoClient } from "../ArchipelagoClient.ts";
+import { ArchipelagoClient } from "../structs/ArchipelagoClient.ts";
 
 /**
  * @todo Implement functionality.
