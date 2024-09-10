@@ -14,11 +14,40 @@ Works on all major desktop and mobile browsers ([Firefox](https://www.mozilla.or
 
 ## Installation
 
-    // TODO: Rewrite this whole section.
+In your project directory, run one of the following commands to install the library to your project as a dependency:
+
+### Node
+
+npm: `npm install @pharware/archipelago`
+
+yarn: `yarn add @pharware/archipealgo`
+
+pnpm: `pnpm add @pharware/archipelago`
+
+### Bun
+
+bun: `bun add @pharware/archipelago`
+
+### Deno
+
+deno: `deno add @pharware/archipelago`
+
+### Browser
+
+    // TODO: Write.
 
 ## Basic Usage
 
-    // TODO: Rewrite this whole section.
+```js
+import { ArchipelagoClient } from "@pharware/archipelago";
+
+// Create a client.
+const client = new ArchipelagoClient();
+
+// Connect and authenticate.
+await client.connect("wss://archipelago.gg:38281");
+await client.authenticate("Phar", "Clique");
+```
 
 ## Documentation
 

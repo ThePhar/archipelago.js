@@ -18,6 +18,7 @@ import { APEventUnsubscribe, createSubscriber } from "../utils.ts";
 
 /**
  * Manages network API-level events and exposes helper methods to faciliate that communication.
+ * @category Manager Class
  */
 export class APIManager {
     readonly #send: (packets: ClientPacket[]) => void;

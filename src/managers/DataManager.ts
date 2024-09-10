@@ -6,6 +6,7 @@ import { APEventUnsubscribe, generateUuid } from "../utils.ts";
 
 /**
  * Manages communication between the data storage API and data package for item and location name lookups.
+ * @category Manager Class
  */
 export class DataManager {
     readonly #client: ArchipelagoClient;
