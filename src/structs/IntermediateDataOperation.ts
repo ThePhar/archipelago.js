@@ -191,17 +191,17 @@ export class IntermediateDataOperation<T extends JSONSerializableData> {
 
     /**
      * Commit the current operations to data store and return a Promise with the updated key, once fulfilled.
-     * @param awaitReply If `true`, a promise will be returned with the new value. Otherwise, immediately returns.
+     * @param awaitReply If `true`, a promise will be returned with the new value. Otherwise, immediately resolves.
      */
-    public set(awaitReply: true): Promise<T>;
+    public async set(awaitReply: true): Promise<T>;
 
     /**
-     * Commit the current operations to data store.
-     * @param awaitReply If `true`, a promise will be returned with the new value. Otherwise, immediately returns.
+     * Commit the current operations to data store and return a Promise that immediately resolves with no value.
+     * @param awaitReply If `true`, a promise will be returned with the new value. Otherwise, immediately resolves.
      */
-    public set(awaitReply: false): void;
+    public async set(awaitReply: false | undefined): Promise<void>;
 
-    public set(awaitReply: boolean = false): Promise<T> | void {
+    public async set(awaitReply: boolean = false): Promise<T | void> {
         const code = generateUuid();
         const packet: SetPacket = {
             cmd: "Set",

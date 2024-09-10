@@ -27,10 +27,11 @@ export class DataManager {
      * @param callback The callback to call when the key is modified.
      * @returns A function to stop listening for changes, when no longer needed. Key will remain in watched list for
      * remainder of session and can be accessed via {@link DataManager.get}.
+     * @remarks Keys prefixed with `_read_` do not include `oldValue`.
      */
     public notify(
         key: string,
-        callback: (key: string, value: JSONSerializableData, oldValue: JSONSerializableData) => void,
+        callback: (key: string, value: JSONSerializableData, oldValue: JSONSerializableData | undefined) => void,
     ): APEventUnsubscribe {
         // If we aren't already tracking this key, begin tracking it. We don't care about the promise in this case.
         if (!Object.keys(this.#storage).includes(key)) {
@@ -38,7 +39,9 @@ export class DataManager {
         }
 
         return this.#client.api.subscribe("onSetReply", (packet) => {
-            callback(packet.key, packet.value, packet.original_value);
+            if (packet.key === key) {
+                callback(packet.key, packet.value, packet.original_value);
+            }
         });
     };
 
