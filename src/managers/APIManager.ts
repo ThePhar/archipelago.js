@@ -14,113 +14,24 @@ import {
     ServerPacket,
     SetReplyPacket,
 } from "../api/packets";
-import { APSocketError } from "../errors.ts";
-import { APEventUnsubscribe, createSubscriber, findWebSocket } from "../utils.ts";
+import { APEventUnsubscribe, createSubscriber } from "../utils.ts";
 
-export class SocketManager {
-    readonly #events: EventTarget = new EventTarget();
-    #socket: WebSocket | null = null;
-    #connected: boolean = false;
+export class APIManager {
+    readonly #send: (packets: ClientPacket[]) => void;
+    readonly #events: EventTarget;
 
     /**
-     * Instantiates a new SocketManager.
+     * Instantiates a new APIManager.
      * @internal
+     * @param events The EventTarget attached to the Archipelago client.
+     * @param send The Archipelago client associated with this manager.
      */
-    public constructor() {}
+    public constructor(events: EventTarget, send: (packets: ClientPacket[]) => void) {
+        this.#send = send;
+        this.#events = events;
 
-    /** Returns `true` if currently connected to an Archipelago server. */
-    public get connected(): boolean {
-        return this.#connected;
-    }
-
-    /** Returns the url of the current connection or `null` if not connected. */
-    public get url(): string | null {
-        if (this.connected && this.#socket) {
-            // Strip parts of the url that don't actually matter as connection args are stored separately.
-            const url = new URL(this.#socket.url);
-            return `${url.protocol}//${url.host}`;
-        }
-
-        return null;
-    }
-
-    /**
-     * Connect to an Archipelago server without authenticating.
-     * @param url The url of the server, including the protocol (e.g., `wss://archipelago.gg:38281`).
-     * @remarks If the port is omitted, manager will default to `38281`. Any paths, queries, fragments, or userinfo
-     * components of the provided URL will be ignored.
-     */
-    public async connect(url: URL | string): Promise<void> {
-        // Drop any current connection from this client.
-        this.disconnect();
-
-        if (typeof url === "string") {
-            url = new URL(url);
-        }
-
-        // If port is omitted, default to 38281.
-        url.port = url.port || "38281";
-
-        // Disallow any protocols that aren't "ws" or "wss".
-        if (url.protocol !== "wss:" && url.protocol !== "ws:") {
-            throw new TypeError(`Connection supports ws:// or wss:// protocol only: ${url.protocol}// is not valid.`);
-        }
-
-        try {
-            await new Promise<void>((resolve, reject) => {
-                const IsomorphousWebSocket = findWebSocket();
-                if (IsomorphousWebSocket === null) {
-                    throw new APSocketError("Unable to find a suitable WebSocket API.");
-                }
-
-                // Establish a connection and setup basic handlers.
-                this.#socket = new IsomorphousWebSocket(url);
-                this.#socket.onclose = this.disconnect.bind(this);
-                this.#socket.onopen = () => {
-                    this.#connected = true;
-
-                    // Wait for RoomInfo packet or timeout after 10 seconds with no packet.
-                    const timeout = setTimeout(() => {
-                        unsub();
-                        reject(new APSocketError(
-                            "Client did not receive RoomInfo packet within 10 seconds of establishing connection. "
-                            + "Is this an Archipelago server?",
-                        ));
-                    }, 10_000);
-                    const unsub = this.subscribe("onRoomInfo", () => {
-                        clearTimeout(timeout);
-                        unsub();
-                        resolve();
-                    });
-                };
-                this.#socket.onerror = () => {
-                    reject(new APSocketError("Socket closed unexpectedly. Is there a server listening on that URL?"));
-                };
-                this.#socket.onmessage = (event: MessageEvent<string>) => {
-                    this.#onPacketsReceived(JSON.parse(event.data) as ServerPacket[]);
-                };
-            });
-
-            this.#events.dispatchEvent(new Event("_Connected"));
-        } catch (error) {
-            this.disconnect();
-            throw error;
-        }
-    }
-
-    /**
-     * Disconnect from the current Archipelago server, if still connected, and reset internal state.
-     */
-    public disconnect(): void {
-        // Prevents additional re-runs if already disconnected.
-        if (!this.connected) {
-            return;
-        }
-
-        this.#connected = false;
-        this.#socket?.close();
-        this.#socket = null;
-        this.#events.dispatchEvent(new Event("onDisconnected"));
+        // Process packets.
+        createSubscriber<ServerPacket[]>(this.#events, "__onPacketsReceived")(this.#onPacketsReceived.bind(this));
     }
 
     /**
@@ -129,11 +40,8 @@ export class SocketManager {
      * @throws {@link ArchipelagoErrors.APSocketError} if not connected to an Archipelago server.
      */
     public send(...packets: ClientPacket[]): void {
-        if (!this.#socket) {
-            throw new APSocketError("Unable to send packet(s); not connected to a server.");
-        }
-
-        this.#socket.send(JSON.stringify(packets));
+        // Use the ArchipelagoClient's send function, so it can maintain control over the socket.
+        this.#send(packets);
     }
 
     /**
@@ -253,16 +161,7 @@ export class SocketManager {
      */
     public subscribe(type: "onPacketReceived", callback: (packet: ServerPacket) => void): APEventUnsubscribe;
 
-    /**
-     * Subscribe to disconnection events.
-     * @param type The type of event to listen for.
-     * @param callback The callback to run when this event occurs.
-     * @returns An unsubscribe function to remove event listener. Event listeners are not automatically unsubscribed on
-     * a disconnection event.
-     */
-    public subscribe(type: "onDisconnected", callback: () => void): APEventUnsubscribe;
-
-    public subscribe(type: SubscriptionEventType, callback: (packet: never) => void | (() => void)): APEventUnsubscribe {
+    public subscribe(type: SubscriptionEventType, callback: (packet: never) => void): APEventUnsubscribe {
         const subscribe = createSubscriber<ServerPacket>(this.#events, type);
         return subscribe(callback as (packet: ServerPacket) => void);
     }
@@ -292,5 +191,4 @@ type SubscriptionEventType =
     | "onRoomInfo"
     | "onRoomUpdate"
     | "onSetReply"
-    | "onPacketReceived"
-    | "onDisconnected";
+    | "onPacketReceived";

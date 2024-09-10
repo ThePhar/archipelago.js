@@ -54,15 +54,16 @@ export type ConnectionArguments = {
     readonly subscribedItemEvents?: "minimal" | "external_only" | "exclude_self" | "exclude_starting_inventory" | "all"
 
     /**
-     * Automatically adds the `Tracker` tag to designate this client is a tracker and will not check locations.
-     */
-    readonly isTracker?: boolean
-
-    /**
      * Automatically adds the `HintGame` tag to designate this client will be sending hints and will not check
      * locations.
      */
-    readonly isHintGame?: boolean
+    readonly isHintClient?: boolean
+
+    /**
+     * Automatically adds the `Tracker` tag to designate this client is a tracker and will not check locations.
+     * @remarks This property is ignored if `isHintGame` is `true`.
+     */
+    readonly isTracker?: boolean
 
     /**
      * Automatically adds the `TextOnly` tag to designate this client will only be chatting and will not check

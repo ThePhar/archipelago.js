@@ -1,3 +1,5 @@
+import { ConnectionArguments } from "./types/ConnectionArguments.ts";
+
 /**
  * Generate a random uuid version 4 hexadecimal string.
  * @internal
@@ -79,4 +81,24 @@ export function findWebSocket(): typeof WebSocket | null {
     }
 
     return IsomorphousWebSocket;
+}
+
+/**
+ * Creates default connection arguments for if a user does not supply some arguments.
+ * @internal
+ */
+export function createDefaultConnectionArgs(): Required<ConnectionArguments> {
+    return {
+        password: "",
+        uuid: generateUuid(),
+        tags: [],
+        targetVersion: {
+            major: 0, minor: 5, build: 0,
+        },
+        requestSlotData: true,
+        subscribedItemEvents: "all",
+        isTracker: false,
+        isHintClient: false,
+        isTextOnly: false,
+    };
 }

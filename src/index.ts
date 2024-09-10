@@ -19,13 +19,13 @@ export * as ArchipelagoErrors from "./errors.ts";
 // Normal exports.
 export { ArchipelagoClient } from "./ArchipelagoClient.ts";
 export { CommonTags } from "./consts/CommonTags.ts";
+export { APIManager } from "./managers/APIManager.ts";
 export { ChatManager } from "./managers/ChatManager.ts";
 export { DataStorageManager } from "./managers/DataStorageManager.ts";
 export { ItemsManager } from "./managers/ItemsManager.ts";
 export { LocationsManager } from "./managers/LocationsManager.ts";
 export { PlayersManager } from "./managers/PlayersManager.ts";
 export { RoomManager } from "./managers/RoomManager.ts";
-export { SocketManager } from "./managers/SocketManager.ts";
 
 // Typed exports.
 import type { ConnectionArguments } from "./types/ConnectionArguments.ts";
