@@ -1,4 +1,4 @@
-import { ItemsHandlingFlags } from "./api";
+import { ClientStatus, ItemsHandlingFlags } from "./api";
 import { ClientPacket, ConnectPacket, ServerPacket } from "./api/packets";
 import { CommonTags } from "./consts/CommonTags.ts";
 import { APSocketError } from "./errors.ts";
@@ -10,7 +10,7 @@ import { LocationsManager } from "./managers/LocationsManager.ts";
 import { PlayersManager } from "./managers/PlayersManager.ts";
 import { RoomManager } from "./managers/RoomManager.ts";
 import { ConnectionArguments } from "./types/ConnectionArguments.ts";
-import { APEventUnsubscribe, createDefaultConnectionArgs, createSubscriber, findWebSocket } from "./utils.ts";
+import { createDefaultConnectionArgs, findWebSocket } from "./utils.ts";
 
 /**
  * The client that connects to an Archipelago server, facilitates communication, and keeps track of room/player state.
@@ -44,10 +44,6 @@ export class ArchipelagoClient {
 
     /** The name of the game associated with this client. */
     public get game(): string {
-        if (!this.connected) {
-            return "";
-        }
-
         return this.#game;
     }
 
@@ -69,19 +65,11 @@ export class ArchipelagoClient {
 
     /** Returns the slot name of this client. */
     public get name(): string {
-        if (!this.connected) {
-            return "";
-        }
-
         return this.#name;
     }
 
     /** Returns the connection arguments for this client. */
     public get args(): ConnectionArguments {
-        if (!this.connected) {
-            return {};
-        }
-
         return this.#args;
     }
 
@@ -149,21 +137,6 @@ export class ArchipelagoClient {
             this.disconnect();
             throw error;
         }
-    }
-
-    /**
-     * Disconnect from the current Archipelago server, if still connected, and reset internal state.
-     */
-    public disconnect(): void {
-        // Prevents additional re-runs if already disconnected.
-        if (!this.connected) {
-            return;
-        }
-
-        this.#connected = false;
-        this.#socket?.close();
-        this.#socket = null;
-        this.#events.dispatchEvent(new Event("onDisconnect"));
     }
 
     /**
@@ -267,17 +240,28 @@ export class ArchipelagoClient {
     }
 
     /**
-     * Subscribe to socket disconnection events.
-     * @param type The type of event to listen for.
-     * @param callback The callback to run when this event occurs.
-     * @returns An unsubscribe function to remove event listener. Event listeners are not automatically unsubscribed on
-     * a disconnection event.
+     * Disconnect from the current Archipelago server, if still connected, and reset internal state.
      */
-    public subscribe(type: "onDisconnected", callback: () => void): APEventUnsubscribe;
+    public disconnect(): void {
+        // Prevents additional re-runs if already disconnected.
+        if (!this.connected) {
+            return;
+        }
 
-    public subscribe(type: SubscriptionEventType, callback: () => void): APEventUnsubscribe {
-        const subscribe = createSubscriber<undefined>(this.#events, type);
-        return subscribe(callback as () => void);
+        this.#connected = false;
+        this.#socket?.close();
+        this.#socket = null;
+        this.#events.dispatchEvent(new Event("onDisconnected"));
+    }
+
+    /**
+     * Update the client status for the current player. For a list of known client statuses, see {@link ClientStatus}.
+     * @param status The status to change to.
+     * @remarks Once a player has reached the {@link ClientStatus.Goal} status, it cannot be changed and any additional
+     * requests will be ignored by the server.
+     */
+    public updateStatus(status: ClientStatus) {
+        this.api.send({ cmd: "StatusUpdate", status });
     }
 
     #send(packets: ClientPacket[]): void {
@@ -288,6 +272,3 @@ export class ArchipelagoClient {
         this.#socket.send(JSON.stringify(packets));
     }
 }
-
-type SubscriptionEventType =
-    | "onDisconnected";

@@ -1,5 +1,8 @@
 import { ArchipelagoClient } from "../ArchipelagoClient.ts";
 
+/**
+ * @todo Implement functionality.
+ */
 export class ChatManager {
     readonly #client: ArchipelagoClient;
 

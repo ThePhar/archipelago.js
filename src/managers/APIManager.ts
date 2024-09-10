@@ -16,6 +16,9 @@ import {
 } from "../api/packets";
 import { APEventUnsubscribe, createSubscriber } from "../utils.ts";
 
+/**
+ * Manages network API-level events and exposes helper methods to faciliate that communication.
+ */
 export class APIManager {
     readonly #send: (packets: ClientPacket[]) => void;
     readonly #events: EventTarget;
@@ -161,6 +164,15 @@ export class APIManager {
      */
     public subscribe(type: "onPacketReceived", callback: (packet: ServerPacket) => void): APEventUnsubscribe;
 
+    /**
+     * Subscribe to socket disconnection events.
+     * @param type The type of event to listen for.
+     * @param callback The callback to run when this event occurs.
+     * @returns An unsubscribe function to remove event listener. Event listeners are not automatically unsubscribed on
+     * a disconnection event.
+     */
+    public subscribe(type: "onDisconnected", callback: () => void): APEventUnsubscribe;
+
     public subscribe(type: SubscriptionEventType, callback: (packet: never) => void): APEventUnsubscribe {
         const subscribe = createSubscriber<ServerPacket>(this.#events, type);
         return subscribe(callback as (packet: ServerPacket) => void);
@@ -191,4 +203,5 @@ type SubscriptionEventType =
     | "onRoomInfo"
     | "onRoomUpdate"
     | "onSetReply"
-    | "onPacketReceived";
+    | "onPacketReceived"
+    | "onDisconnected";
