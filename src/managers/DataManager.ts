@@ -39,7 +39,9 @@ export class DataManager {
                 itemIdLookup: dataPackage.games[game].item_name_to_id,
                 locationIdLookup: dataPackage.games[game].location_name_to_id,
                 checksum: dataPackage.games[game].checksum,
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                 itemNameLookup: Object.fromEntries(Object.entries(dataPackage.games[game].item_name_to_id).map((a) => a.reverse())),
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                 locationNameLookup: Object.fromEntries(Object.entries(dataPackage.games[game].location_name_to_id).map((a) => a.reverse())),
             };
         }
