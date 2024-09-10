@@ -31,7 +31,7 @@ export type ConnectedPacket = {
     readonly slot_data: AbstractSlotData
 
     /** Object of each slot with their {@link NetworkSlot} information. */
-    readonly slot_info: { [slot: number]: NetworkSlot }
+    readonly slot_info: Record<string, NetworkSlot>
 
     /** Number of hint points that the current player has. */
     readonly hint_points: number

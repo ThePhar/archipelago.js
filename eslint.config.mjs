@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment */
 // @ts-check
 // noinspection JSCheckFunctionSignatures
 
@@ -32,6 +31,7 @@ export default tslint.config(
             "jsdoc/require-returns": 0,
             "jsdoc/require-throws": 1,
             "jsdoc/sort-tags": 1,
+            "jsdoc/valid-types": 0,
             "simple-import-sort/imports": "error",
             "simple-import-sort/exports": "error",
         },
@@ -39,9 +39,7 @@ export default tslint.config(
             ecmaVersion: "latest",
             sourceType: "module",
             parserOptions: {
-                projectService: {
-                    allowDefaultProject: ["*.js", "*.mjs"],
-                },
+                projectService: true,
                 tsconfigRootDir: import.meta.dirname,
             },
         },
