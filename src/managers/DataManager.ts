@@ -1,4 +1,4 @@
-import { JSONSerializableData } from "../api";
+import { DataPackage, JSONSerializableData } from "../api";
 import { GetPacket } from "../api/packets";
 import { ArchipelagoClient } from "../structs/ArchipelagoClient.ts";
 import { IntermediateDataOperation } from "../structs/IntermediateDataOperation.ts";
@@ -10,6 +10,15 @@ import { APEventUnsubscribe, generateUuid } from "../utils.ts";
 export class DataManager {
     readonly #client: ArchipelagoClient;
     #storage: Record<string, JSONSerializableData | undefined> = {};
+    #package: {
+        [game: string]: {
+            itemNameLookup: Record<number, string>
+            locationNameLookup: Record<number, string>
+            itemIdLookup: Record<string, number>
+            locationIdLookup: Record<string, number>
+            checksum: string
+        }
+    } = {};
 
     /**
      * Instantiates a new DataStorageManager.
@@ -18,6 +27,48 @@ export class DataManager {
      */
     public constructor(client: ArchipelagoClient) {
         this.#client = client;
+    }
+
+    /**
+     * Prefills internal data package with existing data package data, such as data cached, to reduce network bandwidth.
+     * @param dataPackage
+     */
+    public preloadDataPackage(dataPackage: DataPackage): void {
+        for (const game in dataPackage.games) {
+            this.#package[game] = {
+                itemIdLookup: dataPackage.games[game].item_name_to_id,
+                locationIdLookup: dataPackage.games[game].location_name_to_id,
+                checksum: dataPackage.games[game].checksum,
+                itemNameLookup: Object.fromEntries(Object.entries(dataPackage.games[game].item_name_to_id).map((a) => a.reverse())),
+                locationNameLookup: Object.fromEntries(Object.entries(dataPackage.games[game].location_name_to_id).map((a) => a.reverse())),
+            };
+        }
+    }
+
+    /**
+     * Requests an updated data package from the server.
+     * @param games A list of games to fetch game packages for. If omitted, fetches all game packages in the session.
+     * @param force If `false`, preloaded game packages will not be fetched to save bandwidth, unless checksum doesn't
+     * match the server. On `true`, it always downloads (not recommended).
+     */
+    public async loadDataPackage(games?: string[], force?: boolean): Promise<void> {
+        // TODO: Needs room manager ready.
+    }
+
+    /**
+     * Returns a copy of the data package. Helpful for caching to preload later.
+     */
+    public getDataPackage(): DataPackage {
+        const dataPackage: DataPackage = { games: {} };
+        for (const game in this.#package) {
+            dataPackage.games[game] = {
+                item_name_to_id: this.#package[game].itemIdLookup,
+                location_name_to_id: this.#package[game].locationIdLookup,
+                checksum: this.#package[game].checksum,
+            };
+        }
+
+        return dataPackage;
     }
 
     /**
