@@ -1,4 +1,4 @@
-import { NetworkSlot, Permission, PermissionTable } from "../api";
+import { Permission, PermissionTable } from "../api";
 import { ArchipelagoClient } from "../structs/ArchipelagoClient.ts";
 import { APEventUnsubscribe } from "../utils.ts";
 
