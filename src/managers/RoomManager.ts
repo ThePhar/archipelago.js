@@ -20,7 +20,6 @@ export class RoomManager {
     #releasePermission: Permission = 0;
     #collectPermission: Permission = 0;
     #remainingPermission: Permission = 0;
-    #slots: Record<number, NetworkSlot> = {};
 
     /**
      * Instantiates a new RoomManager.
