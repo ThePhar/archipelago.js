@@ -1,5 +1,6 @@
 import { Permission, PermissionTable } from "../api";
 import { ArchipelagoClient } from "../structs/ArchipelagoClient.ts";
+import { APEventUnsubscribe } from "../utils.ts";
 
 /**
  * Keeps track of room state.
@@ -8,17 +9,17 @@ export class RoomManager {
     readonly #client: ArchipelagoClient;
     #serverVersion = { major: -1, minor: -1, build: -1 };
     #generatorVersion = { major: -1, minor: -1, build: -1 };
-    #serverTags: string[] = [];
-    #password: boolean = false;
-    #hintCost: number = 0;
-    #locationCheckPoints: number = 0;
     #games: string[] = [];
     #seed: string = "";
-    #permissions: PermissionTable = {
-        release: Permission.Disabled,
-        collect: Permission.Disabled,
-        remaining: Permission.Disabled,
-    };
+    #locations: number = 0;
+    #hasPassword: boolean = false;
+    #hintCostPercentage: number = 0;
+    #hintPoints: number = 0;
+    #locationCheckPoints: number = 0;
+    #serverTags: string[] = [];
+    #releasePermission: Permission = 0;
+    #collectPermission: Permission = 0;
+    #remainingPermission: Permission = 0;
 
     /**
      * Instantiates a new RoomManager.
@@ -40,20 +41,32 @@ export class RoomManager {
                 build: packet.generator_version.build,
             };
             this.#serverTags = packet.tags;
-            this.#password = packet.password;
-            this.#permissions = packet.permissions;
-            this.#hintCost = packet.hint_cost;
+            this.#hasPassword = packet.password;
+            this.#releasePermission = packet.permissions.release;
+            this.#collectPermission = packet.permissions.collect;
+            this.#releasePermission = packet.permissions.remaining;
+            this.#hintCostPercentage = packet.hint_cost;
             this.#locationCheckPoints = packet.location_check_points;
             this.#games = packet.games;
             this.#seed = packet.seed_name;
         });
 
+        this.#client.api.subscribe("onConnected", (packet) => {
+            this.#hintPoints = packet.hint_points;
+            this.#locations = packet.missing_locations.length + packet.checked_locations.length;
+        });
+
         this.#client.api.subscribe("onRoomUpdate", (packet) => {
-            this.#hintCost = packet.hint_cost ?? this.#hintCost;
+            this.#hintCostPercentage = packet.hint_cost ?? this.#hintCostPercentage;
+            this.#hintPoints = packet.hint_points ?? this.#hintPoints;
             this.#locationCheckPoints = packet.location_check_points ?? this.#locationCheckPoints;
-            this.#permissions = packet.permissions ?? this.#permissions;
             this.#serverTags = packet.tags ?? this.#serverTags;
-            this.#password = packet.password ?? this.#password;
+            this.#hasPassword = packet.password ?? this.#hasPassword;
+            if (packet.permissions) {
+                this.#releasePermission = packet.permissions.release;
+                this.#collectPermission = packet.permissions.collect;
+                this.#releasePermission = packet.permissions.remaining;
+            }
         });
     }
 
@@ -78,23 +91,20 @@ export class RoomManager {
     /** Returns a list of tags the server is currently capable of. */
     public get serverTags(): string[] {
         // Return a copy to prevent runtime modification of private field outside this library.
-        return [...this.#serverTags];
+        return structuredClone(this.#serverTags);
+    }
+
+    /** Returns `true` if the room requires a password to join. */
+    public get hasPassword(): boolean {
+        return this.#hasPassword;
     }
 
     /**
-     * Returns if the room requires a password to authenticate and join.
-     * @returns `true` if the room requires a password to join.
-     */
-    public get password(): boolean {
-        return this.#password;
-    }
-
-    /**
-     * Returns a string representation of the current permissions for the `!release` command.
+     * Returns the string representation of the `!release` command option.
      * @remarks If the bit representation is required, use `permissionBitflags` property instead.
      */
-    public get releaseMode(): "enabled" | "disabled" | "goal" | "auto" | "auto_enabled" | "unknown" {
-        switch (this.#permissions.release) {
+    public get releaseMode(): "enabled" | "disabled" | "goal" | "auto" | "auto_enabled" {
+        switch (this.#releasePermission) {
             case Permission.Auto:
                 return "auto";
             case Permission.AutoEnabled:
@@ -105,17 +115,15 @@ export class RoomManager {
                 return "enabled";
             case Permission.Goal:
                 return "goal";
-            default:
-                return "unknown";
         }
     }
 
     /**
-     * Returns a string representation of the current permissions for the `!collect` command.
+     * Returns the string representation of the `!collect` command option.
      * @remarks If the bit representation is required, use `permissionBitflags` property instead.
      */
-    public get collectMode(): "enabled" | "disabled" | "goal" | "auto" | "auto_enabled" | "unknown" {
-        switch (this.#permissions.collect) {
+    public get collectMode(): "enabled" | "disabled" | "goal" | "auto" | "auto_enabled" {
+        switch (this.#collectPermission) {
             case Permission.Auto:
                 return "auto";
             case Permission.AutoEnabled:
@@ -126,17 +134,15 @@ export class RoomManager {
                 return "enabled";
             case Permission.Goal:
                 return "goal";
-            default:
-                return "unknown";
         }
     }
 
     /**
-     * Returns a string representation of the current permissions for the `!remaining` command.
+     * Returns the string representation of the `!remaining` command option.
      * @remarks If the bit representation is required, use `permissionBitflags` property instead.
      */
-    public get remainingMode(): "enabled" | "disabled" | "goal" | "unknown" {
-        switch (this.#permissions.remaining) {
+    public get remainingMode(): "enabled" | "disabled" | "goal" {
+        switch (this.#remainingPermission) {
             case Permission.Disabled:
                 return "disabled";
             case Permission.Enabled:
@@ -144,7 +150,8 @@ export class RoomManager {
             case Permission.Goal:
                 return "goal";
             default:
-                return "unknown";
+                // Ideally this should never happen, but alas.
+                throw new Error(`Invalid remaining permission: ${this.#remainingPermission}`);
         }
     }
 
@@ -155,12 +162,30 @@ export class RoomManager {
      * properties instead.
      */
     public get permissionBitflags(): PermissionTable {
-        return structuredClone(this.#permissions);
+        return {
+            release: this.#releasePermission,
+            collect: this.#collectPermission,
+            remaining: this.#remainingPermission,
+        };
     }
 
-    /** Returns the amount of hint points required to request a hint from the server. */
+    /** Returns the percentage of locations that need to be checked to have enough points to hint from the server. */
+    public get hintCostPercentage(): number {
+        return this.#hintCostPercentage;
+    }
+
+    /** Returns the amount of hint points this player needs to create a hint. */
     public get hintCost(): number {
-        return this.#hintCost;
+        if (this.#hintCostPercentage) {
+            return Math.max(1, Math.floor(this.#hintCostPercentage * this.#locations * 0.01));
+        }
+
+        return 0;
+    }
+
+    /** Returns the amount of hint points this player currently has. */
+    public get hintPoints(): number {
+        return this.#hintPoints;
     }
 
     /** Returns the amount of hint points received per location checked. */
@@ -170,7 +195,7 @@ export class RoomManager {
 
     /** Returns the list of games present in the current room. */
     public get games(): string[] {
-        return [...this.#games];
+        return structuredClone(this.#games);
     }
 
     /**
@@ -180,4 +205,49 @@ export class RoomManager {
     public get seedName(): string {
         return this.#seed;
     }
+
+    /**
+     * Register a callback to fire when the room state changes.
+     * @param callback The callback to fire when the room state changes.
+     * @returns An unsubscribe function to remove the event listener when no longer needed.
+     * @remarks Only changed values are passed to the callback.
+     * @example
+     * client.room.onRoomUpdate((changes) => {
+     *     if (changes.hintPointsChanged) {
+     *         console.log(`You now have ${client.room.hintPoints} hint points!`);
+     *     }
+     *
+     *     if (changes.hintCostChanged) {
+     *         console.log(`New hints now cost ${client.room.hintCost} hint points.`);
+     *     }
+     * });
+     */
+    public onRoomUpdate(callback: (changes: ChangedRoomProperties) => void): APEventUnsubscribe {
+        return this.#client.api.subscribe("onRoomUpdate", (packet) => {
+            const changes: ChangedRoomProperties = {
+                // Any time this is present, we'll treat it as different.
+                serverTagsChanged: packet.tags !== undefined,
+                hintPointsChanged: packet.hint_points !== undefined,
+                hintCostChanged: packet.hint_cost !== undefined,
+                locationCheckPointsChanged: packet.location_check_points !== undefined,
+                hasPasswordChanged: packet.password !== undefined,
+                permissionsChanged: packet.permissions !== undefined,
+            };
+
+            callback(changes);
+        });
+    }
 }
+
+/**
+ * An object containing the possible values that can change when room state updates. Returned on the callback from
+ * {@link RoomManager.onRoomUpdate}.
+ */
+export type ChangedRoomProperties = {
+    readonly hasPasswordChanged: boolean
+    readonly permissionsChanged: boolean
+    readonly hintPointsChanged: boolean
+    readonly hintCostChanged: boolean
+    readonly locationCheckPointsChanged: boolean
+    readonly serverTagsChanged: boolean
+};

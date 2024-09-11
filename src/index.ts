@@ -31,12 +31,14 @@ export { IntermediateDataOperation } from "./structs/IntermediateDataOperation.t
 
 // Typed exports.
 import type { DataChangeCallback, DataRecordPromise } from "./managers/DataStorageManager.ts";
+import type { ChangedRoomProperties } from "./managers/RoomManager.ts";
 import type { ConnectionArguments } from "./types/ConnectionArguments.ts";
 import type { APEventSubscriber, APEventUnsubscribe } from "./utils.ts";
 
 export type {
     APEventSubscriber,
     APEventUnsubscribe,
+    ChangedRoomProperties,
     ConnectionArguments,
     DataChangeCallback,
     DataRecordPromise,
