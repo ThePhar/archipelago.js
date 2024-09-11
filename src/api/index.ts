@@ -4,7 +4,6 @@ import { ClientStatus } from "./enums/ClientStatus.ts";
 import { CreateAsHintMode } from "./enums/CreateAsHintMode.ts";
 import { Permission, PermissionTable } from "./enums/Permission.ts";
 import { SlotType } from "./enums/SlotType.ts";
-import { AbstractSlotData } from "./types/AbstractSlotData.ts";
 import { ConnectionError } from "./types/ConnectionError.ts";
 import { DataPackage, GamePackage } from "./types/DataPackage.ts";
 import { JSONSerializableData } from "./types/JSONSerializableData.ts";
@@ -24,7 +23,6 @@ export {
 };
 
 export type {
-    AbstractSlotData,
     ConnectionError,
     DataPackage,
     GamePackage,

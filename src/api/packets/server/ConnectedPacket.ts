@@ -1,4 +1,4 @@
-import { AbstractSlotData } from "../../types/AbstractSlotData.ts";
+import { JSONSerializableData } from "../../types/JSONSerializableData.ts";
 import { NetworkPlayer } from "../../types/NetworkPlayer.ts";
 import { NetworkSlot } from "../../types/NetworkSlot.ts";
 
@@ -28,7 +28,7 @@ export type ConnectedPacket = {
     readonly checked_locations: number[]
 
     /** Contains a json object for slot related data, differs per game. Empty if not required. */
-    readonly slot_data: AbstractSlotData
+    readonly slot_data: { [p: string]: JSONSerializableData }
 
     /** Object of each slot with their {@link NetworkSlot} information. */
     readonly slot_info: Record<string, NetworkSlot>

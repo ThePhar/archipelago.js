@@ -1,4 +1,4 @@
-import { AbstractSlotData, ClientStatus, NetworkPlayer, NetworkSlot, SlotType } from "../api";
+import { ClientStatus, JSONSerializableData, NetworkPlayer, NetworkSlot, SlotType } from "../api";
 import { ConnectedPacket, RoomUpdatePacket } from "../api/packets";
 import { ArchipelagoClient } from "../structs/ArchipelagoClient.ts";
 
@@ -204,7 +204,11 @@ export class PlayerMetadata {
      * @remarks This data is not tracked after running, so slot data should be cached to reduce additional network
      * calls, if necessary.
      */
-    public async fetchSlotData<T extends AbstractSlotData = AbstractSlotData>(): Promise<T> {
+    public async fetchSlotData<T extends { [p: string]: JSONSerializableData }>(): Promise<T> {
+        if (this.slot === 0) {
+            throw new Error("Cannot fetch slot data for Archipelago slot; not a real player.");
+        }
+
         const key = `_read_slot_data_${this.slot}`;
         return new Promise<T>((resolve) => {
             void this.#client.data
