@@ -116,7 +116,7 @@ export class DataPackageManager {
      * const client = new ArchipelagoClient();
      *
      * client.package.import(JSON.parse(data));
-     * await client.connect("wss://archipelago.gg:38281");
+     * await client.connect("wss://archipelago.gg:38281", "Phar", "Clique");
      */
     public import(dataPackage: DataPackage): void {
         for (const game in dataPackage.games) {

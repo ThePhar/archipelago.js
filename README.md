@@ -36,17 +36,16 @@ deno: `deno add @pharware/archipelago`
 
     // TODO: Write.
 
-## Basic Usage
+## Quick Start
 
 ```js
 import { ArchipelagoClient } from "@pharware/archipelago";
 
-// Create a client.
 const client = new ArchipelagoClient();
 
-// Connect and authenticate.
-await client.connect("wss://archipelago.gg:38281");
-await client.authenticate("Phar", "Clique");
+// Connect to Archipelago session.
+client.connect("wss://archipelago.gg:38281", "Phar", "Clique")
+    .then(() => client.say("Hello, multi-world!"));
 ```
 
 ## Documentation

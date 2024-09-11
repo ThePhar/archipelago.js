@@ -75,6 +75,10 @@ export class DataStorageManager {
             data = { ...data, ...response };
         }
 
+        if (monitor) {
+            this.#storage = { ...this.#storage, ...data };
+        }
+
         return data;
     }
 

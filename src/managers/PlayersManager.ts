@@ -49,7 +49,8 @@ export class PlayersManager {
                     keys.push(`_read_client_status_${player.team}_${player.slot}`);
                 }
             }
-            this.#client.api.send({ cmd: "SetNotify", keys });
+
+            void this.#client.data.get(keys, true);
         });
         this.#client.api.subscribe("onRoomUpdate", onUpdate);
     }
