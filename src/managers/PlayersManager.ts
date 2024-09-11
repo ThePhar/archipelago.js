@@ -8,6 +8,7 @@ import { ArchipelagoClient } from "../structs/ArchipelagoClient.ts";
 export class PlayersManager {
     readonly #client: ArchipelagoClient;
     #players: { [team: number]: PlayerMetadata[] } = {};
+    #slots: Record<number, NetworkSlot> = {};
 
     /**
      * Instantiates a new PlayersManager.
@@ -37,6 +38,8 @@ export class PlayersManager {
         this.#client.api.subscribe("onConnected", (packet) => {
             onUpdate(packet);
 
+            this.#slots = packet.slot_info;
+
             // Watch for client statuses for each player, as well.
             const keys: string[] = [];
             for (const team in this.#players) {
@@ -49,6 +52,14 @@ export class PlayersManager {
             this.#client.api.send({ cmd: "SetNotify", keys });
         });
         this.#client.api.subscribe("onRoomUpdate", onUpdate);
+    }
+
+    /**
+     * Returns a record of basic information for each slot.
+     * @remarks Slot information is shared across each team. For accessing player data, see {@link PlayersManager}.
+     */
+    public get slots(): Record<number, NetworkSlot> {
+        return structuredClone(this.#slots);
     }
 
     /** Returns all teams and their respective players in the current session. */
@@ -126,7 +137,7 @@ export class PlayerMetadata {
             return "Archipelago";
         }
 
-        return this.#slot.game;
+        return this.#networkSlot.game;
     }
 
     /** Returns the type of slot this player is. See {@link SlotType} for more information. */
@@ -135,7 +146,7 @@ export class PlayerMetadata {
             return SlotType.Spectator;
         }
 
-        return this.#slot.type;
+        return this.#networkSlot.type;
     }
 
     /** Returns the team id this player is a member of. */
@@ -164,7 +175,7 @@ export class PlayerMetadata {
         }
 
         return this.#client.players.teams[this.team].reduce((members, player) => {
-            if (this.#slot.group_members.includes(player.slot)) {
+            if (this.#networkSlot.group_members.includes(player.slot)) {
                 members.push(player);
             }
 
@@ -179,7 +190,7 @@ export class PlayerMetadata {
         }
 
         return this.#client.players.teams[this.team].reduce((groups, player) => {
-            if (this.#client.room.slots[player.slot].group_members.includes(this.slot)) {
+            if (this.#client.players.slots[player.slot].group_members.includes(this.slot)) {
                 groups.push(player);
             }
 
@@ -202,7 +213,7 @@ export class PlayerMetadata {
         });
     }
 
-    get #slot(): NetworkSlot {
-        return this.#client.room.slots[this.slot];
+    get #networkSlot(): NetworkSlot {
+        return this.#client.players.slots[this.slot];
     }
 }

@@ -55,7 +55,6 @@ export class RoomManager {
         this.#client.api.subscribe("onConnected", (packet) => {
             this.#hintPoints = packet.hint_points;
             this.#locations = packet.missing_locations.length + packet.checked_locations.length;
-            this.#slots = packet.slot_info;
         });
 
         this.#client.api.subscribe("onRoomUpdate", (packet) => {
@@ -70,14 +69,6 @@ export class RoomManager {
                 this.#releasePermission = packet.permissions.remaining;
             }
         });
-    }
-
-    /**
-     * Returns a record of basic information for each slot.
-     * @remarks Slot information is shared across each team. For accessing player data, see {@link PlayersManager}.
-     */
-    public get slots(): Record<number, NetworkSlot> {
-        return structuredClone(this.#slots);
     }
 
     /**
