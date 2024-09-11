@@ -74,7 +74,7 @@ export class RoomManager {
 
     /**
      * Returns a record of basic information for each slot.
-     * @remarks Slot information is shared across each team. For accessing player data, see {@link PlayerManager}.
+     * @remarks Slot information is shared across each team. For accessing player data, see {@link PlayersManager}.
      */
     public get slots(): Record<number, NetworkSlot> {
         return structuredClone(this.#slots);
