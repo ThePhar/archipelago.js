@@ -1,4 +1,4 @@
-import { Permission, PermissionTable } from "../api";
+import { NetworkSlot, Permission, PermissionTable } from "../api";
 import { ArchipelagoClient } from "../structs/ArchipelagoClient.ts";
 import { APEventUnsubscribe } from "../utils.ts";
 
@@ -20,6 +20,7 @@ export class RoomManager {
     #releasePermission: Permission = 0;
     #collectPermission: Permission = 0;
     #remainingPermission: Permission = 0;
+    #slots: Record<number, NetworkSlot> = {};
 
     /**
      * Instantiates a new RoomManager.
@@ -54,6 +55,7 @@ export class RoomManager {
         this.#client.api.subscribe("onConnected", (packet) => {
             this.#hintPoints = packet.hint_points;
             this.#locations = packet.missing_locations.length + packet.checked_locations.length;
+            this.#slots = packet.slot_info;
         });
 
         this.#client.api.subscribe("onRoomUpdate", (packet) => {
@@ -68,6 +70,14 @@ export class RoomManager {
                 this.#releasePermission = packet.permissions.remaining;
             }
         });
+    }
+
+    /**
+     * Returns a record of basic information for each slot.
+     * @remarks Slot information is shared across each team. For accessing player data, see {@link PlayerManager}.
+     */
+    public get slots(): Record<number, NetworkSlot> {
+        return structuredClone(this.#slots);
     }
 
     /**
@@ -210,7 +220,6 @@ export class RoomManager {
      * Register a callback to fire when the room state changes.
      * @param callback The callback to fire when the room state changes.
      * @returns An unsubscribe function to remove the event listener when no longer needed.
-     * @remarks Only changed values are passed to the callback.
      * @example
      * client.room.onRoomUpdate((changes) => {
      *     if (changes.hintPointsChanged) {

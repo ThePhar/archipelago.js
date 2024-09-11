@@ -24,7 +24,7 @@ export { DataPackageManager, PackageMetadata } from "./managers/DataPackageManag
 export { DataStorageManager } from "./managers/DataStorageManager.ts";
 export { ItemsManager } from "./managers/ItemsManager.ts";
 export { LocationsManager } from "./managers/LocationsManager.ts";
-export { PlayersManager } from "./managers/PlayersManager.ts";
+export { PlayerMetadata, PlayersManager } from "./managers/PlayersManager.ts";
 export { RoomManager } from "./managers/RoomManager.ts";
 export { ArchipelagoClient } from "./structs/ArchipelagoClient.ts";
 export { IntermediateDataOperation } from "./structs/IntermediateDataOperation.ts";
