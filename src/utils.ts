@@ -95,7 +95,6 @@ export function createDefaultConnectionArgs(): Required<ConnectionArguments> {
         targetVersion: {
             major: 0, minor: 5, build: 0,
         },
-        requestSlotData: true,
         subscribedItemEvents: "all",
         isTracker: false,
         isHintClient: false,
