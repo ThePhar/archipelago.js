@@ -8,11 +8,11 @@ import { ArchipelagoClient } from "./ArchipelagoClient.ts";
  * An intermediate abstract object holding an array of data storage operations to be performed in order by the server.
  * @template T The type of value to be manipulated.
  */
-export class IntermediateDataOperation<T extends JSONSerializableData> {
+export class IntermediateDataOperation {
     readonly #client: ArchipelagoClient;
     readonly #operations: DataStorageOperation[] = [];
     readonly #key: string;
-    readonly #default: T;
+    readonly #default: JSONSerializableData;
 
     /**
      * Create an intermediate object for storing data operations.
@@ -21,7 +21,7 @@ export class IntermediateDataOperation<T extends JSONSerializableData> {
      * @param key The data storage key.
      * @param _default Default value to use, if no value exists.
      */
-    public constructor(client: ArchipelagoClient, key: string, _default: T) {
+    public constructor(client: ArchipelagoClient, key: string, _default: JSONSerializableData) {
         this.#client = client;
         this.#key = key;
         this.#default = _default;
@@ -31,7 +31,7 @@ export class IntermediateDataOperation<T extends JSONSerializableData> {
      * Sets the current value of the key to `value`.
      * @param value A value for the operation to apply against the current data storage value.
      */
-    public replace(value: JSONSerializableData): IntermediateDataOperation<T> {
+    public replace(value: JSONSerializableData): IntermediateDataOperation {
         this.#operations.push({ operation: "replace", value });
         return this;
     }
@@ -39,7 +39,7 @@ export class IntermediateDataOperation<T extends JSONSerializableData> {
     /**
      * If the key has no value yet, sets the current value of the key to `default`.
      */
-    public default(): IntermediateDataOperation<T> {
+    public default(): IntermediateDataOperation {
         this.#operations.push({ operation: "default", value: null });
         return this;
     }
@@ -49,7 +49,7 @@ export class IntermediateDataOperation<T extends JSONSerializableData> {
      * be appended to the current value.
      * @param value A value for the operation to apply against the current data storage value.
      */
-    public add(value: number | JSONSerializableData[]): IntermediateDataOperation<T> {
+    public add(value: number | JSONSerializableData[]): IntermediateDataOperation {
         this.#operations.push({ operation: "add", value });
         return this;
     }
@@ -58,7 +58,7 @@ export class IntermediateDataOperation<T extends JSONSerializableData> {
      * Multiplies the current value of the key by `value`.
      * @param value A value for the operation to apply against the current data storage value.
      */
-    public multiply(value: number): IntermediateDataOperation<T> {
+    public multiply(value: number): IntermediateDataOperation {
         this.#operations.push({ operation: "mul", value });
         return this;
     }
@@ -67,7 +67,7 @@ export class IntermediateDataOperation<T extends JSONSerializableData> {
      * Multiplies the current value of the key to the power of `value`.
      * @param value A value for the operation to apply against the current data storage value.
      */
-    public power(value: number): IntermediateDataOperation<T> {
+    public power(value: number): IntermediateDataOperation {
         this.#operations.push({ operation: "pow", value });
         return this;
     }
@@ -76,7 +76,7 @@ export class IntermediateDataOperation<T extends JSONSerializableData> {
      * Sets the current value of the key to the remainder after division by `value`.
      * @param value A value for the operation to apply against the current data storage value.
      */
-    public remainder(value: number): IntermediateDataOperation<T> {
+    public remainder(value: number): IntermediateDataOperation {
         this.#operations.push({ operation: "mod", value });
         return this;
     }
@@ -84,7 +84,7 @@ export class IntermediateDataOperation<T extends JSONSerializableData> {
     /**
      * Rounds down the current value to the nearest integer.
      */
-    public floor(): IntermediateDataOperation<T> {
+    public floor(): IntermediateDataOperation {
         this.#operations.push({ operation: "floor", value: null });
         return this;
     }
@@ -92,7 +92,7 @@ export class IntermediateDataOperation<T extends JSONSerializableData> {
     /**
      * Rounds up the current value to the nearest integer.
      */
-    public ceiling(): IntermediateDataOperation<T> {
+    public ceiling(): IntermediateDataOperation {
         this.#operations.push({ operation: "ceil", value: null });
         return this;
     }
@@ -101,7 +101,7 @@ export class IntermediateDataOperation<T extends JSONSerializableData> {
      * Sets the current value of the key to `value` if `value` is bigger.
      * @param value A value for the operation to apply against the current data storage value.
      */
-    public max(value: number): IntermediateDataOperation<T> {
+    public max(value: number): IntermediateDataOperation {
         this.#operations.push({ operation: "max", value });
         return this;
     }
@@ -110,7 +110,7 @@ export class IntermediateDataOperation<T extends JSONSerializableData> {
      * Sets the current value of the key to `value` if `value` is bigger.
      * @param value A value for the operation to apply against the current data storage value.
      */
-    public min(value: number): IntermediateDataOperation<T> {
+    public min(value: number): IntermediateDataOperation {
         this.#operations.push({ operation: "min", value });
         return this;
     }
@@ -119,7 +119,7 @@ export class IntermediateDataOperation<T extends JSONSerializableData> {
      * Applies a bitwise **AND** to the current value of the key with `value`.
      * @param value A value for the operation to apply against the current data storage value.
      */
-    public and(value: number): IntermediateDataOperation<T> {
+    public and(value: number): IntermediateDataOperation {
         this.#operations.push({ operation: "and", value });
         return this;
     }
@@ -128,7 +128,7 @@ export class IntermediateDataOperation<T extends JSONSerializableData> {
      * Applies a bitwise **OR** to the current value of the key with value.
      * @param value A value for the operation to apply against the current data storage value.
      */
-    public or(value: number): IntermediateDataOperation<T> {
+    public or(value: number): IntermediateDataOperation {
         this.#operations.push({ operation: "or", value });
         return this;
     }
@@ -137,7 +137,7 @@ export class IntermediateDataOperation<T extends JSONSerializableData> {
      * Applies a bitwise **XOR** to the current value of the key with value.
      * @param value A value for the operation to apply against the current data storage value.
      */
-    public xor(value: number): IntermediateDataOperation<T> {
+    public xor(value: number): IntermediateDataOperation {
         this.#operations.push({ operation: "xor", value });
         return this;
     }
@@ -146,7 +146,7 @@ export class IntermediateDataOperation<T extends JSONSerializableData> {
      * Applies a bitwise left-shift to the current value of the key by `value`.
      * @param value A value for the operation to apply against the current data storage value.
      */
-    public leftShift(value: number): IntermediateDataOperation<T> {
+    public leftShift(value: number): IntermediateDataOperation {
         this.#operations.push({ operation: "left_shift", value });
         return this;
     }
@@ -155,7 +155,7 @@ export class IntermediateDataOperation<T extends JSONSerializableData> {
      * Applies a bitwise right-shift to the current value of the key by `value`.
      * @param value A value for the operation to apply against the current data storage value.
      */
-    public rightShift(value: number): IntermediateDataOperation<T> {
+    public rightShift(value: number): IntermediateDataOperation {
         this.#operations.push({ operation: "right_shift", value });
         return this;
     }
@@ -164,7 +164,7 @@ export class IntermediateDataOperation<T extends JSONSerializableData> {
      * List only: removes the first instance of `value` found in the list.
      * @param value A value for the operation to apply against the current data storage value.
      */
-    public remove(value: JSONSerializableData): IntermediateDataOperation<T> {
+    public remove(value: JSONSerializableData): IntermediateDataOperation {
         this.#operations.push({ operation: "remove", value });
         return this;
     }
@@ -174,7 +174,7 @@ export class IntermediateDataOperation<T extends JSONSerializableData> {
      * with the specified key of `value`.
      * @param value A value for the operation to apply against the current data storage value.
      */
-    public pop(value: JSONSerializableData): IntermediateDataOperation<T> {
+    public pop(value: JSONSerializableData): IntermediateDataOperation {
         this.#operations.push({ operation: "pop", value });
         return this;
     }
@@ -184,7 +184,7 @@ export class IntermediateDataOperation<T extends JSONSerializableData> {
      * ones if they previously existed.
      * @param value A value for the operation to apply against the current data storage value.
      */
-    public update(value: JSONSerializableData): IntermediateDataOperation<T> {
+    public update(value: JSONSerializableData): IntermediateDataOperation {
         this.#operations.push({ operation: "update", value });
         return this;
     }
@@ -193,15 +193,12 @@ export class IntermediateDataOperation<T extends JSONSerializableData> {
      * Commit the current operations to data store and return a Promise with the updated key, once fulfilled.
      * @param awaitReply If `true`, a promise will be returned with the new value. Otherwise, immediately resolves.
      */
-    public async set(awaitReply: true): Promise<T>;
+    public commit(awaitReply: true): Promise<JSONSerializableData>;
 
-    /**
-     * Commit the current operations to data store and return a Promise that immediately resolves with no value.
-     * @param awaitReply If `true`, a promise will be returned with the new value. Otherwise, immediately resolves.
-     */
-    public async set(awaitReply: false | undefined): Promise<void>;
+    /** Commit the current operations to data store. */
+    public commit(awaitReply: false): void;
 
-    public async set(awaitReply: boolean = false): Promise<T | void> {
+    public commit(awaitReply: boolean = false): Promise<JSONSerializableData> | void {
         const code = generateUuid();
         const packet: SetPacket = {
             cmd: "Set",
@@ -225,7 +222,7 @@ export class IntermediateDataOperation<T extends JSONSerializableData> {
                 }
 
                 unsubscribe();
-                resolve(packet.value as T);
+                resolve(packet.value);
             });
         });
     }

@@ -99,24 +99,24 @@ export class DataStorageManager {
 
     /**
      * Create a new transaction for setting a data storage key by returning an {@link IntermediateDataOperation}. To
-     * perform certain operations, just chain additional methods until finished, then `set()`.
+     * perform certain operations, just chain additional methods until finished, then call `prepare()`.
      * @param key The key to manipulate.
-     * @param _default A default value to be used if a `default()` operation is performed.
+     * @param _default The default value to be used if key does not exist.
      * @throws {@link Error} if attempting to modify a read only key.
      * @example
      * // Prepare key "my-key" and set initial value to 100, if key doesn't exist.
-     * client.data.manipulate("my-key", 100)
-     *     .multiply(0.25) // Multiply value by 0.25 (or divide by 4, in other words).
+     * client.data.prepare("my-key", 100)
+     *     .multiply(0.25) // Multiply value by 0.25.
      *     .floor()        // Round down to nearest integer.
-     *     .max(0)         // Ensure value does not go below 0, otherwise clamp to 0.
-     *     .set();         // Commit the operations to data storage.
+     *     .max(0)         // Clamp value above 0.
+     *     .commit();      // Commit operations to data storage.
      */
-    public manipulate(key: string, _default: JSONSerializableData = 0): IntermediateDataOperation<JSONSerializableData> {
+    public prepare(key: string, _default: JSONSerializableData = 0): IntermediateDataOperation {
         if (key.startsWith("_read_")) {
             throw Error("Cannot manipulate read only keys.");
         }
 
-        return new IntermediateDataOperation<JSONSerializableData>(this.#client, key, _default);
+        return new IntermediateDataOperation(this.#client, key, _default);
     }
 
     async #request(...keys: string[]): DataRecordPromise {
