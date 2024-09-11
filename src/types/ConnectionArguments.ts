@@ -76,7 +76,7 @@ export type ConnectionArguments = {
     readonly isTextOnly?: boolean
 
     /**
-     * If `true`, fetches all relevant data packages automatically prior to authentication.
+     * If `true`, fetches all missing game packages automatically prior to authentication.
      * @default true
      * @remarks It is recommended to import any locally cached data packages first in the {@link DataPackageManager}
      * prior to authentication to reduce network bandwidth.

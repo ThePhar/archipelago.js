@@ -38,6 +38,9 @@ export class DataPackageManager {
      * @param games A list of game packages to fetch. If omitted, fetches all available game packages.
      * @remarks It is recommended to export and locally cache data packages after connecting and prior to next
      * connection, import the data package to reduce future DataPackage calls.
+     *
+     * Can also be automatically done via {@link ConnectionArguments} `fetchDataPackage` property prior to
+     * authentication.
      */
     public async fetch(games?: string[]): Promise<void> {
         // Get all games in the current room if omitted.
@@ -82,6 +85,14 @@ export class DataPackageManager {
     /**
      * Export loaded data package as an object that can be loaded later (e.g., locally cache to reduce network calls to
      * fetch data package).
+     * @example
+     * // Node example
+     * import fs from "fs";
+     *
+     * // ... misc code connecting and fetching data package.
+     *
+     * const data = client.package.export();
+     * fs.writeFileSync("datapackage_cache.json", JSON.stringify(data), "utf8");
      */
     public export(): DataPackage {
         return {
@@ -96,6 +107,16 @@ export class DataPackageManager {
      * Import a data package to pre-populate local storage. Recommended to avoid unnecessary DataPackage calls over
      * the network (can be quite large in rooms with many different games).
      * @param dataPackage A data package to preload.
+     * @example
+     * // Node example
+     * import fs from "fs";
+     * import { ArchipelagoClient } from "@pharware/archipelago";
+     *
+     * const data = fs.readFileSync("datapackage_cache.json");
+     * const client = new ArchipelagoClient();
+     *
+     * client.package.import(JSON.parse(data));
+     * await client.connect("wss://archipelago.gg:38281");
      */
     public import(dataPackage: DataPackage): void {
         for (const game in dataPackage.games) {

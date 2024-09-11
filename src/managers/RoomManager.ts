@@ -235,7 +235,6 @@ export class RoomManager {
         return this.#client.api.subscribe("onRoomUpdate", (packet) => {
             const changes: ChangedRoomProperties = {
                 // Any time this is present, we'll treat it as different.
-                serverTagsChanged: packet.tags !== undefined,
                 hintPointsChanged: packet.hint_points !== undefined,
                 hintCostChanged: packet.hint_cost !== undefined,
                 locationCheckPointsChanged: packet.location_check_points !== undefined,
@@ -258,5 +257,4 @@ export type ChangedRoomProperties = {
     readonly hintPointsChanged: boolean
     readonly hintCostChanged: boolean
     readonly locationCheckPointsChanged: boolean
-    readonly serverTagsChanged: boolean
 };
