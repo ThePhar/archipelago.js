@@ -1,4 +1,4 @@
-import { ClientStatus, ItemsHandlingFlags } from "../api";
+import { ClientStatus, ItemsHandlingFlags, JSONSerializableData } from "../api";
 import { ClientPacket, ConnectPacket, ServerPacket } from "../api/packets";
 import { CommonTags } from "../consts/CommonTags.ts";
 import { APSocketError } from "../errors.ts";
@@ -92,6 +92,14 @@ export class ArchipelagoClient {
         }
 
         throw new Error("Cannot to pull player information prior to first connection. Please connect first.");
+    }
+
+    /**
+     * Fetch this client's slot data from local cache, if available. Otherwise, via the network.
+     * @template T The type of the slot data that is returned, for better typing information.
+     */
+    public async fetchSlotData<T extends { [p: string]: JSONSerializableData }>(): Promise<T> {
+        return this.player.fetchSlotData<T>();
     }
 
     /**
@@ -195,7 +203,6 @@ export class ArchipelagoClient {
         const uuid = options.uuid ?? defaultOptions.uuid;
         const tags = new Set(options.tags ?? defaultOptions.tags);
         const version = options.targetVersion ?? defaultOptions.targetVersion;
-        const slotData = options.requestSlotData ?? defaultOptions.requestSlotData;
         const subscribedItemEvents: string = options.subscribedItemEvents ?? defaultOptions.subscribedItemEvents;
         // Validate version.
         if (
@@ -249,7 +256,7 @@ export class ArchipelagoClient {
             game,
             name,
             password,
-            slot_data: slotData,
+            slot_data: false,
             items_handling: itemsHandling,
             tags: Array.from(tags),
             uuid,

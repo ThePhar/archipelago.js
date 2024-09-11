@@ -212,7 +212,7 @@ export class PlayerMetadata {
         const key = `_read_slot_data_${this.slot}`;
         return new Promise<T>((resolve) => {
             void this.#client.data
-                .get([key])
+                .get([key], this.slot === this.#client.slot) // Okay, we'll cache OUR slot data. Shhhh.
                 .then((data) => resolve(data[key] as T));
         });
     }

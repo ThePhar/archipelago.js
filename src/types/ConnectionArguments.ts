@@ -34,13 +34,6 @@ export type ConnectionArguments = {
     }
 
     /**
-     * Ensures the server includes slot-specific data when connecting to a slot. Can be set to `false` to save network
-     * bandwidth, if that data is not required by the client.
-     * @default true
-     */
-    readonly requestSlotData?: boolean
-
-    /**
      * Determines the kinds of received item events the server will broadcast to the client when locations are checked.
      *
      * - `minimal` - Only cheated item events via `!getitem <item>` and `/send <item>` will be received.
