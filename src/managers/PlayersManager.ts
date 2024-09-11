@@ -123,14 +123,6 @@ export class PlayerMetadata {
         return this.#player.alias;
     }
 
-    /**
-     * @internal
-     * @param value New alias.
-     */
-    public set alias(value: string) {
-        this.#player = { ...this.#player, alias: value };
-    }
-
     /** Returns the game this slot is playing. */
     public get game(): string {
         if (this.slot === 0) {

@@ -331,6 +331,14 @@ export class ArchipelagoClient {
         this.updateStatus(ClientStatus.Goal);
     }
 
+    /**
+     * Set or clear the alias for the currently connected player.
+     * @param alias The alias to be set. If omitted, will clear alias instead.
+     */
+    public setAlias(alias: string = "") {
+        this.chat.say(`!alias ${alias}`);
+    }
+
     #send(packets: ClientPacket[]): void {
         if (!this.#socket) {
             throw new APSocketError("Unable to send packet(s); not connected to a server.");
