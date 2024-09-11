@@ -41,6 +41,20 @@ export class APIManager {
      * Send client packet(s) to the server.
      * @param packets A list of packets to send, to be processed in order defined.
      * @throws {@link ArchipelagoErrors.APSocketError} if not connected to an Archipelago server.
+     * @example
+     * // Send a raw DeathLink bounce packet.
+     * client.api.send({
+     *     cmd: "Bounce",
+     *     tags: ["DeathLink"],
+     *     data: {
+     *         time: Date.now() / 1000,
+     *         source: "Phar",
+     *         cause: "Phar wrote bad code again which killed everyone.",
+     *     },
+     * });
+     *
+     * // Send a sync packet.
+     * client.api.send({ cmd: "Sync" });
      */
     public send(...packets: ClientPacket[]): void {
         // Use the ArchipelagoClient's send function, so it can maintain control over the socket.
@@ -53,6 +67,10 @@ export class APIManager {
      * @param callback The callback to run when this event occurs.
      * @returns An unsubscribe function to remove event listener. Event listeners are not automatically unsubscribed on
      * a disconnection event.
+     * @example
+     * client.api.subscribe("onBounced", (packet) => {
+     *     console.log("Received a Bounced packet!", packet);
+     * });
      */
     public subscribe(type: "onBounced", callback: (packet: BouncedPacket) => void): APEventUnsubscribe;
 
@@ -62,6 +80,10 @@ export class APIManager {
      * @param callback The callback to run when this event occurs.
      * @returns An unsubscribe function to remove event listener. Event listeners are not automatically unsubscribed on
      * a disconnection event.
+     * @example
+     * client.api.subscribe("onConnected", (packet) => {
+     *     console.log("Received a Connected packet!", packet);
+     * });
      */
     public subscribe(type: "onConnected", callback: (packet: ConnectedPacket) => void): APEventUnsubscribe;
 
@@ -71,6 +93,10 @@ export class APIManager {
      * @param callback The callback to run when this event occurs.
      * @returns An unsubscribe function to remove event listener. Event listeners are not automatically unsubscribed on
      * a disconnection event.
+     * @example
+     * client.api.subscribe("onConnectionRefused", (packet) => {
+     *     console.log("Received a ConnectionRefused packet!", packet);
+     * });
      */
     public subscribe(type: "onConnectionRefused", callback: (packet: ConnectionRefusedPacket) => void): APEventUnsubscribe;
 
@@ -80,6 +106,10 @@ export class APIManager {
      * @param callback The callback to run when this event occurs.
      * @returns An unsubscribe function to remove event listener. Event listeners are not automatically unsubscribed on
      * a disconnection event.
+     * @example
+     * client.api.subscribe("onDataPackage", (packet) => {
+     *     console.log("Received a DataPackage packet!", packet);
+     * });
      */
     public subscribe(type: "onDataPackage", callback: (packet: DataPackagePacket) => void): APEventUnsubscribe;
 
@@ -89,6 +119,10 @@ export class APIManager {
      * @param callback The callback to run when this event occurs.
      * @returns An unsubscribe function to remove event listener. Event listeners are not automatically unsubscribed on
      * a disconnection event.
+     * @example
+     * client.api.subscribe("onInvalidPacket", (packet) => {
+     *     console.log("Received a InvalidPacket packet!", packet);
+     * });
      */
     public subscribe(type: "onInvalidPacket", callback: (packet: InvalidPacketPacket) => void): APEventUnsubscribe;
 
@@ -98,6 +132,10 @@ export class APIManager {
      * @param callback The callback to run when this event occurs.
      * @returns An unsubscribe function to remove event listener. Event listeners are not automatically unsubscribed on
      * a disconnection event.
+     * @example
+     * client.api.subscribe("onLocationInfo", (packet) => {
+     *     console.log("Received a LocationInfo packet!", packet);
+     * });
      */
     public subscribe(type: "onLocationInfo", callback: (packet: LocationInfoPacket) => void): APEventUnsubscribe;
 
@@ -107,6 +145,10 @@ export class APIManager {
      * @param callback The callback to run when this event occurs.
      * @returns An unsubscribe function to remove event listener. Event listeners are not automatically unsubscribed on
      * a disconnection event.
+     * @example
+     * client.api.subscribe("onPrintJSON", (packet) => {
+     *     console.log("Received a PrintJSON packet!", packet);
+     * });
      */
     public subscribe(type: "onPrintJSON", callback: (packet: PrintJSONPacket) => void): APEventUnsubscribe;
 
@@ -116,6 +158,10 @@ export class APIManager {
      * @param callback The callback to run when this event occurs.
      * @returns An unsubscribe function to remove event listener. Event listeners are not automatically unsubscribed on
      * a disconnection event.
+     * @example
+     * client.api.subscribe("onReceivedItems", (packet) => {
+     *     console.log("Received a ReceivedItems packet!", packet);
+     * });
      */
     public subscribe(type: "onReceivedItems", callback: (packet: ReceivedItemsPacket) => void): APEventUnsubscribe;
 
@@ -125,6 +171,10 @@ export class APIManager {
      * @param callback The callback to run when this event occurs.
      * @returns An unsubscribe function to remove event listener. Event listeners are not automatically unsubscribed on
      * a disconnection event.
+     * @example
+     * client.api.subscribe("onRetrieved", (packet) => {
+     *     console.log("Received a Retrieved packet!", packet);
+     * });
      */
     public subscribe(type: "onRetrieved", callback: (packet: RetrievedPacket) => void): APEventUnsubscribe;
 
@@ -134,6 +184,10 @@ export class APIManager {
      * @param callback The callback to run when this event occurs.
      * @returns An unsubscribe function to remove event listener. Event listeners are not automatically unsubscribed on
      * a disconnection event.
+     * @example
+     * client.api.subscribe("onRoomInfo", (packet) => {
+     *     console.log("Received a RoomInfo packet!", packet);
+     * });
      */
     public subscribe(type: "onRoomInfo", callback: (packet: RoomInfoPacket) => void): APEventUnsubscribe;
 
@@ -143,6 +197,10 @@ export class APIManager {
      * @param callback The callback to run when this event occurs.
      * @returns An unsubscribe function to remove event listener. Event listeners are not automatically unsubscribed on
      * a disconnection event.
+     * @example
+     * client.api.subscribe("onRoomUpdate", (packet) => {
+     *     console.log("Received a RoomUpdate packet!", packet);
+     * });
      */
     public subscribe(type: "onRoomUpdate", callback: (packet: RoomUpdatePacket) => void): APEventUnsubscribe;
 
@@ -152,6 +210,10 @@ export class APIManager {
      * @param callback The callback to run when this event occurs.
      * @returns An unsubscribe function to remove event listener. Event listeners are not automatically unsubscribed on
      * a disconnection event.
+     * @example
+     * client.api.subscribe("onSetReply", (packet) => {
+     *     console.log("Received a SetReply packet!", packet);
+     * });
      */
     public subscribe(type: "onSetReply", callback: (packet: SetReplyPacket) => void): APEventUnsubscribe;
 
@@ -161,6 +223,10 @@ export class APIManager {
      * @param callback The callback to run when this event occurs.
      * @returns An unsubscribe function to remove event listener. Event listeners are not automatically unsubscribed on
      * a disconnection event.
+     * @example
+     * client.api.subscribe("onPacketReceived", (packet) => {
+     *     console.log(`Received a ${packet.cmd} packet!`, packet);
+     * });
      */
     public subscribe(type: "onPacketReceived", callback: (packet: ServerPacket) => void): APEventUnsubscribe;
 
@@ -170,6 +236,10 @@ export class APIManager {
      * @param callback The callback to run when this event occurs.
      * @returns An unsubscribe function to remove event listener. Event listeners are not automatically unsubscribed on
      * a disconnection event.
+     * @example
+     * client.api.subscribe("onDisconnected", () => {
+     *     console.log("Lost connection to the server.");
+     * });
      */
     public subscribe(type: "onDisconnected", callback: () => void): APEventUnsubscribe;
 

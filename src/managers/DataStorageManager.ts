@@ -85,6 +85,14 @@ export class DataStorageManager {
      * @returns An object containing all current values for each key requested.
      * @remarks If connection to the Archipelago server is lost, keys will no longer be tracked for changes and need to
      * be monitored again.
+     * @example
+     * const keys = ["key1", "key2"];
+     * const data = await client.data.notify(keys, (key, value, oldValue) => {
+     *     console.log(`Key '${key}' has been updated from ${oldValue} to ${value}!`);
+     * });
+     *
+     * client.data.prepare("key2").add(5).commit();
+     * // Key 'key2' has been updated from 0 to 5!
      */
     public async notify(keys: string[], callback: DataChangeCallback): DataRecordPromise {
         keys.forEach((key) => {

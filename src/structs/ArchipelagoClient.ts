@@ -15,10 +15,6 @@ import { createDefaultConnectionArgs, findWebSocket } from "../utils.ts";
 
 /**
  * The client that connects to an Archipelago server, facilitates communication, and keeps track of room/player state.
- * @example
- * import { ArchipelagoClient } from "@pharware/archipelago";
- *
- * const client = new ArchipelagoClient();
  */
 export class ArchipelagoClient {
     readonly #events: EventTarget = new EventTarget();
@@ -77,12 +73,19 @@ export class ArchipelagoClient {
     }
 
     /**
-     * Connect to an Archipelago server without authenticating.
+     * Connect to an Archipelago server before authenticating. Useful for performing any additional steps prior to
+     * authentication, such as loading data packages, checking room state, and setting up event listeners.
      * @param url The url of the server, including the protocol (e.g., `wss://archipelago.gg:38281`).
      * @param timeout Max number of milliseconds to wait for server to attempt to establish connection, before failing.
      * @remarks If the port is omitted, client will default to `38281`.
      *
      * Any paths, queries, fragments, or userinfo components of the provided `url` will be ignored.
+     * @example
+     * import { ArchipelagoClient } from "@pharware/archipelago";
+     *
+     * const client = new ArchipelagoClient();
+     *
+     * await client.connect("wss://archipelago.gg:38281");
      */
     public async connect(url: URL | string, timeout: number = 10_000): Promise<void> {
         // Drop any current connection from this client.
@@ -143,10 +146,18 @@ export class ArchipelagoClient {
     }
 
     /**
-     * Attempt to connect to an Archipelago server and authenticate to the session.
+     * Authenticate to an Archipelago session.
      * @param name The slot name to connect to.
      * @param game The game name associated with the connecting slot.
      * @param options An object of optional properties to configure the connection.
+     * @example
+     * import { ArchipelagoClient } from "@pharware/archipelago";
+     *
+     * const client = new ArchipelagoClient();
+     * await client.connect("wss://archipelago.gg:38281");
+     *
+     * // Connect to a Clique slot named 'Phar' with the 'DeathLink' tag.
+     * await client.authenticate("Phar", "Clique", { tags: ["DeathLink"] });
      */
     public async authenticate(name: string, game: string, options: ConnectionArguments = {}): Promise<void> {
         if (!this.connected) {
@@ -260,11 +271,29 @@ export class ArchipelagoClient {
     /**
      * Update the client status for the current player. For a list of known client statuses, see {@link ClientStatus}.
      * @param status The status to change to.
-     * @remarks Once a player has reached the {@link ClientStatus.Goal} status, it cannot be changed and any additional
-     * requests will be ignored by the server.
+     * @example
+     * import { ArchipelagoClient } from "@pharware/archipelago";
+     *
+     * const client = new ArchipelagoClient();
+     * await client.connect("wss://archipelago.gg:38281");
+     * await client.authenticate("Phar", "Clique");
+     *
+     * // Mark client as ready to start.
+     * client.updateStatus(10);
      */
-    public updateStatus(status: ClientStatus) {
+    public updateStatus(status: ClientStatus): void {
         this.api.send({ cmd: "StatusUpdate", status });
+    }
+
+    /**
+     * Sends goal completion and sets client status appropriately.
+     * @example
+     * client.sendGoalCompletion();
+     *
+     * // AP: Phar (Team #1) has completed their goal.
+     */
+    public sendGoalCompletion(): void {
+        this.updateStatus(ClientStatus.Goal);
     }
 
     #send(packets: ClientPacket[]): void {
