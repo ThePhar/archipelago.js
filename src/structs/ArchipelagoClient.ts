@@ -4,6 +4,7 @@ import { CommonTags } from "../consts/CommonTags.ts";
 import { APSocketError } from "../errors.ts";
 import { APIManager } from "../managers/APIManager.ts";
 import { ChatManager } from "../managers/ChatManager.ts";
+import { DataPackageManager } from "../managers/DataPackageManager.ts";
 import { DataStorageManager } from "../managers/DataStorageManager.ts";
 import { ItemsManager } from "../managers/ItemsManager.ts";
 import { LocationsManager } from "../managers/LocationsManager.ts";
@@ -33,6 +34,8 @@ export class ArchipelagoClient {
     public readonly room: RoomManager = new RoomManager(this);
     /** A helper object for tracking and communciating to/from the AP data storage and data package. */
     public readonly data: DataStorageManager = new DataStorageManager(this);
+    /** A helper object for managing data package and provides helper functions for name lookups. */
+    public readonly package: DataPackageManager = new DataPackageManager(this);
     /** A helper object for logging and sending messages via the Archipelago chat. */
     public readonly chat: ChatManager = new ChatManager(this);
     /** A helper object for tracking received items in the session. */

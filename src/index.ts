@@ -20,6 +20,7 @@ export * as ArchipelagoErrors from "./errors.ts";
 export { CommonTags } from "./consts/CommonTags.ts";
 export { APIManager } from "./managers/APIManager.ts";
 export { ChatManager } from "./managers/ChatManager.ts";
+export { DataPackageManager, PackageMetadata } from "./managers/DataPackageManager.ts";
 export { DataStorageManager } from "./managers/DataStorageManager.ts";
 export { ItemsManager } from "./managers/ItemsManager.ts";
 export { LocationsManager } from "./managers/LocationsManager.ts";

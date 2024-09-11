@@ -43,23 +43,33 @@ export class DataStorageManager {
     /**
      * Fetches provided keys from data storage.
      * @param keys A list of keys to be fetched.
+     * @param monitor Adds keys to local cache and request the server to update client when changes are made to speed up
+     * subsequent lookups. For one-off adhoc lookups, should be omitted.
      * @returns An object containing all current values for each key requested.
-     * @remarks Any keys not currently being monitored (via {@link DataStorageManager.notify}) for changes will be
-     * requested over the network instead of from memory.
+     * @remarks Any keys not currently cached and monitored will be requested over the network instead of from memory.
      */
-    public async get(...keys: string[]): DataRecordPromise {
+    public async get(keys: string[], monitor: boolean = false): DataRecordPromise {
+        if (monitor) {
+            // Request new keys that are not already being monitored to be notified of changes.
+            const newKeys = keys.filter((key) => !Object.keys(this.#storage).includes(key));
+            if (newKeys.length > 0) {
+                this.#client.api.send({ cmd: "SetNotify", keys: newKeys });
+            }
+        }
+
         let data: Record<string, JSONSerializableData> = {};
         const request = keys.reduce((keys, key) => {
             const value = structuredClone(this.#storage[key]);
             if (value !== undefined) {
                 data[key] = value;
             } else {
-                // Will need to request it from data storage.
-                keys.push(key);
+                keys.push(key); // Will need to request it from data storage.
             }
 
             return keys;
         }, [] as string[]);
+
+        // Request additional keys from API.
         if (request.length > 0) {
             const response = await this.#request(...request);
             data = { ...data, ...response };
@@ -69,32 +79,23 @@ export class DataStorageManager {
     }
 
     /**
-     * Add a list of keys to be monitored for changes that can be quickly retrieved later via
-     * {@link DataStorageManager.get} or notified via callback.
+     * Add a list of keys to be monitored for changes and fire a callback when changes are detected.
      * @param keys A list of keys to fetch and watch for changes.
-     * @param callback An optional callback to fire whenever one of these keys change.
+     * @param callback A callback to fire whenever one of these keys change.
      * @returns An object containing all current values for each key requested.
      * @remarks If connection to the Archipelago server is lost, keys will no longer be tracked for changes and need to
      * be monitored again.
      */
-    public async notify(keys: string[], callback?: DataChangeCallback): DataRecordPromise {
-        if (callback) {
-            keys.forEach((key) => {
-                this.#subscribers[key] ??= [];
-                this.#subscribers[key].push(callback);
-            });
-        }
-
-        // Remove any keys that are already being monitored.
-        const monitoredKeys = keys.filter((key) => !Object.keys(this.#storage).includes(key));
-        if (monitoredKeys.length > 0) {
-            this.#client.api.send({ cmd: "SetNotify", keys: monitoredKeys });
-        }
+    public async notify(keys: string[], callback: DataChangeCallback): DataRecordPromise {
+        keys.forEach((key) => {
+            this.#subscribers[key] ??= [];
+            this.#subscribers[key].push(callback);
+        });
 
         // Get current values and update local storage.
-        const data = await this.get(...keys);
-        this.#storage = { ...this.#storage, ...data };
-        return data;
+        const request = await this.get(keys, true);
+        this.#storage = { ...this.#storage, ...request };
+        return request;
     }
 
     /**
