@@ -8,8 +8,8 @@ import { generateUuid } from "../utils.ts";
  */
 export class DataStorageManager {
     readonly #client: ArchipelagoClient;
-    #storage: Map<string, JSONSerializableData> = new Map();
-    #subscribers: Map<string, DataChangeCallback[]> = new Map();
+    #storage: Record<string, JSONSerializableData> = {};
+    #subscribers: Record<string, DataChangeCallback[]> = {};
 
     /**
      * Instantiates a new DataStorageManager.
@@ -21,18 +21,23 @@ export class DataStorageManager {
 
         // If connection is lost discard all current callbacks.
         this.#client.api.subscribe("onDisconnected", () => {
-            this.#storage = new Map();
-            this.#subscribers = new Map();
+            this.#storage = {};
+            this.#subscribers = {};
         });
 
         // Track all keys that are being monitored.
         this.#client.api.subscribe("onSetReply", (packet) => {
-            this.#storage.set(packet.key, packet.value);
-            const callbacks = this.#subscribers.get(packet.key);
+            this.#storage[packet.key] = packet.value;
+            const callbacks = this.#subscribers[packet.key];
             if (callbacks) {
                 callbacks.forEach((callback) => callback(packet.key, packet.value, packet.original_value));
             }
         });
+    }
+
+    /** Returns a copy of all currently monitored keys. */
+    public get storage(): Record<string, JSONSerializableData> {
+        return structuredClone(this.#storage);
     }
 
     /**
@@ -45,7 +50,7 @@ export class DataStorageManager {
     public async get(...keys: string[]): DataRecordPromise {
         let data: Record<string, JSONSerializableData> = {};
         const request = keys.reduce((keys, key) => {
-            const value = structuredClone(this.#storage.get(key));
+            const value = structuredClone(this.#storage[key]);
             if (value !== undefined) {
                 data[key] = value;
             } else {
@@ -75,8 +80,8 @@ export class DataStorageManager {
     public async notify(keys: string[], callback?: DataChangeCallback): DataRecordPromise {
         if (callback) {
             keys.forEach((key) => {
-                const callbacks = this.#subscribers.get(key) ?? [];
-                callbacks.push(callback);
+                this.#subscribers[key] ??= [];
+                this.#subscribers[key].push(callback);
             });
         }
 
@@ -86,7 +91,10 @@ export class DataStorageManager {
             this.#client.api.send({ cmd: "SetNotify", keys: monitoredKeys });
         }
 
-        return this.get(...keys);
+        // Get current values and update local storage.
+        const data = await this.get(...keys);
+        this.#storage = { ...this.#storage, ...data };
+        return data;
     }
 
     /**
@@ -96,13 +104,12 @@ export class DataStorageManager {
      * @param _default A default value to be used if a `default()` operation is performed.
      * @throws {@link Error} if attempting to modify a read only key.
      * @example
-     * // ArchipelagoClient
-     * client.data
-     *     .manipulate("my-key", 100) // Prepare key "my-key" and set initial value to 100, if key doesn't exist.
-     *     .multiply(0.25)            // Multiply value by 0.25 (or divide by 4, in other words).
-     *     .floor()                   // Round down to nearest integer.
-     *     .max(0)                    // Ensure value does not go below 0, otherwise clamp to 0.
-     *     .set();                    // Commit the operations to data storage.
+     * // Prepare key "my-key" and set initial value to 100, if key doesn't exist.
+     * client.data.manipulate("my-key", 100)
+     *     .multiply(0.25) // Multiply value by 0.25 (or divide by 4, in other words).
+     *     .floor()        // Round down to nearest integer.
+     *     .max(0)         // Ensure value does not go below 0, otherwise clamp to 0.
+     *     .set();         // Commit the operations to data storage.
      */
     public manipulate(key: string, _default: JSONSerializableData = 0): IntermediateDataOperation<JSONSerializableData> {
         if (key.startsWith("_read_")) {

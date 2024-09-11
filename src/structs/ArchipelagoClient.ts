@@ -27,20 +27,20 @@ export class ArchipelagoClient {
     #name: string = "";
     #game: string = "";
 
-    /** A helper object for logging and sending messages via the Archipelago chat. */
-    public readonly chat: ChatManager = new ChatManager(this);
+    /** A helper object for communicating directly with the AP network protocol. */
+    public readonly api: APIManager = new APIManager(this.#events, this.#send.bind(this));
+    /** A helper object for managing room state information. */
+    public readonly room: RoomManager = new RoomManager(this);
     /** A helper object for tracking and communciating to/from the AP data storage and data package. */
     public readonly data: DataStorageManager = new DataStorageManager(this);
+    /** A helper object for logging and sending messages via the Archipelago chat. */
+    public readonly chat: ChatManager = new ChatManager(this);
     /** A helper object for tracking received items in the session. */
     public readonly items: ItemsManager = new ItemsManager(this);
     /** A helper object for tracking, scouting, and checking locations in the session. */
     public readonly locations: LocationsManager = new LocationsManager(this);
     /** A helper object for managing all players and their respective states in the session. */
     public readonly players: PlayersManager = new PlayersManager(this);
-    /** A helper object for managing room state information. */
-    public readonly room: RoomManager = new RoomManager(this);
-    /** A helper object for communicating directly with the AP network protocol. */
-    public readonly api: APIManager = new APIManager(this.#events, this.#send.bind(this));
 
     /** The name of the game associated with this client. */
     public get game(): string {
