@@ -100,5 +100,6 @@ export function createDefaultConnectionArgs(): Required<ConnectionArguments> {
         isTracker: false,
         isHintClient: false,
         isTextOnly: false,
+        fetchDataPackage: true,
     };
 }

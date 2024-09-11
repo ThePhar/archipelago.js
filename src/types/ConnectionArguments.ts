@@ -56,11 +56,13 @@ export type ConnectionArguments = {
     /**
      * Automatically adds the `HintGame` tag to designate this client will be sending hints and will not check
      * locations.
+     * @default false
      */
     readonly isHintClient?: boolean
 
     /**
      * Automatically adds the `Tracker` tag to designate this client is a tracker and will not check locations.
+     * @default false
      * @remarks This property is ignored if `isHintGame` is `true`.
      */
     readonly isTracker?: boolean
@@ -68,7 +70,16 @@ export type ConnectionArguments = {
     /**
      * Automatically adds the `TextOnly` tag to designate this client will only be chatting and will not check
      * locations.
+     * @default false
      * @remarks This property is ignored if `isTracker` or `isHintGame` is `true`.
      */
     readonly isTextOnly?: boolean
+
+    /**
+     * If `true`, fetches all relevant data packages automatically prior to authentication.
+     * @default true
+     * @remarks It is recommended to import any locally cached data packages first in the {@link DataPackageManager}
+     * prior to authentication to reduce network bandwidth.
+     */
+    readonly fetchDataPackage?: boolean
 };

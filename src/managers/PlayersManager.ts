@@ -41,9 +41,9 @@ export class PlayersManager {
             const keys: string[] = [];
             for (const team in this.#players) {
                 for (const player of this.#players[team]) {
-                    if (player.id === 0) continue;
+                    if (player.slot === 0) continue;
 
-                    keys.push(`_read_client_status_${player.team}_${player.id}`);
+                    keys.push(`_read_client_status_${player.team}_${player.slot}`);
                 }
             }
             this.#client.api.send({ cmd: "SetNotify", keys });
@@ -122,7 +122,7 @@ export class PlayerMetadata {
 
     /** Returns the game this slot is playing. */
     public get game(): string {
-        if (this.id === 0) {
+        if (this.slot === 0) {
             return "Archipelago";
         }
 
@@ -131,7 +131,7 @@ export class PlayerMetadata {
 
     /** Returns the type of slot this player is. See {@link SlotType} for more information. */
     public get type(): SlotType {
-        if (this.id === 0) {
+        if (this.slot === 0) {
             return SlotType.Spectator;
         }
 
@@ -144,17 +144,17 @@ export class PlayerMetadata {
     }
 
     /** Returns this slot's id. */
-    public get id(): number {
+    public get slot(): number {
         return this.#player.slot;
     }
 
     /** Returns this slot's current {@link ClientStatus}. */
     public get status(): ClientStatus {
-        if (this.id === 0) {
+        if (this.slot === 0) {
             return 30;
         }
 
-        return this.#client.data.storage[`_read_client_status_${this.team}_${this.id}`] as ClientStatus ?? 0;
+        return this.#client.data.storage[`_read_client_status_${this.team}_${this.slot}`] as ClientStatus ?? 0;
     }
 
     /** If this player is a group, returns all members. Otherwise, returns `null`. */
@@ -164,7 +164,7 @@ export class PlayerMetadata {
         }
 
         return this.#client.players.teams[this.team].reduce((members, player) => {
-            if (this.#slot.group_members.includes(player.id)) {
+            if (this.#slot.group_members.includes(player.slot)) {
                 members.push(player);
             }
 
@@ -174,12 +174,12 @@ export class PlayerMetadata {
 
     /** Returns all the groups this player is a member of. */
     public get groups(): PlayerMetadata[] {
-        if (this.id === 0) {
+        if (this.slot === 0) {
             return [];
         }
 
         return this.#client.players.teams[this.team].reduce((groups, player) => {
-            if (this.#client.room.slots[player.id].group_members.includes(this.id)) {
+            if (this.#client.room.slots[player.slot].group_members.includes(this.slot)) {
                 groups.push(player);
             }
 
@@ -194,13 +194,15 @@ export class PlayerMetadata {
      * calls, if necessary.
      */
     public async fetchSlotData<T extends AbstractSlotData = AbstractSlotData>(): Promise<T> {
-        const key = `_read_slot_data_${this.id}`;
+        const key = `_read_slot_data_${this.slot}`;
         return new Promise<T>((resolve) => {
-            this.#client.data.get([key]).then((data) => resolve(data[key] as T));
+            void this.#client.data
+                .get([key])
+                .then((data) => resolve(data[key] as T));
         });
     }
 
     get #slot(): NetworkSlot {
-        return this.#client.room.slots[this.id];
+        return this.#client.room.slots[this.slot];
     }
 }

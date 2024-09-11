@@ -1,4 +1,4 @@
-import { GamePackage } from "../api";
+import { DataPackage, GamePackage } from "../api";
 import { ArchipelagoClient } from "../structs/ArchipelagoClient.ts";
 
 /**
@@ -7,6 +7,8 @@ import { ArchipelagoClient } from "../structs/ArchipelagoClient.ts";
 export class DataPackageManager {
     readonly #client: ArchipelagoClient;
     readonly #packages: Record<string, PackageMetadata> = {};
+    #checksums: Record<string, string> = {};
+    #games: string[] = [];
 
     /**
      * Instantiates a new DataPackageManager.
@@ -15,7 +17,99 @@ export class DataPackageManager {
      */
     public constructor(client: ArchipelagoClient) {
         this.#client = client;
+
+        this.#client.api.subscribe("onRoomInfo", (packet) => {
+            this.#checksums = packet.datapackage_checksums;
+            this.#games = packet.games;
+        });
+
+        // Preload AP 0.5.0 data package.
+        this.#packages["Archipelago"] = this.#fetchCachedArchipelagoPackage();
     }
+
+    /** Returns all loaded game packages. */
+    public get packages(): Record<string, PackageMetadata> {
+        return this.#packages;
+    }
+
+    /**
+     * Fetch game packages from the server if they are not present locally or local checksum does not match the
+     * server's.
+     * @param games A list of game packages to fetch. If omitted, fetches all available game packages.
+     * @remarks It is recommended to export and locally cache data packages after connecting and prior to next
+     * connection, import the data package to reduce future DataPackage calls.
+     */
+    public async fetch(games?: string[]): Promise<void> {
+        // Get all games in the current room if omitted.
+        if (!games) {
+            games = this.#games;
+        }
+
+        // Validate if any game packages even need to be updated to reduce bandwidth.
+        games = games.reduce((requiredGames, game) => {
+            // If game package doesn't exist in this room, then we definitely don't need it.
+            if (!this.#games.includes(game)) {
+                return requiredGames;
+            }
+
+            // If the game package isn't present locally, then we'll need it.
+            if (!this.#packages[game]) {
+                return [...requiredGames, game];
+            }
+
+            // If checksum does not match, then we'll need it.
+            if (this.#packages[game].checksum !== this.#checksums[game]) {
+                return [...requiredGames, game];
+            }
+
+            return requiredGames;
+        }, [] as string[]);
+
+        // Request each game individually to reduce likelihood of a gigantic DataPackage packet.
+        for (const game of games) {
+            await new Promise<void>((resolve) => {
+                const unsubscribe = this.#client.api.subscribe("onDataPackage", (packet) => {
+                    this.import(packet.data);
+                    unsubscribe();
+                    resolve();
+                });
+
+                this.#client.api.send({ cmd: "GetDataPackage", games: [game] });
+            });
+        }
+    }
+
+    /**
+     * Export loaded data package as an object that can be loaded later (e.g., locally cache to reduce network calls to
+     * fetch data package).
+     */
+    public export(): DataPackage {
+        return {
+            games: Object.entries(this.#packages).reduce((games, [game, _package]) => {
+                games[game] = _package.exportGamePackage();
+                return games;
+            }, {} as Record<string, GamePackage>),
+        };
+    }
+
+    /**
+     * Import a data package to pre-populate local storage. Recommended to avoid unnecessary DataPackage calls over
+     * the network (can be quite large in rooms with many different games).
+     * @param dataPackage A data package to preload.
+     */
+    public import(dataPackage: DataPackage): void {
+        for (const game in dataPackage.games) {
+            this.#packages[game] = new PackageMetadata(this.#client, game, dataPackage.games[game]);
+        }
+    }
+
+    #fetchCachedArchipelagoPackage(): PackageMetadata {
+        return new PackageMetadata(this.#client, "Archipelago", {
+            checksum: "ac9141e9ad0318df2fa27da5f20c50a842afeecb",
+            item_name_to_id: { Nothing: -1 },
+            location_name_to_id: { "Cheat Console": -1, "Server": -2 },
+        });
+    };
 }
 
 /**

@@ -8,7 +8,7 @@ import { DataPackageManager } from "../managers/DataPackageManager.ts";
 import { DataStorageManager } from "../managers/DataStorageManager.ts";
 import { ItemsManager } from "../managers/ItemsManager.ts";
 import { LocationsManager } from "../managers/LocationsManager.ts";
-import { PlayersManager } from "../managers/PlayersManager.ts";
+import { PlayerMetadata, PlayersManager } from "../managers/PlayersManager.ts";
 import { RoomManager } from "../managers/RoomManager.ts";
 import { ConnectionArguments } from "../types/ConnectionArguments.ts";
 import { createDefaultConnectionArgs, findWebSocket } from "../utils.ts";
@@ -23,6 +23,8 @@ export class ArchipelagoClient {
     #args: Required<ConnectionArguments> = createDefaultConnectionArgs();
     #name: string = "";
     #game: string = "";
+    #slot: number = -1;
+    #team: number = -1;
 
     /** A helper object for communicating directly with the AP network protocol. */
     public readonly api: APIManager = new APIManager(this.#events, this.#send.bind(this));
@@ -70,6 +72,26 @@ export class ArchipelagoClient {
     /** Returns the connection arguments for this client. */
     public get args(): ConnectionArguments {
         return this.#args;
+    }
+
+    /** Returns this client's team number. */
+    public get team(): number {
+        return this.#team;
+    }
+
+    /** Return this client's slot number. */
+    public get slot(): number {
+        return this.#slot;
+    }
+
+    /** Return this client's {@link PlayerMetadata}. */
+    public get player(): PlayerMetadata {
+        const player = this.players.findPlayer(this.team, this.slot);
+        if (player) {
+            return player;
+        }
+
+        throw new Error("Cannot to pull player information prior to first connection. Please connect first.");
     }
 
     /**
@@ -218,6 +240,10 @@ export class ArchipelagoClient {
                 throw new Error(`Unknown \`subscribedItemEvents\` value: ${subscribedItemEvents}`);
         }
 
+        if (options.fetchDataPackage) {
+            await this.package.fetch();
+        }
+
         const connectPacket: ConnectPacket = {
             cmd: "Connect",
             game,
@@ -232,7 +258,7 @@ export class ArchipelagoClient {
 
         await new Promise<void>((resolve, reject) => {
             // Setup event handlers.
-            const unsubConnect = this.api.subscribe("onConnected", () => {
+            const unsubConnect = this.api.subscribe("onConnected", (packet) => {
                 unsubConnect();
                 unsubRefused();
 
@@ -240,6 +266,8 @@ export class ArchipelagoClient {
                 this.#args = { ...defaultOptions, ...options };
                 this.#name = name;
                 this.#game = game;
+                this.#slot = packet.slot;
+                this.#team = packet.team;
 
                 resolve(); // TODO: Should return self-player information.
             });
