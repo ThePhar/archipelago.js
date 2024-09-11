@@ -20,7 +20,7 @@ export * as ArchipelagoErrors from "./errors.ts";
 export { CommonTags } from "./consts/CommonTags.ts";
 export { APIManager } from "./managers/APIManager.ts";
 export { ChatManager } from "./managers/ChatManager.ts";
-export { DataManager } from "./managers/DataManager.ts";
+export { DataStorageManager } from "./managers/DataStorageManager.ts";
 export { ItemsManager } from "./managers/ItemsManager.ts";
 export { LocationsManager } from "./managers/LocationsManager.ts";
 export { PlayersManager } from "./managers/PlayersManager.ts";
@@ -29,6 +29,7 @@ export { ArchipelagoClient } from "./structs/ArchipelagoClient.ts";
 export { IntermediateDataOperation } from "./structs/IntermediateDataOperation.ts";
 
 // Typed exports.
+import type { DataChangeCallback, DataRecordPromise } from "./managers/DataStorageManager.ts";
 import type { ConnectionArguments } from "./types/ConnectionArguments.ts";
 import type { APEventSubscriber, APEventUnsubscribe } from "./utils.ts";
 
@@ -36,6 +37,8 @@ export type {
     APEventSubscriber,
     APEventUnsubscribe,
     ConnectionArguments,
+    DataChangeCallback,
+    DataRecordPromise,
 };
 
 // Default export can be the client as that will be the majority of the usage.

@@ -1,9 +1,5 @@
 import { ArchipelagoClient } from "../structs/ArchipelagoClient.ts";
 
-/**
- * @category Manager Class
- * @todo Implement functionality.
- */
 export class RoomManager {
     readonly #client: ArchipelagoClient;
 
