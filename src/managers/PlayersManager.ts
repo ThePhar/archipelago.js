@@ -1,4 +1,4 @@
-import { NetworkPlayer, SlotType } from "../api";
+import { AbstractSlotData, ClientStatus, NetworkPlayer, NetworkSlot, SlotType } from "../api";
 import { ConnectedPacket, RoomUpdatePacket } from "../api/packets";
 import { ArchipelagoClient } from "../structs/ArchipelagoClient.ts";
 
@@ -7,7 +7,7 @@ import { ArchipelagoClient } from "../structs/ArchipelagoClient.ts";
  */
 export class PlayersManager {
     readonly #client: ArchipelagoClient;
-    readonly #players: { [team: number]: PlayerMetadata[] } = {};
+    #players: { [team: number]: PlayerMetadata[] } = {};
 
     /**
      * Instantiates a new PlayersManager.
@@ -22,6 +22,7 @@ export class PlayersManager {
                 return;
             }
 
+            this.#players = {};
             for (const player of packet.players) {
                 // Check if team exists, and if not prepare it.
                 if (!this.#players[player.team]) {
@@ -33,7 +34,20 @@ export class PlayersManager {
             }
         };
 
-        this.#client.api.subscribe("onConnected", onUpdate);
+        this.#client.api.subscribe("onConnected", (packet) => {
+            onUpdate(packet);
+
+            // Watch for client statuses for each player, as well.
+            const keys: string[] = [];
+            for (const team in this.#players) {
+                for (const player of this.#players[team]) {
+                    if (player.id === 0) continue;
+
+                    keys.push(`_read_client_status_${player.team}_${player.id}`);
+                }
+            }
+            this.#client.api.send({ cmd: "SetNotify", keys });
+        });
         this.#client.api.subscribe("onRoomUpdate", onUpdate);
     }
 
@@ -41,10 +55,20 @@ export class PlayersManager {
     public get teams(): { [team: number]: PlayerMetadata[] } {
         const teams: { [team: number]: PlayerMetadata[] } = {};
         for (const team in this.#players) {
-            teams[team] = [...this.#players[team]];
+            teams[team] = this.#players[team].slice(1);
         }
 
         return teams;
+    }
+
+    /**
+     * Attempt to find a player by their team or slot name.
+     * @param team The team id associated with the searched player.
+     * @param slot The slot id associated with the searched player.
+     * @returns The player's metadata or `undefined` if not found.
+     */
+    public findPlayer(team: number, slot: number): PlayerMetadata | undefined {
+        return this.#players[team][slot];
     }
 
     #generateArchipelagoSlot(team: number): PlayerMetadata {
@@ -98,20 +122,20 @@ export class PlayerMetadata {
 
     /** Returns the game this slot is playing. */
     public get game(): string {
-        if (this.slot === 0) {
-            throw Error("Cannot access game information on Archipelago slot; not a real player.");
+        if (this.id === 0) {
+            return "Archipelago";
         }
 
-        return this.#client.room.slots[this.slot].game;
+        return this.#slot.game;
     }
 
     /** Returns the type of slot this player is. See {@link SlotType} for more information. */
     public get type(): SlotType {
-        if (this.slot === 0) {
-            throw Error("Cannot access type information on Archipelago slot; not a real player.");
+        if (this.id === 0) {
+            return SlotType.Spectator;
         }
 
-        return this.#client.room.slots[this.slot].type;
+        return this.#slot.type;
     }
 
     /** Returns the team id this player is a member of. */
@@ -120,7 +144,63 @@ export class PlayerMetadata {
     }
 
     /** Returns this slot's id. */
-    public get slot(): number {
+    public get id(): number {
         return this.#player.slot;
+    }
+
+    /** Returns this slot's current {@link ClientStatus}. */
+    public get status(): ClientStatus {
+        if (this.id === 0) {
+            return 30;
+        }
+
+        return this.#client.data.storage[`_read_client_status_${this.team}_${this.id}`] as ClientStatus ?? 0;
+    }
+
+    /** If this player is a group, returns all members. Otherwise, returns `null`. */
+    public get members(): PlayerMetadata[] | null {
+        if (this.type !== SlotType.Group) {
+            return null;
+        }
+
+        return this.#client.players.teams[this.team].reduce((members, player) => {
+            if (this.#slot.group_members.includes(player.id)) {
+                members.push(player);
+            }
+
+            return members;
+        }, [] as PlayerMetadata[]);
+    }
+
+    /** Returns all the groups this player is a member of. */
+    public get groups(): PlayerMetadata[] {
+        if (this.id === 0) {
+            return [];
+        }
+
+        return this.#client.players.teams[this.team].reduce((groups, player) => {
+            if (this.#client.room.slots[player.id].group_members.includes(this.id)) {
+                groups.push(player);
+            }
+
+            return groups;
+        }, [] as PlayerMetadata[]);
+    }
+
+    /**
+     * Fetch this player's slot data over the network.
+     * @template T The type of the slot data that is returned, for better typing information.
+     * @remarks This data is not tracked after running, so slot data should be cached to reduce additional network
+     * calls, if necessary.
+     */
+    public async fetchSlotData<T extends AbstractSlotData = AbstractSlotData>(): Promise<T> {
+        const key = `_read_slot_data_${this.id}`;
+        return new Promise<T>((resolve) => {
+            this.#client.data.get([key]).then((data) => resolve(data[key] as T));
+        });
+    }
+
+    get #slot(): NetworkSlot {
+        return this.#client.room.slots[this.id];
     }
 }
