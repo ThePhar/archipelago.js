@@ -1,9 +1,9 @@
-// import { APIManager } from "./managers/APIManager.ts";
-// import { ConnectionArguments } from "./types/ConnectionArguments.ts";
-// import { findWebSocket } from "./utils.ts";
+import { SocketManager } from "./managers/socket.ts";
 
 export class Client {
-    // static #isInternalConstructor = false;
+    public readonly api: SocketManager = new SocketManager(this);
+
+    public constructor() { }
 
     // static async create(name: string, game: string = "", options: ConnectionArguments = {}): Promise<Client> {
     //     if (typeof url === "string") {
@@ -32,21 +32,6 @@ export class Client {
     //     });
     // }
     //
-    // readonly #events: EventTarget = new EventTarget();
-    // readonly #socket: WebSocket | null = null;
-    // readonly #api: APIManager;
-
-    // protected constructor(socket: WebSocket) {
-    //     if (!Client.#isInternalConstructor) {
-    //         throw new TypeError("Client is not constructable; call `Client.create` instead.");
-    //     }
-    //
-    //     // Reset internal constructor field.
-    //     Client.#isInternalConstructor = false;
-    //
-    //     this.#socket = socket;
-    //     this.#api = new APIManager(this.#events, this.#socket);
-    // }
 
     // readonly #events: EventTarget = new EventTarget();
     // #socket: WebSocket | null = null;

@@ -44,6 +44,7 @@
 // export default Client;
 
 export { Client } from "./client.ts";
+export { SocketEvents, SocketManager } from "./managers/socket.ts";
 
 /**
  * A collection of types, constants, and enumerations that get passed over the Archipelago network protocol.
