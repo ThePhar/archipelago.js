@@ -55,13 +55,26 @@ export class SocketManager {
      * @param url The url of the server, including the protocol (e.g., `wss://archipelago.gg:38281`).
      * @remarks If the port is omitted, client will default to `38281`.
      *
-     * Disconnects from any existing server before establishing a new connection.
+     * If the protocol is omitted, client will attempt to connect via `wss`, then fallback to `ws` if unsuccessful.
      */
     public async connect(url: URL | string): Promise<RoomInfoPacket> {
         // Drop any current connection prior to connecting.
-        // this.disconnect(); // TODO: Write this.
+        this.disconnect();
 
         if (typeof url === "string") {
+            // Check if protocol was provided and URL is valid-ish, if not we'll add wss and fallback to ws if it fails.
+            const pattern = /^([a-zA-Z]+:)(?:\/\/)?[A-Za-z0-9_.~\-:]+/i;
+            if (!pattern.test(url)) {
+                try {
+                    // First try "wss".
+                    return this.connect(new URL(`wss://${url}`));
+                } catch {
+                    // Nope, try "ws".
+                    return this.connect(new URL(`ws://${url}`));
+                }
+            }
+
+            // Protocol provided, continue as is.
             url = new URL(url);
         }
 
@@ -85,7 +98,8 @@ export class SocketManager {
                 this.#socket.onclose = this.disconnect.bind(this);
                 this.#socket.onmessage = this.#parseMessage.bind(this);
                 this.#socket.onerror = () => {
-                    reject(new Error("WebSocket closed unexpectedly. Is there a server listening on that URL?"));
+                    this.disconnect();
+                    reject(new Error("Websocket closed unexpectedly."));
                 };
 
                 this.#socket.onopen = async () => {
@@ -112,6 +126,7 @@ export class SocketManager {
         this.#connected = false;
         this.#socket?.close();
         this.#socket = null;
+        this.#emit("Disconnect", []);
     }
 
     /**
