@@ -22,7 +22,8 @@
         "lint": "eslint src",
         "pack": "pnpm pack --pack-destination packs",
         "test": "jest --watch",
-        "test:coverage": "jest --coverage"
+        "test:coverage": "jest --coverage",
+        "docs": "typedoc --json docs/out.json"
     },
     "jest": {
         "coveragePathIgnorePatterns": [
@@ -40,6 +41,7 @@
     "repository": "https://github.com/ThePhar/archipelago.js.git",
     "bugs": "https://github.com/ThePhar/archipelago.js/issues",
     "devDependencies": {
+        "@discordjs/docgen": "^0.12.1",
         "@eslint/js": "^9.12.0",
         "@stylistic/eslint-plugin": "^2.9.0",
         "@types/bun": "^1.1.11",

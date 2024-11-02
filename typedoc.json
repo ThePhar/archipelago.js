@@ -7,7 +7,7 @@
     "tsconfig": "tsconfig.json",
     "entryPoints": ["src/index.ts"],
     "out": "docs",
-    "categorizeByGroup": true,
+    "categorizeByGroup": false,
     "gitRemote": "origin",
     "includeVersion": true
 }
