@@ -20,22 +20,7 @@
         "build:src": "rimraf -rf dist && bun build.mjs",
         "build:docs": "rimraf -rf docs && typedoc",
         "lint": "eslint src",
-        "pack": "pnpm pack --pack-destination packs",
-        "test": "jest --watch",
-        "test:coverage": "jest --coverage",
-        "docs": "typedoc --json docs/out.json"
-    },
-    "jest": {
-        "coveragePathIgnorePatterns": [
-            "<rootDir>/src/api/"
-        ],
-        "testEnvironment": "node",
-        "transform": {
-            "^.+.tsx?$": [
-                "ts-jest",
-                {}
-            ]
-        }
+        "pack": "pnpm pack --pack-destination packs"
     },
     "homepage": "https://thephar.github.io/archipelago.js/",
     "repository": "https://github.com/ThePhar/archipelago.js.git",
@@ -45,15 +30,12 @@
         "@stylistic/eslint-plugin": "^2.10.1",
         "@types/bun": "^1.1.12",
         "@types/eslint__js": "^8.42.3",
-        "@types/jest": "^29.5.14",
         "@types/node": "^22.8.6",
         "bun-plugin-dts": "^0.2.4",
         "eslint": "^9.14.0",
         "eslint-plugin-jsdoc": "^50.4.3",
         "eslint-plugin-simple-import-sort": "^12.1.1",
-        "jest": "^29.7.0",
         "rimraf": "^6.0.1",
-        "ts-jest": "^29.2.5",
         "typedoc": "^0.26.11",
         "typescript": "^5.6.3",
         "typescript-eslint": "^8.12.2"
