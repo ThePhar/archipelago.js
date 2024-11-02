@@ -73,24 +73,27 @@ export class Client {
         await this.socket.connect(url);
         return new Promise((resolve, reject) => {
             const connectedHandler = (packet: ConnectedPacket) => {
-                this.socket.off("Connected", connectedHandler);
-                this.socket.off("ConnectionRefused", refusedHandler);
+                this.socket
+                    .off("Connected", connectedHandler)
+                    .off("ConnectionRefused", refusedHandler);
 
                 console.log(`Connected to archipelago server as slot #${packet.slot}.`);
                 resolve();
             };
 
             const refusedHandler = (packet: ConnectionRefusedPacket) => {
-                this.socket.off("Connected", connectedHandler);
-                this.socket.off("ConnectionRefused", refusedHandler);
+                this.socket
+                    .off("Connected", connectedHandler)
+                    .off("ConnectionRefused", refusedHandler);
 
                 // TODO: Replace with custom error object that can export the reasons easier.
                 reject(new Error(`Connection was refused. Reason(s): [${packet.errors?.join(", ")}`));
             };
 
-            this.socket.on("Connected", connectedHandler.bind(this));
-            this.socket.on("ConnectionRefused", refusedHandler.bind(this));
-            this.socket.send(packet);
+            this.socket
+                .on("Connected", connectedHandler.bind(this))
+                .on("ConnectionRefused", refusedHandler.bind(this))
+                .send(packet);
         });
     }
 }

@@ -136,8 +136,9 @@ export class SocketManager {
      * @remarks For details on the supported events and the arguments returned for each event type, see
      * {@link SocketEvents}.
      */
-    public on<Event extends keyof SocketEvents>(event: Event, listener: (...args: SocketEvents[Event]) => void): void {
+    public on<Event extends keyof SocketEvents>(event: Event, listener: (...args: SocketEvents[Event]) => void): SocketManager {
         this.#target.addEventListener(event, listener as unknown as EventListener);
+        return this;
     }
 
     /**
@@ -147,8 +148,9 @@ export class SocketManager {
      * @remarks For details on the supported events and the arguments returned for each event type, see
      * {@link SocketEvents}.
      */
-    public off<Event extends keyof SocketEvents>(event: Event, listener: (...args: SocketEvents[Event]) => void): void {
+    public off<Event extends keyof SocketEvents>(event: Event, listener: (...args: SocketEvents[Event]) => void): SocketManager {
         this.#target.removeEventListener(event, listener as unknown as EventListener);
+        return this;
     }
 
     /**
