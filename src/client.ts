@@ -1,37 +1,15 @@
+import { JSONSerializableData } from "./api";
 import { SocketManager } from "./managers/socket.ts";
 
+/**
+ * The client that connects to an Archipelago server and provides helper methods and objects to facilitate
+ * communication, listen for events, and manage data.
+ */
 export class Client {
-    public readonly api: SocketManager = new SocketManager(this);
+    /** A helper object for handling websocket communication and interacting with the AP network protocol directly. */
+    public readonly socket: SocketManager = new SocketManager(this);
 
     public constructor() { }
-
-    // static async create(name: string, game: string = "", options: ConnectionArguments = {}): Promise<Client> {
-    //     if (typeof url === "string") {
-    //         url = new URL(url);
-    //     }
-    //
-    //     // If port is omitted, default to 38281.
-    //     url.port = url.port || "38281";
-    //
-    //     // Disallow protocols that are not "ws" or "wss".
-    //     if (url.protocol !== "ws:" && url.protocol !== "wss:") {
-    //         throw new TypeError(`Unable to create session; unsupported WebSocket protocol: ${url.protocol}//`);
-    //     }
-    //
-    //     return new Promise<Client>((resolve) => {
-    //         const IsomorphousWebSocket = findWebSocket();
-    //         if (IsomorphousWebSocket === null) {
-    //             throw new Error("Unable to create session; no suitable WebSocket API found.");
-    //         }
-    //
-    //         const socket = new IsomorphousWebSocket(url);
-    //
-    //         // Create session.
-    //         Client.#isInternalConstructor = true;
-    //         return new Client(socket);
-    //     });
-    // }
-    //
 
     // readonly #events: EventTarget = new EventTarget();
     // #socket: WebSocket | null = null;

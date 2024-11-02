@@ -28,6 +28,11 @@ export class SocketManager {
         return this.#connected;
     }
 
+    /**
+     * Instantiates a new SocketManager. Should only be instantiated by creating a new {@link Client}.
+     * @internal
+     * @param client The client object this manager is associated with.
+     */
     public constructor(client: Client) {
         this.#client = client;
     }
@@ -206,12 +211,12 @@ export class SocketManager {
  * {@link SocketManager}.
  * @example
  * // Print all chat messages to the console when received.
- * client.api.on("PrintJSON", (packet, message) => {
+ * client.socket.on("PrintJSON", (packet, message) => {
  *     console.log(message);
  * });
  *
  * // Warn when lost connection.
- * client.api.on("Disconnect", () => {
+ * client.socket.on("Disconnect", () => {
  *     console.warn("Lost connection to the server!");
  * }
  */
