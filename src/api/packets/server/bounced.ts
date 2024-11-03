@@ -17,5 +17,5 @@ export interface BouncedPacket {
     readonly tags?: string[]
 
     /** A verbatim copy of the data in the {@link BouncePacket} package. */
-    readonly data: JSONSerializableData
+    readonly data: { [p: string]: JSONSerializableData }
 }

@@ -265,4 +265,32 @@ export class Client {
             this.players.findPlayer(this.players.self.team, item.player) as Player),
         );
     }
+
+    /**
+     * Send a bounce packet targeting any clients that fulfil any target parameters. Can be listened for by listening to
+     * "bounced" events on {@link SocketManager}.
+     * @param targets The targets to receive this bounce packet.
+     * @param targets.games Specific games that should receive this bounce.
+     * @param targets.slots Specific slots that should receive this bounce.
+     * @param targets.tags Specific clients with these tags that should receive this bounce.
+     * @param data The json-serializable data to send.
+     * @throws Error If attempting to send a bounce while not authenticated.
+     * @remarks If no targets are specified, no clients will receive this bounce packet.
+     */
+    public bounce(
+        targets: { games?: string[], slots?: number[], tags?: string[] },
+        data: { [p: string]: JSONSerializableData },
+    ): void {
+        if (!this.authenticated) {
+            throw new Error("Cannot send bounces while not connected and authenticated.");
+        }
+
+        this.socket.send({
+            cmd: "Bounce",
+            data,
+            games: targets.games ?? [],
+            slots: targets.slots ?? [],
+            tags: targets.tags ?? [],
+        });
+    }
 }

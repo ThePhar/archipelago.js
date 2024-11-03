@@ -10,7 +10,7 @@ export interface BouncePacket {
     readonly cmd: "Bounce"
 
     /** Any data you want to send. */
-    readonly data: JSONSerializableData
+    readonly data: { [p: string]: JSONSerializableData }
 
     /** Optional. Games that should receive this message. */
     readonly games?: string[]

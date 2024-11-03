@@ -4,7 +4,7 @@ import {
     ConnectedPacket,
     ConnectionRefusedPacket,
     DataPackagePacket,
-    InvalidPacketPacket,
+    InvalidPacketPacket, JSONSerializableData,
     LocationInfoPacket,
     PrintJSONPacket,
     ReceivedItemsPacket,
@@ -168,7 +168,7 @@ export class SocketManager extends EventBasedManager<SocketEvents> {
                     this.emit("connectionRefused", [packet]);
                     break;
                 case "Bounced":
-                    this.emit("bounced", [packet]);
+                    this.emit("bounced", [packet, packet.data]);
                     break;
                 case "Connected":
                     this.emit("connected", [packet]);
@@ -231,7 +231,7 @@ export type SocketEvents = {
      * Fires when the client receives a {@link BouncedPacket}.
      * @param packet The raw {@link BouncedPacket}.
      */
-    bounced: [packet: BouncedPacket]
+    bounced: [packet: BouncedPacket, data: { [p: string]: JSONSerializableData }]
 
     /**
      * Fires when the client receives a {@link ConnectedPacket}
