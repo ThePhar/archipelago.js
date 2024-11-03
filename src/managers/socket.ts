@@ -44,14 +44,17 @@ export class SocketManager {
     /**
      * Send a list of raw client packets to the server.
      * @param packets List of client packets to send.
+     * @returns This SocketManager.
+     * @throws Error if not connected to a server.
      */
-    public send(...packets: ClientPacket[]): void {
+    public send(...packets: ClientPacket[]): SocketManager {
         if (this.#socket) {
             this.#socket.send(JSON.stringify(packets));
-            return;
+            this.#emit("SentPackets", [packets]);
+            return this;
         }
 
-        console.error("Unable to send packets to the server; not connected to a server.");
+        throw new Error("Unable to send packets to the server; not connected to a server.");
     }
 
     /**
@@ -142,6 +145,7 @@ export class SocketManager {
      * Add an event listener for a specific server packet or any server packets.
      * @param event The packet event name to listen for.
      * @param listener The callback function to fire when the event is emitted.
+     * @returns This SocketManager.
      * @remarks For details on the supported events and the arguments returned for each event type, see
      * {@link SocketEvents}.
      */
@@ -154,6 +158,7 @@ export class SocketManager {
      * Removes an existing event listener.
      * @param event The event name associated with the listener to remove.
      * @param listener The callback function to remove.
+     * @returns This SocketManager.
      * @remarks For details on the supported events and the arguments returned for each event type, see
      * {@link SocketEvents}.
      */
@@ -236,7 +241,7 @@ export class SocketManager {
             }
 
             // Generic-packet listeners only fire after all specific-packet listeners have fired.
-            this.#emit("AnyPacket", [packet]);
+            this.#emit("ReceivedPacket", [packet]);
         }
     }
 }
@@ -338,7 +343,13 @@ export interface SocketEvents {
      * determine the type of packet received.
      * @remarks All specific packet event listeners will fire before this event fires.
      */
-    AnyPacket: [packet: ServerPacket]
+    ReceivedPacket: [packet: ServerPacket]
+
+    /**
+     * Fires when the client sends an array of {@link ClientPacket}.
+     * @param packets An array of {@link ClientPacket} sent to the server.
+     */
+    SentPackets: [packets: ClientPacket[]]
 
     /**
      * Fires when the client has lost connection to the server, intentionally or not.

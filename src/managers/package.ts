@@ -1,4 +1,4 @@
-import { DataPackage, GamePackage } from "../api";
+import { DataPackage, GamePackage, GetDataPackagePacket } from "../api";
 import { Client } from "../client.ts";
 
 /**
@@ -72,8 +72,12 @@ export class DataPackageManager {
         // Request each game package individually to reduce likelihood of a large packet causing network congestion.
         const data: DataPackage = { games: {} };
         for (const game of games) {
-            const [packet] = await this.#client.socket.once("DataPackage");
-            data.games[game] = packet.data.games[game];
+            const request: GetDataPackagePacket = { cmd: "GetDataPackage", games: [game] };
+            const [response] = await this.#client.socket
+                .send(request)
+                .once("DataPackage");
+
+            data.games[game] = response.data.games[game];
         }
 
         if (update) {
