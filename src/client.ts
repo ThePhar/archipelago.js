@@ -26,7 +26,7 @@ export class Client {
     public readonly room = new Managers.RoomStateManager(this);
     /** A helper object for handling players (including self). */
     public readonly players = new Managers.PlayersManager(this);
-    /** A helper object for handling received items. */
+    /** A helper object for handling received items and hints. */
     public readonly items = new Managers.ItemsManager(this);
     /** A helper object for handling chat messages. */
     public readonly messages = new Managers.MessageManager(this);
