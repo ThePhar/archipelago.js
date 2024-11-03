@@ -77,7 +77,7 @@ export class SocketManager extends EventBasedManager<SocketEvents> {
 
         if (typeof url === "string") {
             // Check if protocol was provided and URL is valid-ish, if not we'll add wss and fallback to ws if it fails.
-            const pattern = /^([a-zA-Z]+:)(?:\/\/)?[A-Za-z0-9_.~\-:]+/i;
+            const pattern = /^([a-zA-Z]+:)\/\/[A-Za-z0-9_.~\-:]+/i;
             if (!pattern.test(url)) {
                 try {
                     // First try "wss".
