@@ -111,7 +111,10 @@ export class SocketManager {
                             this.#connected = true;
                             resolve(packet);
                         })
-                        .catch(console.error);
+                        .catch((error) => {
+                            // Throw error up to the try...catch.
+                            throw error;
+                        });
                 };
             });
         } catch (error) {
@@ -169,6 +172,7 @@ export class SocketManager {
     public async once<SocketEvent extends keyof SocketEvents>(event: SocketEvent): Promise<SocketEvents[SocketEvent]> {
         return new Promise<SocketEvents[SocketEvent]>((resolve, reject) => {
             const timeout = setTimeout(
+                // TODO: Replace with custom error object that can export the reasons easier.
                 () => reject(new Error("Server has not responded in time.")),
                 this.#client.options.timeout,
             );

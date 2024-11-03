@@ -85,12 +85,19 @@ export class Client {
 
         await this.socket.connect(url);
         await new Promise<void>((resolve, reject) => {
+            const timeout = setTimeout(
+                // TODO: Replace with custom error object that can export the reasons easier.
+                () => reject(new Error("Server has not responded in time.")),
+                this.options.timeout,
+            );
+
             const connectedHandler = (packet: ConnectedPacket) => {
                 this.socket
                     .off("Connected", connectedHandler)
                     .off("ConnectionRefused", refusedHandler);
 
                 console.log(`Connected to archipelago server as slot #${packet.slot}.`);
+                clearTimeout(timeout);
                 resolve();
             };
 
@@ -100,6 +107,7 @@ export class Client {
                     .off("ConnectionRefused", refusedHandler);
 
                 // TODO: Replace with custom error object that can export the reasons easier.
+                clearTimeout(timeout);
                 reject(new Error(`Connection was refused. Reason(s): [${packet.errors?.join(", ")}`));
             };
 
