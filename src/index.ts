@@ -1,6 +1,7 @@
 export * from "./client.ts";
 export * from "./constants.ts";
 export * from "./managers";
+export * from "./operations.ts";
 export * from "./options.ts";
 export * from "./utils.ts";
 

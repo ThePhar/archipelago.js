@@ -1,6 +1,10 @@
-import { ConnectedPacket, ConnectionRefusedPacket, ConnectPacket } from "./api";
+import { clientStatuses, ConnectedPacket, ConnectionRefusedPacket, ConnectPacket, JSONSerializableData } from "./api";
 import * as Managers from "./managers";
+import { ClientStatus } from "./managers";
 import { ClientOptions, ConnectionOptions, defaultClientOptions, defaultConnectionOptions } from "./options.ts";
+
+/** An abstract type for unknown slot data. */
+export type UnknownSlotData = { [p: string]: JSONSerializableData };
 
 /**
  * The client that connects to an Archipelago server and provides helper methods and objects to facilitate
@@ -20,6 +24,8 @@ export class Client {
     public readonly storage = new Managers.DataStorageManager(this);
     /** A helper object for handling room state. */
     public readonly room = new Managers.RoomStateManager(this);
+    /** A helper object for handling chat messages. */
+    public readonly players = new Managers.PlayersManager(this);
     /** A helper object for handling chat messages. */
     public readonly message = new Managers.MessageManager(this);
 
@@ -98,7 +104,12 @@ export class Client {
      * // slotData: CliqueSlotData { color: "red", hard_mode: false }
      * const slotData = await client.login<CliqueSlotData>("wss://archipelago.gg:38281", "Phar", "Clique");
      */
-    public async login<SlotData>(url: URL | string, name: string, game: string, options?: ConnectionOptions): Promise<SlotData> {
+    public async login<SlotData extends UnknownSlotData>(
+        url: URL | string,
+        name: string,
+        game: string,
+        options?: ConnectionOptions,
+    ): Promise<SlotData> {
         if (name === "") {
             throw Error("Provided slot name cannot be blank.");
         }
@@ -160,5 +171,44 @@ export class Client {
         }
 
         return data;
+    }
+
+    /**
+     * Set or clear the alias for the currently connected player.
+     * @param alias The alias to be set. If omitted, will clear alias instead.
+     * @returns A promise that resolves when the server acknowledges the change.
+     * @remarks Technically, there is no API-native way to change alias, this basically just sends a `!alias [name]`
+     * message to emulate the behavior.
+     */
+    public async setAlias(alias: string = ""): Promise<void> {
+        return this.message.chat(`!alias ${alias}`);
+    }
+
+    /**
+     * Update the client status for the current player. For a list of known client statuses, see {@link clientStatuses}.
+     * @param status The status to change to.
+     * @remarks The server will automatically set the player's status to {@link clientStatuses.disconnected} when all
+     * clients connected to this slot have disconnected, set the status to {@link clientStatuses.connected} if a client
+     * connects to this slot when previously set to {@link clientStatuses.disconnected}, or ignores any future updates
+     * if ever set to {@link clientStatuses.goal}.
+     * @example
+     * import { Client, clientStatuses } from "archipelago.js";
+     *
+     * const client = new Client();
+     * await client.login("wss://archipelago.gg:38281", "Phar", "Clique");
+     *
+     * // Mark client as ready to start.
+     * client.updateStatus(clientStatuses.ready);
+     */
+    public updateStatus(status: ClientStatus): void {
+        this.socket.send({ cmd: "StatusUpdate", status });
+    }
+
+    /**
+     * A shorthand for running `Client.updateStatus(clientStatuses.goal)`. Once set, cannot be changed and if release
+     * and/or collect is set to automatic, will release/collect all items.
+     */
+    public goal(): void {
+        this.updateStatus(clientStatuses.goal);
     }
 }

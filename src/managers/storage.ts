@@ -43,7 +43,7 @@ export class DataStorageManager {
     }
 
     /** Returns a copy of all currently monitored keys. */
-    public get storage(): Record<string, JSONSerializableData> {
+    public get store(): Record<string, JSONSerializableData> {
         return structuredClone(this.#storage);
     }
 
@@ -55,10 +55,10 @@ export class DataStorageManager {
      * @returns An object containing all current values for each key requested.
      * @remarks Any keys not currently cached and monitored will be requested over the network instead of from memory.
      */
-    public async get(keys: string[], monitor: boolean = false): DataRecordPromise {
+    public async fetch(keys: string[], monitor: boolean = false): DataRecordPromise {
         if (monitor) {
             // Request new keys that are not already being monitored to be notified of changes.
-            const newKeys = keys.filter((key) => !Object.keys(this.#storage).includes(key));
+            const newKeys = keys.filter((key) => this.#storage[key] === undefined);
             if (newKeys.length > 0) {
                 this.#client.socket.send({ cmd: "SetNotify", keys: newKeys });
             }
@@ -90,6 +90,27 @@ export class DataStorageManager {
     }
 
     /**
+     * Gets a single provided key from data storage.
+     * @param key The keys to be fetched.
+     * @param monitor Adds key to local cache and request the server to update client when changes are made to speed up
+     * subsequent lookups. For one-off adhoc lookups, should be omitted.
+     * @returns The current value for this key.
+     * @remarks Any keys not currently cached and monitored will be requested over the network instead of from memory.
+     */
+    public async get<T>(key: string, monitor: boolean = false): Promise<T> {
+        if (this.#storage[key] !== undefined) {
+            return this.#storage[key] as T;
+        }
+
+        if (monitor && this.#storage[key] === undefined) {
+            this.#client.socket.send({ cmd: "SetNotify", keys: [key] });
+        }
+
+        const response = await this.#request(key);
+        return response[key] as T;
+    }
+
+    /**
      * Add a list of keys to be monitored for changes and fire a callback when changes are detected.
      * @param keys A list of keys to fetch and watch for changes.
      * @param callback A callback to fire whenever one of these keys change.
@@ -115,7 +136,7 @@ export class DataStorageManager {
         });
 
         // Get current values and update local storage.
-        const request = await this.get(keys, true);
+        const request = await this.fetch(keys, true);
         this.#storage = { ...this.#storage, ...request };
         return request;
     }
@@ -125,7 +146,7 @@ export class DataStorageManager {
      * perform certain operations, just chain additional methods until finished, then call `prepare()`.
      * @param key The key to manipulate.
      * @param _default The default value to be used if key does not exist.
-     * @throws {@link Error} if attempting to modify a read only key.
+     * @throws Error if attempting to modify a read only key.
      * @example
      * // Prepare key "my-key" and set initial value to 100, if key doesn't exist.
      * client.storage

@@ -207,20 +207,17 @@ export class PackageMetadata {
         ));
     }
 
-    // TODO: Need to implement DataStorage API again.
-    // /** Returns item name groups for this package from data storage API. */
-    // public get itemNameGroups(): Promise<Readonly<Record<string, string[]>>> {
-    //     // Get key and locally cache for faster subsequent lookups.
-    //     return this.#client.data.get([`_read_item_name_groups_${this.game}`], true) as Promise<Record<string, string[]>>;
-    // }
+    /** Returns item name groups for this package from data storage API. */
+    public async fetchItemNameGroups(): Promise<Record<string, string[]>> {
+        // Get key and locally cache for faster subsequent lookups.
+        return await this.#client.storage.fetch([`_read_item_name_groups_${this.game}`], true) as Record<string, string[]>;
+    }
 
-    // /**
-    //  * Returns location name groups for this package from the data storage API.
-    //  */
-    // public get locationNameGroups(): Promise<Readonly<Record<string, string[]>>> {
-    //     // Get key and locally cache for faster subsequent lookups.
-    //     return this.#client.data.get([`_read_location_name_groups_${this.game}`], true) as Promise<Record<string, string[]>>;
-    // }
+    /** Returns location name groups for this package from the data storage API. */
+    public async fetchLocationNameGroups(): Promise<Record<string, string[]>> {
+        // Get key and locally cache for faster subsequent lookups.
+        return await this.#client.storage.fetch([`_read_location_name_groups_${this.game}`], true) as Record<string, string[]>;
+    }
 
     /**
      * Lookup an item name by its integer id.
