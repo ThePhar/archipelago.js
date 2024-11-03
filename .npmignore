@@ -1,6 +1,29 @@
-# Ignore everything except those we manually allow
-*
+/coverage/
 
-# JavaScript and Type Definitions
-!dist/**/*.d.ts
-!dist/**/*.js
+/.github/
+
+/.gitignore
+
+/.idea/
+
+/node_modules/
+
+/docs/
+
+/packs/
+
+/_ignore/
+
+/build.mjs
+
+/eslint.config.mjs
+
+/jsr.json
+
+/pnpm-lock.yaml
+
+/tsconfig.json
+
+/typedoc.json
+
+/src/__tests__/

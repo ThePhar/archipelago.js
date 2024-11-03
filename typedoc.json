@@ -1,12 +1,14 @@
 {
-  "name": "archipelago.js",
-  "cleanOutputDir": true,
-  "excludePrivate": true,
-  "excludeInternal": true,
-  "tsconfig": "tsconfig.json",
-  "entryPoints": ["src/index.ts"],
-  "out": "docs",
-  "categorizeByGroup": true,
-  "gitRemote": "origin",
-  "includeVersion": true
+    "$schema": "https://typedoc.org/schema.json",
+    "name": "archipelago.js",
+    "cleanOutputDir": true,
+    "excludePrivate": true,
+    "excludeInternal": true,
+    "excludeProtected": false,
+    "tsconfig": "tsconfig.json",
+    "entryPoints": ["src/index.ts"],
+    "out": "docs",
+    "categorizeByGroup": false,
+    "gitRemote": "origin",
+    "includeVersion": true
 }

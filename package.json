@@ -1,15 +1,12 @@
 {
     "name": "archipelago.js",
-    "version": "1.1.0",
-    "description": "A general-purpose client library for communicating with Archipelago game servers, written for Node.js.",
+    "version": "2.0.0-rc1",
+    "description": "A runtime-agnostic and zero dependency TypeScript/JavaScript library for communicating with Archipelago servers.",
     "license": "MIT",
+    "type": "module",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
-    "author": {
-        "email": "zach@alliware.com",
-        "name": "Zach Parks",
-        "url": "https://pharmakesbad.software"
-    },
+    "author": "Zach Parks <zach@alliware.com>",
     "browserslist": [
         ">0.2%",
         "not dead",
@@ -17,48 +14,31 @@
         "not op_mini all"
     ],
     "engines": {
-        "node": ">= 14.0.0"
+        "node": ">= 18.0.0"
     },
     "scripts": {
-        "clean": "rimraf -rf dist",
-        "docs": "rimraf -rf docs && typedoc --options typedoc.json",
-        "build": "npm run clean && tsc && webpack",
+        "build:src": "rimraf -rf dist && bun build.mjs",
+        "build:docs": "rimraf -rf docs && typedoc",
         "lint": "eslint src",
-        "pack": "npm run build && npm pack --pack-destination packs"
+        "pack": "pnpm pack --pack-destination packs"
     },
     "homepage": "https://thephar.github.io/archipelago.js/",
     "repository": "https://github.com/ThePhar/archipelago.js.git",
     "bugs": "https://github.com/ThePhar/archipelago.js/issues",
-    "keywords": [
-        "archipelago",
-        "client-library",
-        "game-library",
-        "library",
-        "multi-world",
-        "multiworld",
-        "websocket"
-    ],
-    "dependencies": {
-        "isomorphic-ws": "^5.0.0",
-        "ts-loader": "^9.4.4",
-        "uuid": "^9.0.0",
-        "webpack": "^5.88.1",
-        "ws": "^8.13.0"
-    },
     "devDependencies": {
-        "@trivago/prettier-plugin-sort-imports": "^4.1.1",
-        "@types/node": "^18.15.11",
-        "@types/uuid": "^9.0.1",
-        "@types/ws": "^8.5.4",
-        "@typescript-eslint/eslint-plugin": "^5.57.1",
-        "@typescript-eslint/parser": "^5.57.1",
-        "eslint": "^8.37.0",
-        "eslint-config-prettier": "^8.8.0",
-        "prettier": "^2.8.7",
-        "rimraf": "^4.4.1",
-        "terser-webpack-plugin": "^5.3.9",
-        "typedoc": "^0.24.8",
-        "typescript": "^5.1.6",
-        "webpack-cli": "^5.1.4"
+        "@eslint/js": "^9.14.0",
+        "@stylistic/eslint-plugin": "^2.10.1",
+        "@types/bun": "^1.1.12",
+        "@types/eslint__js": "^8.42.3",
+        "@types/node": "^22.8.6",
+        "bun-plugin-dts": "^0.2.4",
+        "eslint": "^9.14.0",
+        "eslint-plugin-jsdoc": "^50.4.3",
+        "eslint-plugin-simple-import-sort": "^12.1.1",
+        "rimraf": "^6.0.1",
+        "ts-node": "^10.9.2",
+        "typedoc": "^0.26.11",
+        "typescript": "^5.6.3",
+        "typescript-eslint": "^8.12.2"
     }
 }
