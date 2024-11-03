@@ -79,10 +79,10 @@ export class SocketManager {
             if (!pattern.test(url)) {
                 try {
                     // First try "wss".
-                    return this.connect(new URL(`wss://${url}`));
+                    return await this.connect(new URL(`wss://${url}`));
                 } catch {
                     // Nope, try "ws".
-                    return this.connect(new URL(`ws://${url}`));
+                    return await this.connect(new URL(`ws://${url}`));
                 }
             }
 
