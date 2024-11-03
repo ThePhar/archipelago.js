@@ -30,6 +30,8 @@ export class Client {
     public readonly items = new Managers.ItemsManager(this);
     /** A helper object for handling chat messages. */
     public readonly messages = new Managers.MessageManager(this);
+    /** A helper object for handling DeathLink mechanics. */
+    public readonly deathLink = new Managers.DeathLinkManager(this);
 
     /** Current options for this client. */
     public options: Required<ClientOptions>;
@@ -67,9 +69,18 @@ export class Client {
         }
 
         // Setup disconnection event handler to reset internal state.
-        this.socket.on("disconnected", () => {
-            this.#authenticated = false;
-        });
+        this.socket
+            .on("disconnected", () => {
+                this.#authenticated = false;
+            })
+            .on("sentPackets", (packets) => {
+                for (const packet of packets) {
+                    if (packet.cmd === "ConnectUpdate") {
+                        this.#arguments.tags = packet.tags;
+                        this.#arguments.items = packet.items_handling;
+                    }
+                }
+            });
     }
 
     /**
@@ -191,6 +202,7 @@ export class Client {
     /**
      * Update the client status for the current player. For a list of known client statuses, see {@link clientStatuses}.
      * @param status The status to change to.
+     * @throws Error If not connected and authenticated.
      * @remarks The server will automatically set the player's status to {@link clientStatuses.disconnected} when all
      * clients connected to this slot have disconnected, set the status to {@link clientStatuses.connected} if a client
      * connects to this slot when previously set to {@link clientStatuses.disconnected}, or ignores any future updates
@@ -205,6 +217,10 @@ export class Client {
      * client.updateStatus(clientStatuses.ready);
      */
     public updateStatus(status: ClientStatus): void {
+        if (!this.authenticated) {
+            throw new Error("Cannot update status while not connected and authenticated.");
+        }
+
         this.socket.send({ cmd: "StatusUpdate", status });
     }
 
@@ -214,6 +230,32 @@ export class Client {
      */
     public goal(): void {
         this.updateStatus(clientStatuses.goal);
+    }
+
+    /**
+     * Request the server update this client's tags.
+     * @param tags Tags to replace the current ones.
+     * @throws Error If not connected and authenticated.
+     */
+    public updateTags(tags: string[]): void {
+        if (!this.authenticated) {
+            throw new Error("Cannot update tags while not connected and authenticated.");
+        }
+
+        this.socket.send({ cmd: "ConnectUpdate", tags, items_handling: this.arguments.items });
+    }
+
+    /**
+     * Request the server update the kinds of item received events this client should receive.
+     * @param items New item handling flags. See {@link itemsHandlingFlags} for more information.
+     * @throws Error If not connected and authenticated.
+     */
+    public updateItemsHandling(items: number): void {
+        if (!this.authenticated) {
+            throw new Error("Cannot update tags while not connected and authenticated.");
+        }
+
+        this.socket.send({ cmd: "ConnectUpdate", tags: this.arguments.tags, items_handling: items });
     }
 
     /**

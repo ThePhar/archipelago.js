@@ -1,4 +1,4 @@
-import { itemClassifications, JSONSerializableData, NetworkHint, NetworkItem } from "../api";
+import { itemClassifications, NetworkHint, NetworkItem } from "../api";
 import { Client } from "../client.ts";
 import { EventBasedManager } from "./abstract.ts";
 import { Player } from "./players.ts";
@@ -91,6 +91,10 @@ export class ItemsManager extends EventBasedManager<ItemEvents> {
     }
 }
 
+/**
+ * An interface with all supported item/hint events and their respective callback arguments. To be called from
+ * {@link ItemsManager}.
+ */
 export type ItemEvents = {
     /**
      * Fired when items have been received.

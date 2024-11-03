@@ -1,4 +1,5 @@
 export * from "./abstract.ts";
+export * from "./deathLink.ts";
 export * from "./items.ts";
 export * from "./message.ts";
 export * from "./package.ts";

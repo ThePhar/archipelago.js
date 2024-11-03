@@ -71,7 +71,7 @@ export interface ConnectionOptions {
      * {@link https://github.com/ArchipelagoMW/Archipelago/blob/main/docs/network%20protocol.md#tags}.
      * @default []
      */
-    readonly tags?: string[]
+    tags?: string[]
 
     /**
      * The version of Archipelago this client was designed for. This can be enforced on the server side to force a user
@@ -95,7 +95,7 @@ export interface ConnectionOptions {
      * @remarks Defaults to request all received item events, so unless you need local-only functionality this property
      * can usually be omitted.
      */
-    readonly items?: number
+    items?: number
 
     /**
      * Request this slot's data during connection. If `false`, server will respond with an empty object (`{}`) instead.
