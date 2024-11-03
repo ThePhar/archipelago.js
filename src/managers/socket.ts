@@ -63,8 +63,10 @@ export class SocketManager extends EventBasedManager<SocketEvents> {
     }
 
     /**
-     * Establish a connection to an Archipelago server and returns the {@link RoomInfoPacket}.
+     * Establish a connection to an Archipelago server before authenticating; useful if there might be tasked that are
+     * needed to be performed before authenticating, but after connecting (e.g., DataPackage).
      * @param url The url of the server, including the protocol (e.g., `wss://archipelago.gg:38281`).
+     * @returns The {@link RoomInfoPacket} received on initial connection.
      * @remarks If the port is omitted, client will default to `38281`.
      *
      * If the protocol is omitted, client will attempt to connect via `wss`, then fallback to `ws` if unsuccessful.
