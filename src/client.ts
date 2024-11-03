@@ -1,7 +1,6 @@
 import { ConnectedPacket, ConnectionRefusedPacket, ConnectPacket } from "./api";
-import { DataPackageManager, MessageManager, RoomStateManager, SocketManager } from "./managers";
+import * as Managers from "./managers";
 import { ClientOptions, ConnectionOptions, defaultClientOptions, defaultConnectionOptions } from "./options.ts";
-import { parseVersion } from "./utils.ts";
 
 /**
  * The client that connects to an Archipelago server and provides helper methods and objects to facilitate
@@ -13,14 +12,16 @@ export class Client {
     #name: string = "";
     #game: string = "";
 
-    /** A helper object for handling websocket communication and interacting with the AP network protocol directly. */
-    public readonly socket: SocketManager = new SocketManager(this);
+    /** A helper object for handling websocket communication and AP network protocol. */
+    public readonly socket = new Managers.SocketManager(this);
     /** A helper object for handling game data packages. */
-    public readonly package: DataPackageManager = new DataPackageManager(this);
+    public readonly package = new Managers.DataPackageManager(this);
+    /** A helper object for handling the data storage API. */
+    public readonly storage = new Managers.DataStorageManager(this);
     /** A helper object for handling room state. */
-    public readonly room: RoomStateManager = new RoomStateManager(this);
+    public readonly room = new Managers.RoomStateManager(this);
     /** A helper object for handling chat messages. */
-    public readonly message: MessageManager = new MessageManager(this);
+    public readonly message = new Managers.MessageManager(this);
 
     /** Current options for this client. */
     public options: Required<ClientOptions>;

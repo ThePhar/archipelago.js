@@ -3,7 +3,8 @@ import { Client } from "../client.ts";
 import { EventBasedManager } from "./abstract.ts";
 
 /**
- * Manages and stores {@link PrintJSONPacket} messages and interacting with the chat system.
+ * Manages and stores {@link PrintJSONPacket} messages, notifies subscribers of new messages, and exposes helper methods
+ * to interact with the chat system.
  */
 export class MessageManager extends EventBasedManager<MessageEvents> {
     readonly #client: Client;

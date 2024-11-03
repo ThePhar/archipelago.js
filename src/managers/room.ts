@@ -2,6 +2,10 @@ import { PermissionTable } from "../api";
 import { Client } from "../client.ts";
 import { EventBasedManager } from "./abstract.ts";
 
+/**
+ * Managers room state information, notifies subscribers of changes, and exposes helper methods for interacting with the
+ * room.
+ */
 export class RoomStateManager extends EventBasedManager<RoomStateEvents> {
     readonly #client: Client;
     #serverVersion = { major: -1, minor: -1, build: -1 };
