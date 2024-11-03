@@ -38,6 +38,16 @@ export class MessageManager extends EventBasedManager<MessageEvents> {
             }
 
             this.emit("ReceivedMessage", [message, index, packet]);
+
+            // Special packets.
+            switch (packet.type) {
+                case "ServerChat":
+                    this.emit("AdminMessage", [message]);
+                    break;
+                case "Countdown":
+                    this.emit("Countdown", [packet.countdown]);
+                    break;
+            }
         });
     }
 
@@ -73,4 +83,16 @@ export type MessageEvents = {
      * @param packet The received PrintJSONPacket, if needed to reconstruct into a specialized message.
      */
     ReceivedMessage: [message: string, index: number, packet: PrintJSONPacket]
+
+    /**
+     * Fires when a countdown message is received.
+     * @param value The current countdown value.
+     */
+    Countdown: [value: number]
+
+    /**
+     * Fires when a server-side admin message is received.
+     * @param message The plaintext message content.
+     */
+    AdminMessage: [message: string]
 };
