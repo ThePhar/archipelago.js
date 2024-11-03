@@ -44,8 +44,10 @@ export class DataStorageManager {
             .on("connected", () => {
                 if (this.#client.options.debugLogVersions) {
                     // For debug purposes log our data to data storage.
+                    // Inspiration for this comes from the MultiClient.Net project.
                     const key = `${this.#client.game}:${libraryVersion}:${navigator?.userAgent}`;
-                    void this.prepare("archipelago.js__runtimes")
+                    void this.prepare("archipelago.js__runtimes", {})
+                        .default()
                         .update({ [key]: true })
                         .commit(false);
                 }

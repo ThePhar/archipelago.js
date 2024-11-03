@@ -116,6 +116,8 @@ export class Client {
             throw Error("Provided slot name cannot be blank.");
         }
 
+        this.#game = game;
+        this.#name = name;
         if (options) {
             this.#arguments = { ...defaultConnectionOptions, ...options };
         } else {
