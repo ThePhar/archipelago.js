@@ -80,7 +80,6 @@ export class RoomStateManager extends EventBasedManager<RoomStateEvents> {
     /** Returns the amount of hint points this player needs to request a hint. */
     public get hintCost(): number {
         if (this.hintCostPercentage > 0) {
-            // TODO: replace this.#locations with locations manager
             return Math.max(1, Math.floor(this.hintCostPercentage * this.allLocations.length * 0.01));
         }
 
