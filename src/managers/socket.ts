@@ -22,6 +22,7 @@ import { EventBasedManager } from "./abstract.ts";
  * directly.
  */
 export class SocketManager extends EventBasedManager<SocketEvents> {
+    #client: Client;
     #socket: WebSocket | null = null;
     #connected: boolean = false;
 
@@ -41,7 +42,8 @@ export class SocketManager extends EventBasedManager<SocketEvents> {
      * @param client The client object this manager is associated with.
      */
     public constructor(client: Client) {
-        super(client);
+        super();
+        this.#client = client;
     }
 
     /**

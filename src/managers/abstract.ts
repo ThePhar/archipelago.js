@@ -1,21 +1,9 @@
-import { Client } from "../client.ts";
-
 /**
  * An abstract class for managers that offer an event-based API.
  * @template Events An interface of events supported by this derived manager.
  */
 export abstract class EventBasedManager<Events extends { [p: string]: unknown[] }> {
-    readonly #client: Client;
     readonly #events = new ArchipelagoEventEmitter();
-
-    /**
-     * Instantiates this manager. Should only be instantiated by creating a new {@link Client}.
-     * @internal
-     * @param client The client object this manager is associated with.
-     */
-    protected constructor(client: Client) {
-        this.#client = client;
-    }
 
     /**
      * Add an event listener for a specific event.

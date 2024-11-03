@@ -25,7 +25,7 @@ export class MessageManager extends EventBasedManager<MessageEvents> {
      * @param client The client object this manager is associated with.
      */
     public constructor(client: Client) {
-        super(client);
+        super();
         this.#client = client;
 
         // Log messages and emit events.
