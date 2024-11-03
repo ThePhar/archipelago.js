@@ -26,6 +26,8 @@ export class Client {
     public readonly room = new Managers.RoomStateManager(this);
     /** A helper object for handling players (including self). */
     public readonly players = new Managers.PlayersManager(this);
+    /** A helper object for handling received items. */
+    public readonly items = new Managers.ItemsManager(this);
     /** A helper object for handling chat messages. */
     public readonly message = new Managers.MessageManager(this);
 
@@ -133,7 +135,13 @@ export class Client {
         };
 
         await this.socket.connect(url);
-        const data = new Promise<SlotData>((resolve, reject) => {
+
+        // Automatically load data package if requested, prior to connection to prefill data package.
+        if (this.options.autoFetchDataPackage) {
+            await this.package.fetchPackage();
+        }
+
+        return new Promise<SlotData>((resolve, reject) => {
             const timeout = setTimeout(
                 // TODO: Replace with custom error object that can export the reasons easier.
                 () => reject(new Error("Server has not responded in time.")),
@@ -165,13 +173,6 @@ export class Client {
                 .on("connectionRefused", refusedHandler.bind(this))
                 .send(request);
         });
-
-        // Automatically load data package if requested.
-        if (this.options.autoFetchDataPackage) {
-            await this.package.fetchPackage();
-        }
-
-        return data;
     }
 
     /**

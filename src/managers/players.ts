@@ -6,7 +6,7 @@ import { EventBasedManager } from "./abstract.ts";
 export type ClientStatus = typeof clientStatuses[keyof typeof clientStatuses];
 
 /**
- * Managers tracking and updating all players in the room session.
+ * Manages tracking and updating all players in the room session.
  */
 export class PlayersManager extends EventBasedManager<PlayerEvents> {
     readonly #client: Client;
@@ -55,8 +55,8 @@ export class PlayersManager extends EventBasedManager<PlayerEvents> {
 
     /** Returns the {@link PlayerMetadata} for this client's player. */
     public get self(): PlayerMetadata {
-        if (!this.#client.authenticated) {
-            throw new Error("Cannot lookup own player object while not authenticated to a server.");
+        if (this.#slot === 0) {
+            throw new Error("Cannot lookup own player object when client has never connected to a server.");
         }
 
         return new PlayerMetadata(this.#client, this.#players[this.#team][this.#slot]);

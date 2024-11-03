@@ -145,6 +145,72 @@ export class DataPackageManager {
     }
 
     /**
+     * Lookup an item name by its integer id.
+     * @param game The name of the game this item is associated with.
+     * @param id The id of the item to name lookup.
+     * @param fallback If `true`, returns `"Unknown Item {id}"` instead of `undefined`, if id does not exist in package.
+     * Defaults to `true`, if omitted.
+     */
+    public lookupItemName(game: string, id: number, fallback: true): string;
+
+    /**
+     * Lookup an item name by its integer id.
+     * @param game The name of the game this item is associated with.
+     * @param id The id of the item to name lookup.
+     * @param fallback If `true`, returns `"Unknown Item {id}"` instead of `undefined`, if id does not exist in package.
+     * Defaults to `true`, if omitted.
+     */
+    public lookupItemName(game: string, id: number, fallback: false): string | undefined;
+
+    public lookupItemName(game: string, id: number, fallback: boolean = true): string | undefined {
+        const fallbackName = `Unknown Item ${id}`;
+        const gamePackage = this.findPackage(game);
+        if (!gamePackage) {
+            return fallback ? fallbackName : undefined;
+        }
+
+        const name = gamePackage.reverseItemTable[id];
+        if (fallback && name === undefined) {
+            return fallbackName;
+        }
+
+        return name;
+    }
+
+    /**
+     * Lookup a location name by its integer id.
+     * @param game The name of the game this location is associated with.
+     * @param id The id of the location to name lookup.
+     * @param fallback If `true`, returns `"Unknown Location {id}"` instead of `undefined`, if id does not exist in
+     * package. Defaults to `true`, if omitted.
+     */
+    public lookupLocationName(game: string, id: number, fallback: true): string;
+
+    /**
+     * Lookup a location name by its integer id.
+     * @param game The name of the game this location is associated with.
+     * @param id The id of the location to name lookup.
+     * @param fallback If `true`, returns `"Unknown Location {id}"` instead of `undefined`, if id does not exist in
+     * package. Defaults to `true`, if omitted.
+     */
+    public lookupLocationName(game: string, id: number, fallback: false): string | undefined;
+
+    public lookupLocationName(game: string, id: number, fallback: boolean = true): string | undefined {
+        const fallbackName = `Unknown Location ${id}`;
+        const gamePackage = this.findPackage(game);
+        if (!gamePackage) {
+            return fallback ? fallbackName : undefined;
+        }
+
+        const name = gamePackage.reverseLocationTable[id];
+        if (fallback && name === undefined) {
+            return fallbackName;
+        }
+
+        return name;
+    }
+
+    /**
      * Returns preloaded data (i.e., Archipelago data package, since it's always available).
      * @private
      * @remarks If updates to the AP game package happen, this should be updated.
@@ -205,68 +271,6 @@ export class PackageMetadata {
             .entries(this.locationTable)
             .map(([k, v]) => [v, k]),
         ));
-    }
-
-    /** Returns item name groups for this package from data storage API. */
-    public async fetchItemNameGroups(): Promise<Record<string, string[]>> {
-        // Get key and locally cache for faster subsequent lookups.
-        return await this.#client.storage.fetch([`_read_item_name_groups_${this.game}`], true) as Record<string, string[]>;
-    }
-
-    /** Returns location name groups for this package from the data storage API. */
-    public async fetchLocationNameGroups(): Promise<Record<string, string[]>> {
-        // Get key and locally cache for faster subsequent lookups.
-        return await this.#client.storage.fetch([`_read_location_name_groups_${this.game}`], true) as Record<string, string[]>;
-    }
-
-    /**
-     * Lookup an item name by its integer id.
-     * @param id The id of the item to name lookup.
-     * @param fallback If `true`, returns `"Unknown Item {id}"` instead of `undefined`, if id does not exist in package.
-     * Defaults to `true`, if omitted.
-     */
-    public findItemName(id: number, fallback: true): string;
-
-    /**
-     * Lookup an item name by its integer id.
-     * @param id The id of the item to name lookup.
-     * @param fallback If `true`, returns `"Unknown Item {id}"` instead of `undefined`, if id does not exist in package.
-     * Defaults to `true`, if omitted.
-     */
-    public findItemName(id: number, fallback: false): string | undefined;
-
-    public findItemName(id: number, fallback: boolean = true): string | undefined {
-        const name = this.reverseItemTable[id];
-        if (fallback && name === undefined) {
-            return `Unknown Item ${id}`;
-        }
-
-        return name;
-    }
-
-    /**
-     * Lookup a location name by its integer id.
-     * @param id The id of the location to name lookup.
-     * @param fallback If `true`, returns `"Unknown Location {id}"` instead of `undefined`, if id does not exist in
-     * package. Defaults to `true`, if omitted.
-     */
-    public findLocationName(id: number, fallback: true): string;
-
-    /**
-     * Lookup a location name by its integer id.
-     * @param id The id of the location to name lookup.
-     * @param fallback If `true`, returns `"Unknown Location {id}"` instead of `undefined`, if id does not exist in
-     * package. Defaults to `true`, if omitted.
-     */
-    public findLocationName(id: number, fallback: false): string | undefined;
-
-    public findLocationName(id: number, fallback: boolean = true): string | undefined {
-        const name = this.reverseLocationTable[id];
-        if (fallback && name === undefined) {
-            return `Unknown Location ${id}`;
-        }
-
-        return name;
     }
 
     /**

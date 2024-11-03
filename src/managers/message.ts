@@ -1,6 +1,7 @@
 import { PrintJSONPacket, SayPacket } from "../api";
 import { Client } from "../client.ts";
 import { EventBasedManager } from "./abstract.ts";
+import { PlayerMetadata } from "./players.ts";
 
 /**
  * Manages and stores {@link PrintJSONPacket} messages, notifies subscribers of new messages, and exposes helper methods
@@ -42,11 +43,15 @@ export class MessageManager extends EventBasedManager<MessageEvents> {
 
             // Special packets.
             switch (packet.type) {
-                case "ServerChat":
-                    this.emit("adminMessage", [message]);
+                case "Chat":
+                    this.emit("chatMessage", [
+                        message,
+                        index,
+                        this.#client.players.findPlayer(packet.team, packet.slot) as PlayerMetadata,
+                    ]);
                     break;
                 case "Countdown":
-                    this.emit("countdown", [packet.countdown]);
+                    this.emit("countdown", [message, index, packet.countdown]);
                     break;
             }
         });
@@ -87,13 +92,19 @@ export type MessageEvents = {
 
     /**
      * Fires when a countdown message is received.
+     * @param message The plaintext message content.
+     * @param index The index of this message in {@link MessageManager.messages}, when this event was fired. If message
+     * logging is disabled, this will return `-1`.
      * @param value The current countdown value.
      */
-    countdown: [value: number]
+    countdown: [message: string, index: number, value: number]
 
     /**
-     * Fires when a server-side admin message is received.
+     * Fires when a player message is received.
      * @param message The plaintext message content.
+     * @param index The index of this message in {@link MessageManager.messages}, when this event was fired. If message
+     * logging is disabled, this will return `-1`.
+     * @param sender The metadata of the player who sent this message.
      */
-    adminMessage: [message: string]
+    chatMessage: [message: string, index: number, sender: PlayerMetadata]
 };
