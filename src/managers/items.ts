@@ -166,6 +166,11 @@ export class Item {
         return this.#client.package.lookupItemName(this.game, this.#item.item, true);
     }
 
+    /** Returns the integer id of this item. */
+    public get id(): number {
+        return this.#item.item;
+    }
+
     /** Returns the name of the location where this item was contained. */
     public get locationName(): string {
         return this.#client.package.lookupLocationName(this.sender.game, this.#item.location, true);
