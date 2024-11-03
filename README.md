@@ -24,7 +24,7 @@ import { Client } from "archipelago.js";
 const client = new Client();
 
 // Connect to Archipelago session.
-client.connect("wss://archipelago.gg:38281", "Phar", "Clique")
+client.login("wss://archipelago.gg:38281", "Phar", "Clique")
     .then(() => client.messages.chat("Hello, multiworld!"));
 ```
 
