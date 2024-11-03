@@ -69,7 +69,7 @@ export class DataPackageManager {
             return false;
         });
 
-        // Request each game package individually to reduce likelihood of a large packet causing network congestion.
+        // Request each game individually to reduce likelihood of a large packet causing a spike in network usage.
         const data: DataPackage = { games: {} };
         for (const game of games) {
             const request: GetDataPackagePacket = { cmd: "GetDataPackage", games: [game] };

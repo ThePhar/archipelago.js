@@ -72,7 +72,7 @@ export class Client {
      * If the protocol is omitted, client will attempt to connect via wss, then fallback to ws if unsuccessful.
      *
      * Any paths, queries, fragments, or userinfo components of the provided url will be ignored.
-     * @example <caption>No Slot Data and a Password</caption>
+     * @example <caption>Password Required and No Slot Data</caption>
      * import { Client } from "archipelago.js";
      *
      * const client = new Client();

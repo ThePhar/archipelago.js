@@ -107,17 +107,31 @@ export class SocketManager {
 
                 // Establish a websocket connection and setup basic handlers.
                 this.#socket = new IsomorphousWebSocket(url);
-                this.#socket.onclose = this.disconnect.bind(this);
                 this.#socket.onmessage = this.#parseMessage.bind(this);
+                this.#socket.onclose = () => {
+                    this.disconnect();
+                    reject(new Error("Failed to connect to Archipelago server."));
+                };
                 this.#socket.onerror = () => {
                     this.disconnect();
-                    reject(new Error("Websocket closed unexpectedly."));
+                    reject(new Error("Failed to connect to Archipelago server."));
                 };
                 this.#socket.onopen = () => {
                     this.once("RoomInfo")
                         .then(([packet]) => {
                             this.#connected = true;
-                            resolve(packet);
+
+                            // Reassign onclose and onerror now that connection looks stable.
+                            if (this.#socket) {
+                                this.#socket.onclose = this.disconnect.bind(this);
+                                this.#socket.onerror = this.disconnect.bind(this);
+                                resolve(packet);
+                                return;
+                            }
+
+                            // Lost socket after connecting somehow? Should never happen, hopefully.
+                            this.disconnect();
+                            reject(new Error("Failed to connect to Archipelago server."));
                         })
                         .catch((error) => {
                             // Throw error up to the try...catch.
