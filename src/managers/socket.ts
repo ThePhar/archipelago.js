@@ -7,11 +7,15 @@ import {
     InvalidPacketPacket,
     LocationInfoPacket,
     PrintJSONPacket,
-    ReceivedItemsPacket, RetrievedPacket,
-    RoomInfoPacket, RoomUpdatePacket,
-    ServerPacket, SetReplyPacket,
+    ReceivedItemsPacket,
+    RetrievedPacket,
+    RoomInfoPacket,
+    RoomUpdatePacket,
+    ServerPacket,
+    SetReplyPacket,
 } from "../api";
 import { Client } from "../client.ts";
+import { ArchipelagoEventEmitter } from "../events.ts";
 
 /**
  * Manages socket-level communication and exposes helper methods/events for interacting with the Archipelago API
@@ -19,7 +23,7 @@ import { Client } from "../client.ts";
  */
 export class SocketManager {
     readonly #client: Client;
-    readonly #target: EventTarget = new EventTarget();
+    readonly #target = new ArchipelagoEventEmitter();
     #socket: WebSocket | null = null;
     #connected: boolean = false;
 
@@ -101,11 +105,13 @@ export class SocketManager {
                     this.disconnect();
                     reject(new Error("Websocket closed unexpectedly."));
                 };
-
-                this.#socket.onopen = async () => {
-                    const [packet] = await this.once("RoomInfo");
-                    this.#connected = true;
-                    resolve(packet);
+                this.#socket.onopen = () => {
+                    this.once("RoomInfo")
+                        .then(([packet]) => {
+                            this.#connected = true;
+                            resolve(packet);
+                        })
+                        .catch(console.error);
                 };
             });
         } catch (error) {
@@ -136,8 +142,8 @@ export class SocketManager {
      * @remarks For details on the supported events and the arguments returned for each event type, see
      * {@link SocketEvents}.
      */
-    public on<Event extends keyof SocketEvents>(event: Event, listener: (...args: SocketEvents[Event]) => void): SocketManager {
-        this.#target.addEventListener(event, listener as unknown as EventListener);
+    public on<SocketEvent extends keyof SocketEvents>(event: SocketEvent, listener: (...args: SocketEvents[SocketEvent]) => void): SocketManager {
+        this.#target.addEventListener(event, listener);
         return this;
     }
 
@@ -148,8 +154,8 @@ export class SocketManager {
      * @remarks For details on the supported events and the arguments returned for each event type, see
      * {@link SocketEvents}.
      */
-    public off<Event extends keyof SocketEvents>(event: Event, listener: (...args: SocketEvents[Event]) => void): SocketManager {
-        this.#target.removeEventListener(event, listener as unknown as EventListener);
+    public off<SocketEvent extends keyof SocketEvents>(event: SocketEvent, listener: (...args: SocketEvents[SocketEvent]) => void): SocketManager {
+        this.#target.removeEventListener(event, listener);
         return this;
     }
 
@@ -160,15 +166,15 @@ export class SocketManager {
      * @remarks For details on the supported events and the arguments returned for each event type, see
      * {@link SocketEvents}.
      */
-    public async once<Event extends keyof SocketEvents>(event: Event): Promise<SocketEvents[Event]> {
-        return new Promise<SocketEvents[Event]>((resolve) => {
-            const listener = (packet: SocketEvents[Event]) => resolve(packet);
-            this.#target.addEventListener(event, listener as unknown as EventListener, { once: true });
+    public async once<SocketEvent extends keyof SocketEvents>(event: SocketEvent): Promise<SocketEvents[SocketEvent]> {
+        return new Promise<SocketEvents[SocketEvent]>((resolve) => {
+            const listener = (packet: SocketEvents[SocketEvent]) => resolve(packet);
+            this.#target.addEventListener(event, listener);
         });
     }
 
     #emit<Event extends keyof SocketEvents>(event: Event, detail: SocketEvents[Event]): void {
-        this.#target.dispatchEvent(new CustomEvent(event, { detail, cancelable: true }));
+        this.#target.dispatchEvent(event, detail);
     }
 
     #parseMessage(event: MessageEvent<string>): void {
