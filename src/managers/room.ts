@@ -13,12 +13,13 @@ export class RoomStateManager extends EventBasedManager<RoomStateEvents> {
     #games: string[] = [];
     #tags: string[] = [];
     #seed = "";
-    #locations = 0;
     #password = false;
     #hintPoints = 0;
     #hintCost = 0;
     #locationCheckPoints = 0;
     #permissions: PermissionTable = { release: 0, collect: 0, remaining: 0 };
+    #missingLocations: number[] = [];
+    #checkedLocations: number[] = [];
     #race = false;
 
     /**
@@ -80,7 +81,7 @@ export class RoomStateManager extends EventBasedManager<RoomStateEvents> {
     public get hintCost(): number {
         if (this.hintCostPercentage > 0) {
             // TODO: replace this.#locations with locations manager
-            return Math.max(1, Math.floor(this.hintCostPercentage * this.#locations * 0.01));
+            return Math.max(1, Math.floor(this.hintCostPercentage * this.allLocations.length * 0.01));
         }
 
         return 0;
@@ -94,6 +95,21 @@ export class RoomStateManager extends EventBasedManager<RoomStateEvents> {
     /** Returns the amount of hint points received per location checked. */
     public get locationCheckPoints(): number {
         return this.#locationCheckPoints;
+    }
+
+    /** Returns a list of location ids that have not been checked. */
+    public get missingLocations(): number[] {
+        return [...this.#missingLocations].sort();
+    }
+
+    /** Returns a list of location ids that have been checked. */
+    public get checkedLocations(): number[] {
+        return [...this.#checkedLocations].sort();
+    }
+
+    /** Returns a list of all location ids for this slot. */
+    public get allLocations(): number[] {
+        return [...this.#missingLocations, ...this.#checkedLocations].sort();
     }
 
     /**
@@ -136,7 +152,9 @@ export class RoomStateManager extends EventBasedManager<RoomStateEvents> {
                 this.#locationCheckPoints = packet.location_check_points;
             })
             .on("connected", (packet) => {
-                this.#locations = packet.missing_locations.length + packet.checked_locations.length;
+                this.#missingLocations = packet.missing_locations;
+                this.#checkedLocations = packet.checked_locations;
+                this.emit("locationsChecked", [this.checkedLocations]);
 
                 this.emit("hintPointsUpdated", [this.#hintPoints, packet.hint_points]);
                 this.#hintPoints = packet.hint_points;
@@ -169,6 +187,12 @@ export class RoomStateManager extends EventBasedManager<RoomStateEvents> {
                     const old = this.#permissions;
                     this.#permissions = packet.permissions;
                     this.emit("permissionsUpdated", [old, this.permissions]);
+                }
+
+                if (packet.checked_locations !== undefined) {
+                    this.#checkedLocations = [...this.#checkedLocations, ...packet.checked_locations];
+                    this.#missingLocations = this.missingLocations.filter((location) => !packet.checked_locations?.includes(location));
+                    this.emit("locationsChecked", [packet.checked_locations]);
                 }
             });
     }
@@ -214,4 +238,10 @@ export type RoomStateEvents = {
      * @param newValue The new hint point value.
      */
     hintPointsUpdated: [oldValue: number, newValue: number]
+
+    /**
+     * Fires when new locations have been checked (or all locations on initial connection).
+     * @param locations All the newly checked locations.
+     */
+    locationsChecked: [locations: number[]]
 };
