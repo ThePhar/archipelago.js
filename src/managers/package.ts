@@ -115,7 +115,7 @@ export class DataPackageManager {
      */
     public importPackage(dataPackage: DataPackage): void {
         for (const game in dataPackage.games) {
-            this.#packages.set(game, new PackageMetadata(this.#client, game, dataPackage.games[game]));
+            this.#packages.set(game, new PackageMetadata(game, dataPackage.games[game]));
             this.#checksums.set(game, dataPackage.games[game].checksum);
         }
     }
@@ -217,7 +217,7 @@ export class DataPackageManager {
      */
     private preloadArchipelago(): PackageMetadata {
         // As of AP 0.5.0
-        return new PackageMetadata(this.#client, "Archipelago", {
+        return new PackageMetadata("Archipelago", {
             checksum: "ac9141e9ad0318df2fa27da5f20c50a842afeecb",
             item_name_to_id: { Nothing: -1 },
             location_name_to_id: { "Cheat Console": -1, "Server": -2 },
@@ -230,8 +230,6 @@ export class DataPackageManager {
  * package.
  */
 export class PackageMetadata {
-    readonly #client: Client;
-
     /** The name of the game this game package is for. */
     public readonly game: string;
 
@@ -253,12 +251,10 @@ export class PackageMetadata {
     /**
      * Creates a new PackageMetadata from a given {@link GamePackage}.
      * @internal
-     * @param client The Archipelago client that created this package.
      * @param game The name of the game for this game package.
      * @param _package The API-level game package to expand upon.
      */
-    public constructor(client: Client, game: string, _package: GamePackage) {
-        this.#client = client;
+    public constructor(game: string, _package: GamePackage) {
         this.game = game;
         this.checksum = _package.checksum;
         this.itemTable = Object.freeze(_package.item_name_to_id);

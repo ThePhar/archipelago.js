@@ -1,5 +1,6 @@
 import { JSONSerializableData } from "../api";
 import { Client } from "../client.ts";
+import { libraryVersion } from "../constants.ts";
 import { IntermediateDataOperation } from "../operations.ts";
 import { generateUuid } from "../utils.ts";
 
@@ -25,21 +26,31 @@ export class DataStorageManager {
     public constructor(client: Client) {
         this.#client = client;
 
-        // If connection is lost discard storage and subscribers as the server will no longer notify anyway on
-        // reconnection.
-        this.#client.socket.on("disconnected", () => {
-            this.#storage = {};
-            this.#subscribers = {};
-        });
+        this.#client.socket
+            // If connection is lost discard storage and subscribers as the server will no longer notify anyway on
+            // reconnection.
+            .on("disconnected", () => {
+                this.#storage = {};
+                this.#subscribers = {};
+            })
+            // Keep track of monitored keys.
+            .on("setReply", (packet) => {
+                this.#storage[packet.key] = packet.value;
+                const callbacks = this.#subscribers[packet.key];
+                if (callbacks) {
+                    callbacks.forEach((callback) => callback(packet.key, packet.value, packet.original_value));
+                }
+            });
 
-        // Track all keys that are being monitored.
-        this.#client.socket.on("setReply", (packet) => {
-            this.#storage[packet.key] = packet.value;
-            const callbacks = this.#subscribers[packet.key];
-            if (callbacks) {
-                callbacks.forEach((callback) => callback(packet.key, packet.value, packet.original_value));
-            }
-        });
+        if (this.#client.options.debugLogVersions) {
+            this.#client.socket.on("connected", () => {
+                // For debug purposes log our data to data storage.
+                const key = `${this.#client.game}:${libraryVersion}:${navigator?.userAgent}`;
+                void this.prepare("archipelago.js__runtimes")
+                    .update({ [key]: true })
+                    .commit(false);
+            });
+        }
     }
 
     /** Returns a copy of all currently monitored keys. */
