@@ -1,5 +1,6 @@
 export * from "./client.ts";
 export * from "./constants.ts";
+export * from "./managers/package.ts";
 export * from "./managers/socket.ts";
 export * from "./utils.ts";
 

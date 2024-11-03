@@ -1,5 +1,7 @@
 import { ConnectedPacket, ConnectionRefusedPacket, ConnectPacket } from "./api";
+import { DataPackageManager } from "./managers/package.ts";
 import { SocketManager } from "./managers/socket.ts";
+import { ClientOptions, defaultClientOptions } from "./options.ts";
 import { parseVersion } from "./utils.ts";
 
 /**
@@ -11,6 +13,10 @@ export class Client {
 
     /** A helper object for handling websocket communication and interacting with the AP network protocol directly. */
     public readonly socket: SocketManager = new SocketManager(this);
+    /** A helper object for handling game data packages. */
+    public readonly package: DataPackageManager = new DataPackageManager(this);
+
+    public options: Required<ClientOptions>;
 
     /** Returns `true` if currently connected and authenticated to the Archipelago server. */
     public get authenticated(): boolean {
@@ -20,8 +26,15 @@ export class Client {
     /**
      * Instantiates a new Archipelago client. After creating, call {@link Client.login} to connect and authenticate to
      * a server.
+     * @param options Additional configuration options for this client. See {@link ClientOptions} for more information.
      */
-    public constructor() {
+    public constructor(options?: ClientOptions) {
+        if (options) {
+            this.options = { ...defaultClientOptions, ...options };
+        } else {
+            this.options = { ...defaultClientOptions };
+        }
+
         // Setup disconnection event handler to reset internal state.
         this.socket.on("Disconnect", () => {
             this.#authenticated = false;
@@ -71,7 +84,7 @@ export class Client {
         };
 
         await this.socket.connect(url);
-        return new Promise((resolve, reject) => {
+        await new Promise<void>((resolve, reject) => {
             const connectedHandler = (packet: ConnectedPacket) => {
                 this.socket
                     .off("Connected", connectedHandler)
@@ -95,5 +108,10 @@ export class Client {
                 .on("ConnectionRefused", refusedHandler.bind(this))
                 .send(packet);
         });
+
+        // Automatically load data package if requested.
+        if (this.options.autoFetchDataPackage) {
+            await this.package.fetchPackage();
+        }
     }
 }

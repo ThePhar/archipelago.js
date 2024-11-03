@@ -167,9 +167,17 @@ export class SocketManager {
      * {@link SocketEvents}.
      */
     public async once<SocketEvent extends keyof SocketEvents>(event: SocketEvent): Promise<SocketEvents[SocketEvent]> {
-        return new Promise<SocketEvents[SocketEvent]>((resolve) => {
-            const listener = (...args: SocketEvents[SocketEvent]) => resolve(args);
-            this.#target.addEventListener(event, listener);
+        return new Promise<SocketEvents[SocketEvent]>((resolve, reject) => {
+            const timeout = setTimeout(
+                () => reject(new Error("Server has not responded in time.")),
+                this.#client.options.timeout,
+            );
+            const listener = (...args: SocketEvents[SocketEvent]) => {
+                clearTimeout(timeout);
+                resolve(args);
+            };
+
+            this.#target.addEventListener(event, listener, true);
         });
     }
 
