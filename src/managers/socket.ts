@@ -15,15 +15,13 @@ import {
     SetReplyPacket,
 } from "../api";
 import { Client } from "../client.ts";
-import { ArchipelagoEventEmitter } from "../events.ts";
+import { EventBasedManager } from "./abstract.ts";
 
 /**
  * Manages socket-level communication and exposes helper methods/events for interacting with the Archipelago API
  * directly.
  */
-export class SocketManager {
-    readonly #client: Client;
-    readonly #target = new ArchipelagoEventEmitter();
+export class SocketManager extends EventBasedManager<SocketEvents> {
     #socket: WebSocket | null = null;
     #connected: boolean = false;
 
@@ -43,7 +41,7 @@ export class SocketManager {
      * @param client The client object this manager is associated with.
      */
     public constructor(client: Client) {
-        this.#client = client;
+        super(client);
     }
 
     /**
@@ -55,7 +53,7 @@ export class SocketManager {
     public send(...packets: ClientPacket[]): SocketManager {
         if (this.#socket) {
             this.#socket.send(JSON.stringify(packets));
-            this.#emit("SentPackets", [packets]);
+            this.emit("SentPackets", [packets]);
             return this;
         }
 
@@ -117,7 +115,7 @@ export class SocketManager {
                     reject(new Error("Failed to connect to Archipelago server."));
                 };
                 this.#socket.onopen = () => {
-                    this.once("RoomInfo")
+                    this.wait("RoomInfo")
                         .then(([packet]) => {
                             this.#connected = true;
 
@@ -157,60 +155,7 @@ export class SocketManager {
         this.#connected = false;
         this.#socket?.close();
         this.#socket = null;
-        this.#emit("Disconnect", []);
-    }
-
-    /**
-     * Add an event listener for a specific server packet or any server packets.
-     * @param event The packet event name to listen for.
-     * @param listener The callback function to fire when the event is emitted.
-     * @returns This SocketManager.
-     * @remarks For details on the supported events and the arguments returned for each event type, see
-     * {@link SocketEvents}.
-     */
-    public on<SocketEvent extends keyof SocketEvents>(event: SocketEvent, listener: (...args: SocketEvents[SocketEvent]) => void): SocketManager {
-        this.#target.addEventListener(event, listener);
-        return this;
-    }
-
-    /**
-     * Removes an existing event listener.
-     * @param event The event name associated with the listener to remove.
-     * @param listener The callback function to remove.
-     * @returns This SocketManager.
-     * @remarks For details on the supported events and the arguments returned for each event type, see
-     * {@link SocketEvents}.
-     */
-    public off<SocketEvent extends keyof SocketEvents>(event: SocketEvent, listener: (...args: SocketEvents[SocketEvent]) => void): SocketManager {
-        this.#target.removeEventListener(event, listener);
-        return this;
-    }
-
-    /**
-     * Returns a promise that waits for a single specified packet event to be received. Resolves with a list of
-     * arguments dispatched with the event.
-     * @param event The packet name to listen for.
-     * @remarks For details on the supported events and the arguments returned for each event type, see
-     * {@link SocketEvents}.
-     */
-    public async once<SocketEvent extends keyof SocketEvents>(event: SocketEvent): Promise<SocketEvents[SocketEvent]> {
-        return new Promise<SocketEvents[SocketEvent]>((resolve, reject) => {
-            const timeout = setTimeout(
-                // TODO: Replace with custom error object that can export the reasons easier.
-                () => reject(new Error("Server has not responded in time.")),
-                this.#client.options.timeout,
-            );
-            const listener = (...args: SocketEvents[SocketEvent]) => {
-                clearTimeout(timeout);
-                resolve(args);
-            };
-
-            this.#target.addEventListener(event, listener, true);
-        });
-    }
-
-    #emit<Event extends keyof SocketEvents>(event: Event, detail: SocketEvents[Event]): void {
-        this.#target.dispatchEvent(event, detail);
+        this.emit("Disconnect", []);
     }
 
     #parseMessage(event: MessageEvent<string>): void {
@@ -218,49 +163,49 @@ export class SocketManager {
         for (const packet of packets) {
             switch (packet.cmd) {
                 case "ConnectionRefused":
-                    this.#emit("ConnectionRefused", [packet]);
+                    this.emit("ConnectionRefused", [packet]);
                     break;
                 case "Bounced":
-                    this.#emit("Bounced", [packet]);
+                    this.emit("Bounced", [packet]);
                     break;
                 case "Connected":
-                    this.#emit("Connected", [packet]);
+                    this.emit("Connected", [packet]);
                     break;
                 case "DataPackage":
-                    this.#emit("DataPackage", [packet]);
+                    this.emit("DataPackage", [packet]);
                     break;
                 case "InvalidPacket":
-                    this.#emit("InvalidPacket", [packet]);
+                    this.emit("InvalidPacket", [packet]);
                     break;
                 case "LocationInfo":
-                    this.#emit("LocationInfo", [packet]);
+                    this.emit("LocationInfo", [packet]);
                     break;
                 case "PrintJSON":
                     if (packet.type === "Chat" || packet.type === "ServerChat") {
-                        this.#emit("PrintJSON", [packet, packet.message]);
+                        this.emit("PrintJSON", [packet, packet.message]);
                     } else {
-                        this.#emit("PrintJSON", [packet, packet.data.reduce((prev, value) => prev + value.text, "")]);
+                        this.emit("PrintJSON", [packet, packet.data.reduce((prev, value) => prev + value.text, "")]);
                     }
                     break;
                 case "ReceivedItems":
-                    this.#emit("ReceivedItems", [packet]);
+                    this.emit("ReceivedItems", [packet]);
                     break;
                 case "Retrieved":
-                    this.#emit("Retrieved", [packet]);
+                    this.emit("Retrieved", [packet]);
                     break;
                 case "RoomInfo":
-                    this.#emit("RoomInfo", [packet]);
+                    this.emit("RoomInfo", [packet]);
                     break;
                 case "RoomUpdate":
-                    this.#emit("RoomUpdate", [packet]);
+                    this.emit("RoomUpdate", [packet]);
                     break;
                 case "SetReply":
-                    this.#emit("SetReply", [packet]);
+                    this.emit("SetReply", [packet]);
                     break;
             }
 
             // Generic-packet listeners only fire after all specific-packet listeners have fired.
-            this.#emit("ReceivedPacket", [packet]);
+            this.emit("ReceivedPacket", [packet]);
         }
     }
 }
@@ -279,7 +224,7 @@ export class SocketManager {
  *     console.warn("Lost connection to the server!");
  * }
  */
-export interface SocketEvents {
+export type SocketEvents = {
     /**
      * Fires when the client receives a {@link BouncedPacket}.
      * @param packet The raw {@link BouncedPacket}.
@@ -374,7 +319,7 @@ export interface SocketEvents {
      * Fires when the client has lost connection to the server, intentionally or not.
      */
     Disconnect: []
-}
+};
 
 /**
  * Finds the first appropriate WebSocket prototype available in the current scope.

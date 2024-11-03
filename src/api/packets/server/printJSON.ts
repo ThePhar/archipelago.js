@@ -330,3 +330,23 @@ export type PrintJSONPacket =
     | ReleaseJSONPacket
     | CollectJSONPacket
     | CountdownJSONPacket;
+
+/**
+ * A union of all known {@link PrintJSONPacket} types.
+ */
+export type PrintJSONType =
+    | "ItemSend"
+    | "ItemCheat"
+    | "Hint"
+    | "Join"
+    | "Part"
+    | "Chat"
+    | "ServerChat"
+    | "Tutorial"
+    | "TagsChanged"
+    | "CommandResult"
+    | "AdminCommandResult"
+    | "Goal"
+    | "Release"
+    | "Collect"
+    | "Countdown";

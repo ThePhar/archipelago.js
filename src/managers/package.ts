@@ -75,7 +75,7 @@ export class DataPackageManager {
             const request: GetDataPackagePacket = { cmd: "GetDataPackage", games: [game] };
             const [response] = await this.#client.socket
                 .send(request)
-                .once("DataPackage");
+                .wait("DataPackage");
 
             data.games[game] = response.data.games[game];
         }

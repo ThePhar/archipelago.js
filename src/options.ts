@@ -19,6 +19,13 @@ export interface ClientOptions {
      * @default true
      */
     autoFetchDataPackage?: boolean
+
+    /**
+     * Determines the maximum number of chat messages to log in {@link MessageManager}.
+     * @default 1000
+     * @remarks If `0` or fewer, message logging will effectively be disabled.
+     */
+    maximumMessages?: number
 }
 
 /**
@@ -28,6 +35,7 @@ export interface ClientOptions {
 export const defaultClientOptions: Required<ClientOptions> = {
     timeout: 10000,
     autoFetchDataPackage: true,
+    maximumMessages: 1000,
 };
 
 /**

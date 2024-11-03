@@ -1,4 +1,5 @@
 import { ConnectedPacket, ConnectionRefusedPacket, ConnectPacket } from "./api";
+import { MessageManager } from "./managers/message.ts";
 import { DataPackageManager } from "./managers/package.ts";
 import { SocketManager } from "./managers/socket.ts";
 import { ClientOptions, ConnectionOptions, defaultClientOptions, defaultConnectionOptions } from "./options.ts";
@@ -18,6 +19,8 @@ export class Client {
     public readonly socket: SocketManager = new SocketManager(this);
     /** A helper object for handling game data packages. */
     public readonly package: DataPackageManager = new DataPackageManager(this);
+    /** A helper object for handling chat messages. */
+    public readonly message: MessageManager = new MessageManager(this);
 
     /** Current options for this client. */
     public options: Required<ClientOptions>;
