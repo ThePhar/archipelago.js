@@ -50,18 +50,9 @@ export abstract class EventBasedManager<Events extends { [p: string]: unknown[] 
         event: Event,
         clearPredicate: (...args: Events[Event]) => boolean = () => true,
     ): Promise<Events[Event]> {
-        return new Promise<Events[Event]>((resolve, reject) => {
-            const timeout = setTimeout(
-                () => {
-                    this.#events.removeEventListener(event, listener);
-                    reject(new Error("Server did not respond within the maximum timeout time."));
-                },
-                this.#client.options.timeout,
-            );
-
+        return new Promise<Events[Event]>((resolve) => {
             const listener = (...args: Events[Event]) => {
                 if (clearPredicate(...args)) {
-                    clearTimeout(timeout);
                     this.#events.removeEventListener(event, listener);
                     resolve(args);
                 }
