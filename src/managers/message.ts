@@ -1,7 +1,7 @@
 import { PrintJSONPacket, SayPacket } from "../api";
 import { Client } from "../client.ts";
 import { EventBasedManager } from "./abstract.ts";
-import { PlayerMetadata } from "./players.ts";
+import { Player } from "./players.ts";
 
 /**
  * Manages and stores {@link PrintJSONPacket} messages, notifies subscribers of new messages, and exposes helper methods
@@ -47,7 +47,7 @@ export class MessageManager extends EventBasedManager<MessageEvents> {
                     this.emit("chatMessage", [
                         message,
                         index,
-                        this.#client.players.findPlayer(packet.team, packet.slot) as PlayerMetadata,
+                        this.#client.players.findPlayer(packet.team, packet.slot) as Player,
                     ]);
                     break;
                 case "Countdown":
@@ -106,5 +106,5 @@ export type MessageEvents = {
      * logging is disabled, this will return `-1`.
      * @param sender The metadata of the player who sent this message.
      */
-    chatMessage: [message: string, index: number, sender: PlayerMetadata]
+    chatMessage: [message: string, index: number, sender: Player]
 };

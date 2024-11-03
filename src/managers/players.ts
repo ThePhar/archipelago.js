@@ -1,6 +1,7 @@
-import { clientStatuses, NetworkPlayer, NetworkSlot, slotTypes } from "../api";
+import { clientStatuses, NetworkHint, NetworkPlayer, NetworkSlot, slotTypes } from "../api";
 import { Client, UnknownSlotData } from "../client.ts";
 import { EventBasedManager } from "./abstract.ts";
+import { Hint } from "./items.ts";
 
 /** A type alias for any known client status. See {@link clientStatuses} for more information. */
 export type ClientStatus = typeof clientStatuses[keyof typeof clientStatuses];
@@ -47,19 +48,19 @@ export class PlayersManager extends EventBasedManager<PlayerEvents> {
                     if (this.#players[player.team][player.slot].alias !== player.alias) {
                         const oldAlias = this.#players[player.team][player.slot].alias;
                         this.#players[player.team][player.slot] = player;
-                        this.emit("aliasUpdated", [new PlayerMetadata(this.#client, player), oldAlias, player.alias]);
+                        this.emit("aliasUpdated", [new Player(this.#client, player), oldAlias, player.alias]);
                     }
                 }
             });
     }
 
-    /** Returns the {@link PlayerMetadata} for this client's player. */
-    public get self(): PlayerMetadata {
+    /** Returns the {@link Player} for this client's player. */
+    public get self(): Player {
         if (this.#slot === 0) {
             throw new Error("Cannot lookup own player object when client has never connected to a server.");
         }
 
-        return new PlayerMetadata(this.#client, this.#players[this.#team][this.#slot]);
+        return new Player(this.#client, this.#players[this.#team][this.#slot]);
     }
 
     /**
@@ -79,12 +80,12 @@ export class PlayersManager extends EventBasedManager<PlayerEvents> {
      *     }
      * }
      */
-    public get teams(): PlayerMetadata[][] {
-        const players: PlayerMetadata[][] = [];
+    public get teams(): Player[][] {
+        const players: Player[][] = [];
         for (let team = 0; team < this.#players.length; team++) {
             players[team] = [];
             for (let player = 0; player < this.#players[team].length; player++) {
-                players[team].push(new PlayerMetadata(this.#client, this.#players[team][player]));
+                players[team].push(new Player(this.#client, this.#players[team][player]));
             }
         }
 
@@ -97,10 +98,10 @@ export class PlayersManager extends EventBasedManager<PlayerEvents> {
      * @param slot The slot id associated with the searched player.
      * @returns The player's metadata or `undefined` if not found.
      */
-    public findPlayer(team: number, slot: number): PlayerMetadata | undefined {
+    public findPlayer(team: number, slot: number): Player | undefined {
         const playerTeam = this.#players[team];
         if (playerTeam) {
-            return new PlayerMetadata(this.#client, this.#players[team][slot]);
+            return new Player(this.#client, this.#players[team][slot]);
         }
 
         return undefined;
@@ -110,17 +111,17 @@ export class PlayersManager extends EventBasedManager<PlayerEvents> {
 export type PlayerEvents = {
     /**
      * Fires when a player updates their alias.
-     * @param player The {@link PlayerMetadata} for this player with the changes applied.
+     * @param player The {@link Player} for this player with the changes applied.
      * @param oldAlias The player's previous alias.
      * @param newAlias The player's new alias.
      */
-    aliasUpdated: [player: PlayerMetadata, oldAlias: string, newAlias: string]
+    aliasUpdated: [player: Player, oldAlias: string, newAlias: string]
 };
 
 /**
  * A collection of metadata and helper methods for interacting with a particular player.
  */
-export class PlayerMetadata {
+export class Player {
     #client: Client;
     #player: NetworkPlayer;
 
@@ -179,7 +180,7 @@ export class PlayerMetadata {
     }
 
     /** If this player is a group, returns all members. Otherwise, returns `null`. */
-    public get members(): PlayerMetadata[] | null {
+    public get members(): Player[] | null {
         if (this.type !== slotTypes.group) {
             return null;
         }
@@ -190,11 +191,11 @@ export class PlayerMetadata {
             }
 
             return members;
-        }, [] as PlayerMetadata[]);
+        }, [] as Player[]);
     }
 
     /** Returns all the groups this player is a member of. */
-    public get groups(): PlayerMetadata[] {
+    public get groups(): Player[] {
         if (this.slot === 0) {
             return [];
         }
@@ -210,7 +211,7 @@ export class PlayerMetadata {
             }
 
             return groups;
-        }, [] as PlayerMetadata[]);
+        }, [] as Player[]);
     }
 
     /** Returns this slot's current status. See {@link clientStatuses} for more information. */
@@ -239,5 +240,11 @@ export class PlayerMetadata {
 
     get #networkSlot(): NetworkSlot {
         return this.#client.players.slots[this.slot];
+    }
+
+    /** Fetch this player's current hints. */
+    public async fetchHints(): Promise<Hint[]> {
+        const hints = await this.#client.storage.get<NetworkHint[]>(`_read_hints_${this.team}_${this.slot}`);
+        return hints.map((hint) => new Hint(this.#client, hint));
     }
 }

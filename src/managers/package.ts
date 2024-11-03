@@ -6,7 +6,7 @@ import { Client } from "../client.ts";
  */
 export class DataPackageManager {
     readonly #client: Client;
-    readonly #packages: Map<string, PackageMetadata> = new Map();
+    readonly #packages: Map<string, Package> = new Map();
     readonly #checksums: Map<string, string> = new Map();
     readonly #games: Set<string> = new Set();
 
@@ -35,7 +35,7 @@ export class DataPackageManager {
      * `null` instead.
      * @param game The specific game package to look up.
      */
-    public findPackage(game: string): PackageMetadata | null {
+    public findPackage(game: string): Package | null {
         return this.#packages.get(game) ?? null;
     }
 
@@ -115,7 +115,7 @@ export class DataPackageManager {
      */
     public importPackage(dataPackage: DataPackage): void {
         for (const game in dataPackage.games) {
-            this.#packages.set(game, new PackageMetadata(game, dataPackage.games[game]));
+            this.#packages.set(game, new Package(game, dataPackage.games[game]));
             this.#checksums.set(game, dataPackage.games[game].checksum);
         }
     }
@@ -215,9 +215,9 @@ export class DataPackageManager {
      * @private
      * @remarks If updates to the AP game package happen, this should be updated.
      */
-    private preloadArchipelago(): PackageMetadata {
+    private preloadArchipelago(): Package {
         // As of AP 0.5.0
-        return new PackageMetadata("Archipelago", {
+        return new Package("Archipelago", {
             checksum: "ac9141e9ad0318df2fa27da5f20c50a842afeecb",
             item_name_to_id: { Nothing: -1 },
             location_name_to_id: { "Cheat Console": -1, "Server": -2 },
@@ -229,7 +229,7 @@ export class DataPackageManager {
  * An abstraction of a {@link GamePackage} object which includes additional helper methods for interacting with a game's
  * package.
  */
-export class PackageMetadata {
+export class Package {
     /** The name of the game this game package is for. */
     public readonly game: string;
 
