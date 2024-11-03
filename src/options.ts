@@ -68,11 +68,16 @@ export interface ConnectionOptions {
     /**
      * The version of Archipelago this client was designed for. This can be enforced on the server side to force a user
      * to update their client, if a new version was released.
-     *
-     * Must be in the format: `major`.`minor`.`build` (e.g., `"0.5.0"`)
      * @default {@link targetVersion}
      */
-    readonly version?: string
+    readonly version?: {
+        /** The major version component. */
+        readonly major: number
+        /** The minor version component. */
+        readonly minor: number
+        /** The build version component. */
+        readonly build: number
+    }
 
     /**
      * Determines the kinds of received item events the server will broadcast to this client when locations are checked.

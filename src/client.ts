@@ -1,7 +1,5 @@
 import { ConnectedPacket, ConnectionRefusedPacket, ConnectPacket } from "./api";
-import { MessageManager } from "./managers/message.ts";
-import { DataPackageManager } from "./managers/package.ts";
-import { SocketManager } from "./managers/socket.ts";
+import { DataPackageManager, MessageManager, RoomStateManager, SocketManager } from "./managers";
 import { ClientOptions, ConnectionOptions, defaultClientOptions, defaultConnectionOptions } from "./options.ts";
 import { parseVersion } from "./utils.ts";
 
@@ -19,6 +17,8 @@ export class Client {
     public readonly socket: SocketManager = new SocketManager(this);
     /** A helper object for handling game data packages. */
     public readonly package: DataPackageManager = new DataPackageManager(this);
+    /** A helper object for handling room state. */
+    public readonly room: RoomStateManager = new RoomStateManager(this);
     /** A helper object for handling chat messages. */
     public readonly message: MessageManager = new MessageManager(this);
 
@@ -58,7 +58,7 @@ export class Client {
         }
 
         // Setup disconnection event handler to reset internal state.
-        this.socket.on("Disconnect", () => {
+        this.socket.on("disconnected", () => {
             this.#authenticated = false;
         });
     }
@@ -117,7 +117,7 @@ export class Client {
             items_handling: this.arguments.items,
             uuid: this.arguments.uuid,
             tags: this.arguments.tags,
-            version: parseVersion(this.arguments.version),
+            version: { ...this.arguments.version, class: "Version" },
         };
 
         await this.socket.connect(url);
@@ -130,8 +130,8 @@ export class Client {
 
             const connectedHandler = (packet: ConnectedPacket) => {
                 this.socket
-                    .off("Connected", connectedHandler)
-                    .off("ConnectionRefused", refusedHandler);
+                    .off("connected", connectedHandler)
+                    .off("connectionRefused", refusedHandler);
 
                 clearTimeout(timeout);
                 resolve(packet.slot_data as SlotData);
@@ -139,8 +139,8 @@ export class Client {
 
             const refusedHandler = (packet: ConnectionRefusedPacket) => {
                 this.socket
-                    .off("Connected", connectedHandler)
-                    .off("ConnectionRefused", refusedHandler);
+                    .off("connected", connectedHandler)
+                    .off("connectionRefused", refusedHandler);
 
                 // TODO: Replace with custom error object that can export the reasons easier.
                 clearTimeout(timeout);
@@ -148,8 +148,8 @@ export class Client {
             };
 
             this.socket
-                .on("Connected", connectedHandler.bind(this))
-                .on("ConnectionRefused", refusedHandler.bind(this))
+                .on("connected", connectedHandler.bind(this))
+                .on("connectionRefused", refusedHandler.bind(this))
                 .send(request);
         });
 

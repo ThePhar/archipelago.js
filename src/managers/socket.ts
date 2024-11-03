@@ -55,7 +55,7 @@ export class SocketManager extends EventBasedManager<SocketEvents> {
     public send(...packets: ClientPacket[]): SocketManager {
         if (this.#socket) {
             this.#socket.send(JSON.stringify(packets));
-            this.emit("SentPackets", [packets]);
+            this.emit("sentPackets", [packets]);
             return this;
         }
 
@@ -117,7 +117,7 @@ export class SocketManager extends EventBasedManager<SocketEvents> {
                     reject(new Error("Failed to connect to Archipelago server."));
                 };
                 this.#socket.onopen = () => {
-                    this.wait("RoomInfo")
+                    this.wait("roomInfo")
                         .then(([packet]) => {
                             this.#connected = true;
 
@@ -157,7 +157,7 @@ export class SocketManager extends EventBasedManager<SocketEvents> {
         this.#connected = false;
         this.#socket?.close();
         this.#socket = null;
-        this.emit("Disconnect", []);
+        this.emit("disconnected", []);
     }
 
     #parseMessage(event: MessageEvent<string>): void {
@@ -165,49 +165,49 @@ export class SocketManager extends EventBasedManager<SocketEvents> {
         for (const packet of packets) {
             switch (packet.cmd) {
                 case "ConnectionRefused":
-                    this.emit("ConnectionRefused", [packet]);
+                    this.emit("connectionRefused", [packet]);
                     break;
                 case "Bounced":
-                    this.emit("Bounced", [packet]);
+                    this.emit("bounced", [packet]);
                     break;
                 case "Connected":
-                    this.emit("Connected", [packet]);
+                    this.emit("connected", [packet]);
                     break;
                 case "DataPackage":
-                    this.emit("DataPackage", [packet]);
+                    this.emit("dataPackage", [packet]);
                     break;
                 case "InvalidPacket":
-                    this.emit("InvalidPacket", [packet]);
+                    this.emit("invalidPacket", [packet]);
                     break;
                 case "LocationInfo":
-                    this.emit("LocationInfo", [packet]);
+                    this.emit("locationInfo", [packet]);
                     break;
                 case "PrintJSON":
                     if (packet.type === "Chat" || packet.type === "ServerChat") {
-                        this.emit("PrintJSON", [packet, packet.message]);
+                        this.emit("printJSON", [packet, packet.message]);
                     } else {
-                        this.emit("PrintJSON", [packet, packet.data.reduce((prev, value) => prev + value.text, "")]);
+                        this.emit("printJSON", [packet, packet.data.reduce((prev, value) => prev + value.text, "")]);
                     }
                     break;
                 case "ReceivedItems":
-                    this.emit("ReceivedItems", [packet]);
+                    this.emit("receivedItems", [packet]);
                     break;
                 case "Retrieved":
-                    this.emit("Retrieved", [packet]);
+                    this.emit("retrieved", [packet]);
                     break;
                 case "RoomInfo":
-                    this.emit("RoomInfo", [packet]);
+                    this.emit("roomInfo", [packet]);
                     break;
                 case "RoomUpdate":
-                    this.emit("RoomUpdate", [packet]);
+                    this.emit("roomUpdate", [packet]);
                     break;
                 case "SetReply":
-                    this.emit("SetReply", [packet]);
+                    this.emit("setReply", [packet]);
                     break;
             }
 
             // Generic-packet listeners only fire after all specific-packet listeners have fired.
-            this.emit("ReceivedPacket", [packet]);
+            this.emit("receivedPacket", [packet]);
         }
     }
 }
@@ -231,57 +231,57 @@ export type SocketEvents = {
      * Fires when the client receives a {@link BouncedPacket}.
      * @param packet The raw {@link BouncedPacket}.
      */
-    Bounced: [packet: BouncedPacket]
+    bounced: [packet: BouncedPacket]
 
     /**
      * Fires when the client receives a {@link ConnectedPacket}
      * @param packet The raw {@link ConnectedPacket} packet.
      * @remarks This also means the client has authenticated to an Archipelago server.
      */
-    Connected: [packet: ConnectedPacket]
+    connected: [packet: ConnectedPacket]
 
     /**
      * Fires when the client receives a {@link ConnectionRefusedPacket}.
      * @param packet The raw {@link ConnectionRefusedPacket}.
      */
-    ConnectionRefused: [packet: ConnectionRefusedPacket]
+    connectionRefused: [packet: ConnectionRefusedPacket]
 
     /**
      * Fires when the client receives a {@link DataPackagePacket}.
      * @param packet The raw {@link DataPackagePacket}.
      */
-    DataPackage: [packet: DataPackagePacket]
+    dataPackage: [packet: DataPackagePacket]
 
     /**
      * Fires when the client receives a {@link InvalidPacketPacket}.
      * @param packet The raw {@link InvalidPacketPacket}.
      */
-    InvalidPacket: [packet: InvalidPacketPacket]
+    invalidPacket: [packet: InvalidPacketPacket]
 
     /**
      * Fires when the client receives a {@link LocationInfoPacket}.
      * @param packet The raw {@link LocationInfoPacket}.
      */
-    LocationInfo: [packet: LocationInfoPacket]
+    locationInfo: [packet: LocationInfoPacket]
 
     /**
      * Fires when the client receives a {@link PrintJSONPacket}.
      * @param packet The raw {@link PrintJSONPacket} packet.
      * @param message The full plaintext message content.
      */
-    PrintJSON: [packet: PrintJSONPacket, message: string]
+    printJSON: [packet: PrintJSONPacket, message: string]
 
     /**
      * Fires when the client receives a {@link ReceivedItemsPacket}.
      * @param packet The raw {@link ReceivedItemsPacket}.
      */
-    ReceivedItems: [packet: ReceivedItemsPacket]
+    receivedItems: [packet: ReceivedItemsPacket]
 
     /**
      * Fires when the client receives a {@link RetrievedPacket}.
      * @param packet The raw {@link RetrievedPacket}.
      */
-    Retrieved: [packet: RetrievedPacket]
+    retrieved: [packet: RetrievedPacket]
 
     /**
      * Fires when the client receives a {@link RoomInfoPacket}.
@@ -289,19 +289,19 @@ export type SocketEvents = {
      * @remarks This also means the client has established a websocket connection to an Archipelago server, but not yet
      * authenticated.
      */
-    RoomInfo: [packet: RoomInfoPacket]
+    roomInfo: [packet: RoomInfoPacket]
 
     /**
      * Fires when the client receives a {@link RoomUpdatePacket}.
      * @param packet The raw {@link RoomUpdatePacket}.
      */
-    RoomUpdate: [packet: RoomUpdatePacket]
+    roomUpdate: [packet: RoomUpdatePacket]
 
     /**
      * Fires when the client receives a {@link SetReplyPacket}.
      * @param packet The raw {@link SetReplyPacket}.
      */
-    SetReply: [packet: SetReplyPacket]
+    setReply: [packet: SetReplyPacket]
 
     /**
      * Fires when the client receives any {@link ServerPacket}.
@@ -309,18 +309,18 @@ export type SocketEvents = {
      * determine the type of packet received.
      * @remarks All specific packet event listeners will fire before this event fires.
      */
-    ReceivedPacket: [packet: ServerPacket]
+    receivedPacket: [packet: ServerPacket]
 
     /**
      * Fires when the client sends an array of {@link ClientPacket}.
      * @param packets An array of {@link ClientPacket} sent to the server.
      */
-    SentPackets: [packets: ClientPacket[]]
+    sentPackets: [packets: ClientPacket[]]
 
     /**
      * Fires when the client has lost connection to the server, intentionally or not.
      */
-    Disconnect: []
+    disconnected: []
 };
 
 /**

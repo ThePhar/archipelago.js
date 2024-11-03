@@ -17,7 +17,7 @@ export class DataPackageManager {
      */
     public constructor(client: Client) {
         this.#client = client;
-        this.#client.socket.on("RoomInfo", (packet) => {
+        this.#client.socket.on("roomInfo", (packet) => {
             this.#packages.clear();
             this.#checksums.clear();
             this.#games.clear();
@@ -75,7 +75,7 @@ export class DataPackageManager {
             const request: GetDataPackagePacket = { cmd: "GetDataPackage", games: [game] };
             const [response] = await this.#client.socket
                 .send(request)
-                .wait("DataPackage");
+                .wait("dataPackage");
 
             data.games[game] = response.data.games[game];
         }

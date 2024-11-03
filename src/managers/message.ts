@@ -29,7 +29,7 @@ export class MessageManager extends EventBasedManager<MessageEvents> {
         this.#client = client;
 
         // Log messages and emit events.
-        this.#client.socket.on("PrintJSON", (packet, message) => {
+        this.#client.socket.on("printJSON", (packet, message) => {
             let index = -1;
             if (this.#client.options.maximumMessages >= 1) {
                 this.messages.push({ message, packet });
@@ -37,15 +37,15 @@ export class MessageManager extends EventBasedManager<MessageEvents> {
                 index = this.messages.length - 1;
             }
 
-            this.emit("ReceivedMessage", [message, index, packet]);
+            this.emit("receivedMessage", [message, index, packet]);
 
             // Special packets.
             switch (packet.type) {
                 case "ServerChat":
-                    this.emit("AdminMessage", [message]);
+                    this.emit("adminMessage", [message]);
                     break;
                 case "Countdown":
-                    this.emit("Countdown", [packet.countdown]);
+                    this.emit("countdown", [packet.countdown]);
                     break;
             }
         });
@@ -66,7 +66,7 @@ export class MessageManager extends EventBasedManager<MessageEvents> {
         const request: SayPacket = { cmd: "Say", text };
         await this.#client.socket
             .send(request)
-            .wait("PrintJSON", (_, message) => message === text);
+            .wait("printJSON", (_, message) => message === text);
     }
 }
 
@@ -82,17 +82,17 @@ export type MessageEvents = {
      * logging is disabled, this will return `-1`.
      * @param packet The received PrintJSONPacket, if needed to reconstruct into a specialized message.
      */
-    ReceivedMessage: [message: string, index: number, packet: PrintJSONPacket]
+    receivedMessage: [message: string, index: number, packet: PrintJSONPacket]
 
     /**
      * Fires when a countdown message is received.
      * @param value The current countdown value.
      */
-    Countdown: [value: number]
+    countdown: [value: number]
 
     /**
      * Fires when a server-side admin message is received.
      * @param message The plaintext message content.
      */
-    AdminMessage: [message: string]
+    adminMessage: [message: string]
 };
