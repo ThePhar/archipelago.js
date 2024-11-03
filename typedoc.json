@@ -4,6 +4,7 @@
     "cleanOutputDir": true,
     "excludePrivate": true,
     "excludeInternal": true,
+    "excludeProtected": false,
     "tsconfig": "tsconfig.json",
     "entryPoints": ["src/index.ts"],
     "out": "docs",

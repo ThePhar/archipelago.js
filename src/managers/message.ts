@@ -12,7 +12,7 @@ export class MessageManager extends EventBasedManager<MessageEvents> {
     /**
      * Returns all current chat messages that are logged.
      *
-     * If the messages length is greater than {@link Client.options.maximumMessages}, the oldest messages are spliced
+     * If the messages length is greater than {@link ClientOptions.maximumMessages}, the oldest messages are spliced
      * out.
      */
     public get messages(): { readonly message: string, readonly packet: PrintJSONPacket }[] {

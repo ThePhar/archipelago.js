@@ -29,8 +29,8 @@ export interface ClientOptions {
 }
 
 /**
+ * Default {@link ClientOptions}.
  * @internal
- * @remarks If any of these are updated, also update the JSDoc above.
  */
 export const defaultClientOptions: Required<ClientOptions> = {
     timeout: 10000,
@@ -92,8 +92,8 @@ export interface ConnectionOptions {
 }
 
 /**
+ * Default {@link ConnectionOptions}.
  * @internal
- * @remarks If any of these are updated, also update the JSDoc above.
  */
 export const defaultConnectionOptions: Required<ConnectionOptions> = {
     password: "",
