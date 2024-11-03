@@ -1,7 +1,7 @@
 import { ConnectedPacket, ConnectionRefusedPacket, ConnectPacket } from "./api";
 import { DataPackageManager } from "./managers/package.ts";
 import { SocketManager } from "./managers/socket.ts";
-import { ClientOptions, defaultClientOptions } from "./options.ts";
+import { ClientOptions, ConnectionOptions, defaultClientOptions, defaultConnectionOptions } from "./options.ts";
 import { parseVersion } from "./utils.ts";
 
 /**
@@ -10,17 +10,36 @@ import { parseVersion } from "./utils.ts";
  */
 export class Client {
     #authenticated: boolean = false;
+    #arguments: Required<ConnectionOptions> = defaultConnectionOptions;
+    #name: string = "";
+    #game: string = "";
 
     /** A helper object for handling websocket communication and interacting with the AP network protocol directly. */
     public readonly socket: SocketManager = new SocketManager(this);
     /** A helper object for handling game data packages. */
     public readonly package: DataPackageManager = new DataPackageManager(this);
 
+    /** Current options for this client. */
     public options: Required<ClientOptions>;
 
     /** Returns `true` if currently connected and authenticated to the Archipelago server. */
     public get authenticated(): boolean {
         return this.socket.connected && this.#authenticated;
+    }
+
+    /** Returns the client's current slot name (or an empty string, if never connected). */
+    public get name(): string {
+        return this.#name;
+    }
+
+    /** Returns the client's current game name (or an empty string, if never connected). */
+    public get game(): string {
+        return this.#game;
+    }
+
+    /** Returns a copy of this client's current connection arguments (or defaults, if never connected). */
+    public get arguments(): Required<ConnectionOptions> {
+        return { ...this.#arguments };
     }
 
     /**
@@ -46,45 +65,60 @@ export class Client {
      * @param url The url of the server, including the protocol (e.g., `wss://archipelago.gg:38281`).
      * @param name The slot name this client will be connecting to.
      * @param game The game name this client will be connecting to.
+     * @param options Additional optional connection arguments.
+     * @typeParam SlotData If slot data is requested, this sets the type of the returning slot data.
      * @remarks If the port is omitted, the client will default to `38281` (AP default).
      *
      * If the protocol is omitted, client will attempt to connect via wss, then fallback to ws if unsuccessful.
      *
      * Any paths, queries, fragments, or userinfo components of the provided url will be ignored.
-     * @example
+     * @example <caption>No Slot Data and a Password</caption>
      * import { Client } from "archipelago.js";
      *
-     * // Instantiate a new client.
      * const client = new Client();
      *
-     * // Connect and authenticate.
-     * await client.login("wss://archipelago.gg:42069", "Phar", "Clique");
+     * await client.login("wss://archipelago.gg:38281", "Phar", "Clique", {
+     *     slotData: false,
+     *     password: "4444"
+     * });
+     * @example <caption>TypeScript with Slot Data</caption>
+     * import { Client } from "archipelago.js";
+     *
+     * interface CliqueSlotData {
+     *     color: string
+     *     hard_mode: boolean
+     * }
+     *
+     * const client = new Client();
+     *
+     * // slotData: CliqueSlotData { color: "red", hard_mode: false }
+     * const slotData = await client.login<CliqueSlotData>("wss://archipelago.gg:38281", "Phar", "Clique");
      */
-    public async login(url: URL | string, name: string, game: string): Promise<void> {
+    public async login<SlotData>(url: URL | string, name: string, game: string, options?: ConnectionOptions): Promise<SlotData> {
         if (name === "") {
             throw Error("Provided slot name cannot be blank.");
         }
 
-        // TODO: Write additional options.
-        const password = "";
-        const uuid = "";
-        const tags: string[] = [];
-        const version = parseVersion("0.5.0");
-        const items = 7;
-        const packet: ConnectPacket = {
+        if (options) {
+            this.#arguments = { ...defaultConnectionOptions, ...options };
+        } else {
+            this.#arguments = { ...defaultConnectionOptions };
+        }
+
+        const request: ConnectPacket = {
             cmd: "Connect",
             name,
             game,
-            password,
-            slot_data: false,
-            items_handling: items,
-            uuid,
-            version,
-            tags,
+            password: this.arguments.password,
+            slot_data: this.arguments.slotData,
+            items_handling: this.arguments.items,
+            uuid: this.arguments.uuid,
+            tags: this.arguments.tags,
+            version: parseVersion(this.arguments.version),
         };
 
         await this.socket.connect(url);
-        await new Promise<void>((resolve, reject) => {
+        const data = new Promise<SlotData>((resolve, reject) => {
             const timeout = setTimeout(
                 // TODO: Replace with custom error object that can export the reasons easier.
                 () => reject(new Error("Server has not responded in time.")),
@@ -96,9 +130,8 @@ export class Client {
                     .off("Connected", connectedHandler)
                     .off("ConnectionRefused", refusedHandler);
 
-                console.log(`Connected to archipelago server as slot #${packet.slot}.`);
                 clearTimeout(timeout);
-                resolve();
+                resolve(packet.slot_data as SlotData);
             };
 
             const refusedHandler = (packet: ConnectionRefusedPacket) => {
@@ -114,12 +147,14 @@ export class Client {
             this.socket
                 .on("Connected", connectedHandler.bind(this))
                 .on("ConnectionRefused", refusedHandler.bind(this))
-                .send(packet);
+                .send(request);
         });
 
         // Automatically load data package if requested.
         if (this.options.autoFetchDataPackage) {
             await this.package.fetchPackage();
         }
+
+        return data;
     }
 }

@@ -25,7 +25,7 @@ export default tslint.config(
             "@stylistic/indent-binary-ops": ["error", 4],
             "@stylistic/quotes": ["error", "double"],
             "@stylistic/semi": ["error", "always"],
-            "jsdoc/check-tag-names": ["warn", { definedTags: ["remarks", "category"] }],
+            "jsdoc/check-tag-names": ["warn", { definedTags: ["remarks", "category", "typeParam"] }],
             "jsdoc/require-description": "warn",
             "jsdoc/require-template": "warn",
             "jsdoc/require-returns": "off",

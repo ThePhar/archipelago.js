@@ -32,6 +32,11 @@ export class SocketManager {
         return this.#connected;
     }
 
+    /** Returns the current connection's URL or an empty string, if not connected. */
+    public get url(): string {
+        return this.#socket?.url ?? "";
+    }
+
     /**
      * Instantiates a new SocketManager. Should only be instantiated by creating a new {@link Client}.
      * @internal
