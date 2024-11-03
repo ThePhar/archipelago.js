@@ -11,7 +11,7 @@ export type ClientStatus = typeof clientStatuses[keyof typeof clientStatuses];
 export class PlayersManager extends EventBasedManager<PlayerEvents> {
     readonly #client: Client;
     #players: NetworkPlayer[][] = [];
-    #slots: Readonly<Record<number, NetworkSlot>> = {};
+    #slots: Readonly<Record<string, NetworkSlot>> = {};
     #slot: number = 0;
     #team: number = 0;
 
@@ -82,26 +82,10 @@ export class PlayersManager extends EventBasedManager<PlayerEvents> {
     public get teams(): PlayerMetadata[][] {
         const players: PlayerMetadata[][] = [];
         for (let team = 0; team < this.#players.length; team++) {
-            // Yes, this is as cursed as it looks.
-            const proxy = new Proxy<PlayerMetadata[]>(this.#players[team] as PlayerMetadata[], {
-                get: (target, slot: string) => {
-                    return new PlayerMetadata(this.#client, target[parseInt(slot)]);
-                },
-                set: () => {
-                    throw new Error("Cannot directly modify teams values.");
-                },
-                deleteProperty: () => {
-                    throw new Error("Cannot directly modify teams values.");
-                },
-                setPrototypeOf: () => {
-                    throw new Error("Cannot directly modify teams values.");
-                },
-                getPrototypeOf: () => {
-                    return Object.getPrototypeOf(PlayerMetadata) as PlayerMetadata;
-                },
-            });
-
-            players.push(proxy);
+            players[team] = [];
+            for (let player = 0; player < this.#players[team].length; player++) {
+                players[team].push(new PlayerMetadata(this.#client, this.#players[team][player]));
+            }
         }
 
         return players;
@@ -216,6 +200,11 @@ export class PlayerMetadata {
         }
 
         return this.#client.players.teams[this.team].reduce((groups, player) => {
+            // Don't bother checking slot #0.
+            if (player.slot === 0) {
+                return groups;
+            }
+
             if (this.#client.players.slots[player.slot].group_members.includes(this.slot)) {
                 groups.push(player);
             }
