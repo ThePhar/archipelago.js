@@ -24,7 +24,7 @@ export class Client {
     public readonly storage = new Managers.DataStorageManager(this);
     /** A helper object for handling room state. */
     public readonly room = new Managers.RoomStateManager(this);
-    /** A helper object for handling chat messages. */
+    /** A helper object for handling players (including self). */
     public readonly players = new Managers.PlayersManager(this);
     /** A helper object for handling chat messages. */
     public readonly message = new Managers.MessageManager(this);
@@ -141,6 +141,7 @@ export class Client {
             );
 
             const connectedHandler = (packet: ConnectedPacket) => {
+                this.#authenticated = true;
                 this.socket
                     .off("connected", connectedHandler)
                     .off("connectionRefused", refusedHandler);
