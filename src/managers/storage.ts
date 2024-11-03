@@ -40,17 +40,16 @@ export class DataStorageManager {
                 if (callbacks) {
                     callbacks.forEach((callback) => callback(packet.key, packet.value, packet.original_value));
                 }
+            })
+            .on("connected", () => {
+                if (this.#client.options.debugLogVersions) {
+                    // For debug purposes log our data to data storage.
+                    const key = `${this.#client.game}:${libraryVersion}:${navigator?.userAgent}`;
+                    void this.prepare("archipelago.js__runtimes")
+                        .update({ [key]: true })
+                        .commit(false);
+                }
             });
-
-        if (this.#client.options.debugLogVersions) {
-            this.#client.socket.on("connected", () => {
-                // For debug purposes log our data to data storage.
-                const key = `${this.#client.game}:${libraryVersion}:${navigator?.userAgent}`;
-                void this.prepare("archipelago.js__runtimes")
-                    .update({ [key]: true })
-                    .commit(false);
-            });
-        }
     }
 
     /** Returns a copy of all currently monitored keys. */
