@@ -37,7 +37,7 @@ export class ItemsManager extends EventBasedManager<ItemEvents> {
                     );
                 }
 
-                this.emit("itemsReceived", [this.#received.slice(packet.index, count), packet.index]);
+                this.emit("itemsReceived", [this.#received.toSpliced(packet.index, packet.index + count), packet.index]);
             })
             .on("connected", () => {
                 this.#hints = [];
