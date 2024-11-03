@@ -168,7 +168,7 @@ export class SocketManager {
      */
     public async once<SocketEvent extends keyof SocketEvents>(event: SocketEvent): Promise<SocketEvents[SocketEvent]> {
         return new Promise<SocketEvents[SocketEvent]>((resolve) => {
-            const listener = (packet: SocketEvents[SocketEvent]) => resolve(packet);
+            const listener = (...args: SocketEvents[SocketEvent]) => resolve(args);
             this.#target.addEventListener(event, listener);
         });
     }
