@@ -87,7 +87,7 @@ export class Client {
      * Connect and authenticate to an Archipelago server.
      * @param url The url of the server, including the protocol (e.g., `wss://archipelago.gg:38281`).
      * @param name The slot name this client will be connecting to.
-     * @param game The game name this client will be connecting to.
+     * @param game The game name this client will be connecting to. If omitted, client will connect in "TextOnly" mode.
      * @param options Additional optional connection arguments.
      * @typeParam SlotData If slot data is requested, this sets the type of the returning slot data.
      * @remarks If the port is omitted, the client will default to `38281` (AP default).
@@ -120,21 +120,27 @@ export class Client {
     public async login<SlotData extends UnknownSlotData>(
         url: URL | string,
         name: string,
-        game: string,
+        game: string = "",
         options?: ConnectionOptions,
     ): Promise<SlotData> {
         if (name === "") {
             throw Error("Provided slot name cannot be blank.");
         }
 
-        this.#game = game;
-        this.#name = name;
         if (options) {
             this.#arguments = { ...defaultConnectionOptions, ...options };
         } else {
             this.#arguments = { ...defaultConnectionOptions };
         }
 
+        // Enforce TextOnly if no game was provided (and no relevant tag was supplied).
+        const tags = new Set(this.arguments.tags);
+        if (!game && !tags.has("HintGame") && !tags.has("Tracker") && !tags.has("TextOnly")) {
+            tags.add("TextOnly");
+        }
+
+        // Removes duplicate tags.
+        this.#arguments.tags = Array.from(tags);
         const request: ConnectPacket = {
             cmd: "Connect",
             name,
@@ -163,6 +169,8 @@ export class Client {
 
             const connectedHandler = (packet: ConnectedPacket) => {
                 this.#authenticated = true;
+                this.#game = packet.slot_info[packet.slot].game;
+                this.#name = packet.slot_info[packet.slot].name;
                 this.socket
                     .off("connected", connectedHandler)
                     .off("connectionRefused", refusedHandler);
