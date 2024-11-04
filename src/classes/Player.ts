@@ -7,8 +7,8 @@ import { ClientStatus } from "./managers/PlayersManager.ts";
  * A collection of metadata and helper methods for interacting with a particular player.
  */
 export class Player {
-    #client: Client;
-    #player: NetworkPlayer;
+    readonly #client: Client;
+    readonly #player: NetworkPlayer;
 
     /**
      * Instantiates a new PlayerMetadata.
