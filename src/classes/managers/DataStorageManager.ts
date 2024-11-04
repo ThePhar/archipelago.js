@@ -1,11 +1,11 @@
-import { JSONRecord, JSONSerializableData } from "../../api";
+import { JSONRecord, JSONSerializable } from "../../api";
 import { libraryVersion } from "../../constants.ts";
 import { uuid } from "../../utils.ts";
 import { Client } from "../Client.ts";
 import { IntermediateDataOperation } from "../IntermediateDataOperation.ts";
 
 /** A callback that fires when a monitored key is updated in data storage. */
-export type DataChangeCallback = (key: string, value: JSONSerializableData, oldValue?: JSONSerializableData) => void;
+export type DataChangeCallback = (key: string, value: JSONSerializable, oldValue?: JSONSerializable) => void;
 
 /**
  * Manages communication between the data storage API and notifies subscribers of changes to storage updates.
@@ -75,7 +75,7 @@ export class DataStorageManager {
      * @returns The current value for this key.
      * @remarks Any keys not currently cached and monitored will be requested over the network instead of from memory.
      */
-    public async fetch<T extends JSONSerializableData>(key: string, monitor?: boolean): Promise<T>;
+    public async fetch<T extends JSONSerializable>(key: string, monitor?: boolean): Promise<T>;
 
     public async fetch<T>(input: string | Array<keyof T>, monitor: boolean = false): Promise<T> {
         let keys: string[] = typeof input === "string" ? [input] : input as string[];
@@ -156,7 +156,7 @@ export class DataStorageManager {
      *     .max(0)         // Clamp value above 0.
      *     .commit();      // Commit operations to data storage.
      */
-    public prepare(key: string, _default: JSONSerializableData = 0): IntermediateDataOperation {
+    public prepare<T extends JSONSerializable>(key: string, _default: T): IntermediateDataOperation<T> {
         if (key.startsWith("_read_")) {
             throw Error("Cannot manipulate read only keys.");
         }

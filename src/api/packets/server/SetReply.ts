@@ -1,4 +1,4 @@
-import { JSONSerializableData } from "../../types.ts";
+import { JSONSerializable } from "../../types.ts";
 
 /**
  * Sent to clients in response to a {@link SetPacket} if `want_reply` was set to true, or if the client has registered
@@ -16,11 +16,11 @@ export interface SetReplyPacket {
     readonly key: string
 
     /** The new value for the key. */
-    readonly value: JSONSerializableData
+    readonly value: JSONSerializable
 
     /** The value the key had before it was updated. */
-    readonly original_value: JSONSerializableData
+    readonly original_value: JSONSerializable
 
     /** Additional arguments that were passed in from {@link SetPacket}. */
-    readonly [p: string]: JSONSerializableData
+    readonly [p: string]: JSONSerializable
 }

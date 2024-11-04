@@ -1,5 +1,5 @@
 import { DataStorageOperation } from "../../DataStorageOperations.ts";
-import { JSONSerializableData } from "../../types.ts";
+import { JSONSerializable } from "../../types.ts";
 
 /**
  * Sent by the client to write data to the server's data storage, that data can then be shared across worlds or just
@@ -13,7 +13,7 @@ export interface SetPacket {
     readonly cmd: "Set"
 
     /** The default value to use in case the key has no value on the server. */
-    readonly default: JSONSerializableData
+    readonly default: JSONSerializable
 
     /** The key to manipulate. */
     readonly key: string
@@ -28,5 +28,5 @@ export interface SetPacket {
     readonly want_reply: boolean
 
     /** Additional arguments to be returned in {@link SetReplyPacket}. */
-    readonly [p: string]: JSONSerializableData
+    readonly [p: string]: JSONSerializable
 }

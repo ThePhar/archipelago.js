@@ -1,4 +1,4 @@
-import { JSONSerializableData } from "./types.ts";
+import { JSONSerializable } from "./types.ts";
 
 /**
  * Sets the current value of the key to `value`.
@@ -9,7 +9,7 @@ export type ReplaceDataStorageOperation = {
     readonly operation: "replace"
 
     /** A value for the operation to apply against the current data storage value. */
-    readonly value: JSONSerializableData
+    readonly value: JSONSerializable
 };
 
 /**
@@ -35,7 +35,7 @@ export type AddDataStorageOperation = {
     readonly operation: "add"
 
     /** A value for the operation to apply against the current data storage value. */
-    readonly value: number | JSONSerializableData[]
+    readonly value: number | JSONSerializable[]
 };
 
 /**
@@ -191,7 +191,7 @@ export type RemoveDataStorageOperation = {
     readonly operation: "remove"
 
     /** A value for the operation to apply against the current data storage value. */
-    readonly value: JSONSerializableData
+    readonly value: JSONSerializable
 };
 
 /**
@@ -204,7 +204,7 @@ export type PopDataStorageOperation = {
     readonly operation: "pop"
 
     /** A value for the operation to apply against the current data storage value. */
-    readonly value: JSONSerializableData
+    readonly value: JSONSerializable
 };
 
 /**
@@ -217,7 +217,7 @@ export type UpdateDataStorageOperation = {
     readonly operation: "update"
 
     /** A value for the operation to apply against the current data storage value. */
-    readonly value: JSONSerializableData
+    readonly value: JSONSerializable
 };
 
 /**

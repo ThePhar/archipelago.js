@@ -40,16 +40,16 @@ export type GamePackage = {
 };
 
 /** A type union of all basic JSON-compatible types. */
-export type JSONSerializableData =
+export type JSONSerializable =
     | string
     | number
     | boolean
     | null
     | JSONRecord
-    | JSONSerializableData[];
+    | JSONSerializable[];
 
 /** A record of JSON-serializable data. */
-export type JSONRecord = { [p: string]: JSONSerializableData };
+export type JSONRecord = { [p: string]: JSONSerializable };
 
 /**
  * An object representing a hint information for a particular item and location that contains it.

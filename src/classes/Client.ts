@@ -4,7 +4,7 @@ import {
     ConnectionRefusedPacket,
     ConnectPacket,
     JSONRecord,
-    JSONSerializableData,
+    JSONSerializable,
 } from "../api";
 import { ClientOptions, defaultClientOptions } from "../interfaces/ClientOptions.ts";
 import { ConnectionOptions, defaultConnectionOptions } from "../interfaces/ConnectionOptions.ts";

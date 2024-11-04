@@ -1,4 +1,4 @@
-import { JSONSerializableData, NetworkPlayer, NetworkSlot } from "../../types.ts";
+import { JSONSerializable, NetworkPlayer, NetworkSlot } from "../../types.ts";
 
 /**
  * Sent to clients when the connection handshake is successfully completed.
@@ -30,7 +30,7 @@ export interface ConnectedPacket {
      * Contains an object of slot related data, which differs per slot. If slot data was not requested in the
      * {@link ConnectPacket}, this value be an empty object.
      */
-    readonly slot_data: JSONSerializableData
+    readonly slot_data: JSONSerializable
 
     /** Object of each slot with their {@link NetworkSlot} information. */
     readonly slot_info: Record<string, NetworkSlot>

@@ -5,7 +5,7 @@ import {
     ConnectionRefusedPacket,
     DataPackagePacket,
     InvalidPacketPacket, JSONRecord,
-    JSONSerializableData,
+    JSONSerializable,
     LocationInfoPacket,
     PrintJSONPacket,
     ReceivedItemsPacket,

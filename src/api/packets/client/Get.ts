@@ -1,4 +1,4 @@
-import { JSONSerializableData } from "../../types.ts";
+import { JSONSerializable } from "../../types.ts";
 
 /**
  * Sent by the client to request a single or multiple values from the server's data storage, see the {@link SetPacket}
@@ -10,7 +10,7 @@ import { JSONSerializableData } from "../../types.ts";
  *
  * - `_read_hints_{team}_{slot}`: {@link NetworkHint}[] - All hinted {@link NetworkHint} items relevant to the requested
  * player.
- * - `_read_slot_data_{slot}`: {@link JSONSerializableData} - `slot_data` belonging to the requested slot.
+ * - `_read_slot_data_{slot}`: {@link JSONSerializable} - `slot_data` belonging to the requested slot.
  * - `_read_item_name_groups_{game}`: `Record<string, string[]>` - An object of item groups and their members.
  * - `_read_location_name_groups_{game}`: `Record<string, string[]>` - An object of location groups and their
  * members.
@@ -26,5 +26,5 @@ export interface GetPacket {
     readonly keys: string[]
 
     /** Additional arguments to be returned in {@link RetrievedPacket}. */
-    readonly [p: string]: JSONSerializableData
+    readonly [p: string]: JSONSerializable
 }
