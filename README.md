@@ -48,7 +48,7 @@ cd archipelago.js
 npm install # or pnpm install
 ```
 
-Then to build, have [Bun](https://bun.sh/) installed and run `npm run build:src` (or `pnpm build:docs`).
+Then to build, have [Bun](https://bun.sh/) installed and run `npm run build` (or `pnpm build`).
 
 **Archipelago.js** is written in TypeScript and includes a strong ESLint config file to ensure code consistency. Be sure
 to follow the code standards of this repository and check your work with `npm run lint`.
