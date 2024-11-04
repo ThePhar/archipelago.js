@@ -154,6 +154,10 @@ export class Client<TSlotData = SlotData> {
     }
 
     #finalizeConnection(info: ConnectionInformation): Promise<ConnectedPacket> {
+        if (this.#socket != undefined) {
+            this.#socket.onclose = this.#closeSocket.bind(this);
+        }
+
         const version = info.version ?? MINIMUM_SUPPORTED_AP_VERSION;
 
         return new Promise<ConnectedPacket>((resolve, reject) => {
@@ -192,6 +196,19 @@ export class Client<TSlotData = SlotData> {
         });
     }
 
+    #closeSocket(): void {
+        this.#socket = undefined;
+        this.#status = CONNECTION_STATUS.DISCONNECTED;
+        this.#emitter.removeAllListeners();
+
+        // Reinitialize our Managers.
+        this.#dataManager = new DataManager(this);
+        this.#hintManager = new HintsManager(this);
+        this.#itemsManager = new ItemsManager(this);
+        this.#locationsManager = new LocationsManager(this);
+        this.#playersManager = new PlayersManager(this);
+    }
+
     /**
      * Send a list of raw packets to the Archipelago server in the order they are listed as arguments.
      *
@@ -223,16 +240,6 @@ export class Client<TSlotData = SlotData> {
      */
     public disconnect(): void {
         this.#socket?.close();
-        this.#socket = undefined;
-        this.#status = CONNECTION_STATUS.DISCONNECTED;
-        this.#emitter.removeAllListeners();
-
-        // Reinitialize our Managers.
-        this.#dataManager = new DataManager(this);
-        this.#hintManager = new HintsManager(this);
-        this.#itemsManager = new ItemsManager(this);
-        this.#locationsManager = new LocationsManager(this);
-        this.#playersManager = new PlayersManager(this);
     }
 
     public addListener(event: "Bounced", listener: (packet: BouncedPacket) => void): void;
