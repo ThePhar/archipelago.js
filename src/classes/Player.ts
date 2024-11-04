@@ -106,12 +106,12 @@ export class Player {
             return clientStatuses.goal;
         }
 
-        return await this.#client.storage.get<ClientStatus>(`_read_client_status_${this.team}_${this.slot}`) ?? 0;
+        return await this.#client.storage.fetch<ClientStatus>(`_read_client_status_${this.team}_${this.slot}`) ?? 0;
     }
 
     /**
      * Fetch this player's slot data over the network.
-     * @template T The type of the slot data that is returned, for better typing information.
+     * @template SlotData The type of the slot data that is returned, for better typing information.
      * @remarks This data is not tracked after running, so slot data should be cached to reduce additional network
      * calls, if necessary.
      */
@@ -120,7 +120,7 @@ export class Player {
             throw new Error("Cannot fetch slot data for Archipelago slot; not a real player.");
         }
 
-        return await this.#client.storage.get<SlotData>(`_read_slot_data_${this.slot}`);
+        return await this.#client.storage.fetch<SlotData>(`_read_slot_data_${this.slot}`);
     }
 
     get #networkSlot(): NetworkSlot {
@@ -129,7 +129,7 @@ export class Player {
 
     /** Fetch this player's current hints. */
     public async fetchHints(): Promise<Hint[]> {
-        const hints = await this.#client.storage.get<NetworkHint[]>(`_read_hints_${this.team}_${this.slot}`);
+        const hints = await this.#client.storage.fetch<NetworkHint[]>(`_read_hints_${this.team}_${this.slot}`);
         return hints.map((hint) => new Hint(this.#client, hint));
     }
 }

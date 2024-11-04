@@ -64,7 +64,7 @@ export class DataStorageManager {
      * @returns An object containing all current values for each key requested.
      * @remarks Any keys not currently cached and monitored will be requested over the network instead of from memory.
      */
-    public async fetch<T extends Record<string, JSONSerializableData>>(keys: Array<keyof T>, monitor: boolean): Promise<T>;
+    public async fetch<T extends Record<string, JSONSerializableData>>(keys: Array<keyof T>, monitor?: boolean): Promise<T>;
 
     /**
      * Fetches a single key-value pair from data storage.
@@ -75,7 +75,7 @@ export class DataStorageManager {
      * @returns The current value for this key.
      * @remarks Any keys not currently cached and monitored will be requested over the network instead of from memory.
      */
-    public async fetch<T extends JSONSerializableData>(key: string, monitor: boolean): Promise<T>;
+    public async fetch<T extends JSONSerializableData>(key: string, monitor?: boolean): Promise<T>;
 
     public async fetch<T>(input: string | Array<keyof T>, monitor: boolean = false): Promise<T> {
         let keys: string[] = typeof input === "string" ? [input] : input as string[];
