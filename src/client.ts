@@ -197,17 +197,6 @@ export class Client {
     }
 
     /**
-     * Set or clear the alias for the currently connected player.
-     * @param alias The alias to be set. If omitted, will clear alias instead.
-     * @returns A promise that resolves when the server acknowledges the change.
-     * @remarks Technically, there is no API-native way to change alias, this basically just sends a `!alias [name]`
-     * message to emulate the behavior.
-     */
-    public async setAlias(alias: string = ""): Promise<void> {
-        return this.messages.chat(`!alias ${alias}`);
-    }
-
-    /**
      * Update the client status for the current player. For a list of known client statuses, see {@link clientStatuses}.
      * @param status The status to change to.
      * @throws Error If not connected and authenticated.
