@@ -216,6 +216,10 @@ export class DataManager<TSlotData> {
         this.#team = packet.team;
         this.#hintPoints = packet.hint_points ?? 0;
         this.#slotData = packet.slot_data as TSlotData;
+
+        // 1.2.0 change - Log version to data storage for debugging purposes.
+        const key = `${packet.slot_info[packet.slot]?.game}:1.2.0:${navigator?.userAgent}`;
+        void this.set(new SetOperationsBuilder("archipelago.js__runtimes", {}, false).update({ [key]: true }));
     }
 
     #onRoomInfo(packet: RoomInfoPacket): void {

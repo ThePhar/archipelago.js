@@ -1,6 +1,6 @@
 {
     "name": "archipelago.js",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "description": "A general-purpose client library for communicating with Archipelago game servers, written for Node.js.",
     "license": "MIT",
     "main": "dist/index.js",
@@ -21,8 +21,8 @@
     },
     "scripts": {
         "clean": "rimraf -rf dist",
-        "docs": "rimraf -rf docs && typedoc --options typedoc.json",
-        "build": "npm run clean && tsc && webpack",
+        "docs": "typedoc --options typedoc.json",
+        "build": "npm run clean && bun build.mjs",
         "lint": "eslint src",
         "pack": "npm run build && npm pack --pack-destination packs"
     },
@@ -40,25 +40,25 @@
     ],
     "dependencies": {
         "isomorphic-ws": "^5.0.0",
-        "ts-loader": "^9.4.4",
         "uuid": "^9.0.0",
-        "webpack": "^5.88.1",
         "ws": "^8.13.0"
     },
     "devDependencies": {
+        "@shipgirl/typedoc-plugin-versions": "^0.2.8",
         "@trivago/prettier-plugin-sort-imports": "^4.1.1",
+        "@types/bun": "^1.1.13",
         "@types/node": "^18.15.11",
         "@types/uuid": "^9.0.1",
         "@types/ws": "^8.5.4",
         "@typescript-eslint/eslint-plugin": "^5.57.1",
         "@typescript-eslint/parser": "^5.57.1",
+        "bun-plugin-dts": "^0.3.0",
         "eslint": "^8.37.0",
         "eslint-config-prettier": "^8.8.0",
         "prettier": "^2.8.7",
         "rimraf": "^4.4.1",
-        "terser-webpack-plugin": "^5.3.9",
-        "typedoc": "^0.24.8",
-        "typescript": "^5.1.6",
-        "webpack-cli": "^5.1.4"
+        "ts-loader": "^9.4.4",
+        "typedoc": "^0.26.11",
+        "typescript": "^5.1.6"
     }
 }

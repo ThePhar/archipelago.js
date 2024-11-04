@@ -6,6 +6,9 @@
 ![npm](https://img.shields.io/npm/v/archipelago.js?style=flat-square)
 ![npm](https://img.shields.io/npm/dm/archipelago.js?style=flat-square)
 
+> This is the developer documentation for the legacy 1.x branch, if you are looking for the developer documentation for 
+> **2.0.0**, see [these docs](https://thephar.github.io/archipelago.js/v2.0/).
+
 A general purpose library for communicating with Archipelago servers in Node.js or in the browser.
 
 You can install it from npm or use a CDN to use it in browser.
@@ -456,5 +459,5 @@ The full API documentation is located [here](https://thephar.github.io/archipela
 while you are developing your JavaScript-based clients.
 
 This library supports 100% of the Archipelago network protocol referenced at
-[here](https://github.com/ArchipelagoMW/Archipelago/blob/main/docs/network%20protocol.md) as of **2023-07-08**. See more
+[here](https://github.com/ArchipelagoMW/Archipelago/blob/main/docs/network%20protocol.md) as of **2023-07-08** (0.4.2). See more
 information about [Archipelago](https://archipelago.gg) at their website.
