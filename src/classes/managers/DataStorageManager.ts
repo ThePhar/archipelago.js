@@ -57,22 +57,22 @@ export class DataStorageManager {
 
     /**
      * Fetches a list of key-value pairs from data storage.
+     * @template T The expected key-value types to be returned.
      * @param keys A list of keys to fetch values for.
      * @param monitor Adds keys to local cache and request the server to update client when changes are made to speed up
      * subsequent lookups.
      * @returns An object containing all current values for each key requested.
-     * @typeParam The expected key-value types to be returned.
      * @remarks Any keys not currently cached and monitored will be requested over the network instead of from memory.
      */
     public async fetch<T extends Record<string, JSONSerializableData>>(keys: Array<keyof T>, monitor: boolean): Promise<T>;
 
     /**
      * Fetches a single key-value pair from data storage.
+     * @template T The expected value type to be returned.
      * @param key The key to fetch a value for.
      * @param monitor Adds key to local cache and request the server to update client when changes are made to speed up
      * subsequent lookups.
      * @returns The current value for this key.
-     * @typeParam The expected value type to be returned.
      * @remarks Any keys not currently cached and monitored will be requested over the network instead of from memory.
      */
     public async fetch<T extends JSONSerializableData>(key: string, monitor: boolean): Promise<T>;

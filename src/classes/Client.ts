@@ -94,11 +94,11 @@ export class Client {
 
     /**
      * Connect and authenticate to an Archipelago server.
+     * @template SlotData If slot data is requested, this sets the type of the returning slot data.
      * @param url The url of the server, including the protocol (e.g., `wss://archipelago.gg:38281`).
      * @param name The slot name this client will be connecting to.
      * @param game The game name this client will be connecting to. If omitted, client will connect in "TextOnly" mode.
      * @param options Additional optional connection arguments.
-     * @typeParam SlotData If slot data is requested, this sets the type of the returning slot data.
      * @remarks If the port is omitted, the client will default to `38281` (AP default).
      *
      * If the protocol is omitted, client will attempt to connect via wss, then fallback to ws if unsuccessful.
