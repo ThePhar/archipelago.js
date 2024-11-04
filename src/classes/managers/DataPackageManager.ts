@@ -23,7 +23,7 @@ export class DataPackageManager {
             this.#checksums.clear();
             this.#games.clear();
 
-            this.#packages.set("Archipelago", this.preloadArchipelago());
+            this.#packages.set("Archipelago", this.#preloadArchipelago());
             for (const game in packet.datapackage_checksums) {
                 this.#checksums.set(game, packet.datapackage_checksums[game]);
                 this.#games.add(game);
@@ -216,7 +216,7 @@ export class DataPackageManager {
      * @private
      * @remarks If updates to the AP game package happen, this should be updated.
      */
-    private preloadArchipelago(): PackageMetadata {
+    #preloadArchipelago(): PackageMetadata {
         // As of AP 0.5.0
         return new PackageMetadata("Archipelago", {
             checksum: "ac9141e9ad0318df2fa27da5f20c50a842afeecb",

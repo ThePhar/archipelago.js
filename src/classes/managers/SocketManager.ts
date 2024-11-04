@@ -10,6 +10,14 @@ export class SocketManager extends EventBasedManager<SocketEvents> {
     #socket: WebSocket | null = null;
     #connected: boolean = false;
 
+    /**
+     * Instantiates a new SocketManager. Should only be instantiated by creating a new {@link Client}.
+     * @internal
+     */
+    public constructor() {
+        super();
+    }
+
     /** Returns `true` if currently connected to a websocket server. */
     public get connected(): boolean {
         return this.#connected;
@@ -18,14 +26,6 @@ export class SocketManager extends EventBasedManager<SocketEvents> {
     /** Returns the current connection's URL or an empty string, if not connected. */
     public get url(): string {
         return this.#socket?.url ?? "";
-    }
-
-    /**
-     * Instantiates a new SocketManager. Should only be instantiated by creating a new {@link ArchipelagoClient}.
-     * @internal
-     */
-    public constructor() {
-        super();
     }
 
     /**
