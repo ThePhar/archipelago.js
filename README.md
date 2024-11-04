@@ -6,6 +6,11 @@
 ![npm](https://img.shields.io/npm/v/archipelago.js?style=flat-square)
 ![npm](https://img.shields.io/npm/dm/archipelago.js?style=flat-square)
 
+> This is the developer documentation for the legacy 1.x branch, if you are looking for the developer documentation for 
+> **2.0.0**, please change your version in the top right dropdown box to v2.0.
+> 
+> If you get a 404 error, please navigate to the front page (this page) and try again.
+
 A general purpose library for communicating with Archipelago servers in Node.js or in the browser.
 
 You can install it from npm or use a CDN to use it in browser.
