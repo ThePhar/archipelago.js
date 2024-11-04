@@ -41,6 +41,9 @@ export type ConnectionInformation = {
     /** Denotes special features or capabilities that the sender is currently capable of. */
     tags?: string[];
 
+    /** If true, the Connect answer will contain slot_data */
+    slot_data?: boolean;
+
     /**
      * Bit flags configuring which items should be sent by the server. Read {@link ItemsHandlingFlags} for information
      * on individual flags.

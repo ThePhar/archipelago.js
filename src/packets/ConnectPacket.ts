@@ -26,6 +26,9 @@ export interface ConnectPacket extends BaseClientPacket {
     /** Denotes special features or capabilities that the sender is currently capable of. */
     tags: string[];
 
+    /** If true, the Connect answer will contain slot_data */
+    slot_data: boolean;
+
     /** An object representing the minimum Archipelago server version this client supports. */
     version: NetworkVersion;
 
