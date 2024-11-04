@@ -27,6 +27,7 @@
     "bugs": "https://github.com/ThePhar/archipelago.js/issues",
     "devDependencies": {
         "@eslint/js": "^9.14.0",
+        "@shipgirl/typedoc-plugin-versions": "^0.2.8",
         "@stylistic/eslint-plugin": "^2.10.1",
         "@types/bun": "^1.1.13",
         "@types/eslint__js": "^8.42.3",

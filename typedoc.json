@@ -1,14 +1,21 @@
 {
     "$schema": "https://typedoc.org/schema.json",
     "name": "archipelago.js",
-    "cleanOutputDir": true,
+    "cleanOutputDir": false,
     "excludePrivate": true,
     "excludeInternal": true,
     "excludeProtected": false,
     "tsconfig": "tsconfig.json",
     "entryPoints": ["src/index.ts"],
-    "out": "docs",
+
     "categorizeByGroup": false,
     "gitRemote": "origin",
-    "includeVersion": true
+    "includeVersion": true,
+    "plugin": [
+        "@shipgirl/typedoc-plugin-versions"
+    ],
+    "versions": {
+        "stable": "1.2.0",
+        "dev": "2.0.0-rc4"
+    }
 }
