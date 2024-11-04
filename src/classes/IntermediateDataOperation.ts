@@ -1,12 +1,12 @@
 import { DataStorageOperation, JSONSerializableData, SetPacket } from "../api";
 import { uuid } from "../utils.ts";
-import { ArchipelagoClient } from "./ArchipelagoClient.ts";
+import { Client } from "./Client.ts";
 
 /**
  * An intermediate abstract object holding an array of data storage operations to be performed in order by the server.
  */
 export class IntermediateDataOperation {
-    readonly #client: ArchipelagoClient;
+    readonly #client: Client;
     readonly #operations: DataStorageOperation[] = [];
     readonly #key: string;
     readonly #default: JSONSerializableData;
@@ -18,7 +18,7 @@ export class IntermediateDataOperation {
      * @param key The data storage key.
      * @param _default Default value to use, if no value exists.
      */
-    public constructor(client: ArchipelagoClient, key: string, _default: JSONSerializableData) {
+    public constructor(client: Client, key: string, _default: JSONSerializableData) {
         this.#client = client;
         this.#key = key;
         this.#default = _default;

@@ -1,5 +1,5 @@
 import { clientStatuses, NetworkPlayer, NetworkSlot } from "../../api";
-import { ArchipelagoClient } from "../ArchipelagoClient.ts";
+import { Client } from "../Client.ts";
 import { Player } from "../Player.ts";
 import { EventBasedManager } from "./EventBasedManager.ts";
 
@@ -10,7 +10,7 @@ export type ClientStatus = typeof clientStatuses[keyof typeof clientStatuses];
  * Manages tracking and updating all players in the room session.
  */
 export class PlayersManager extends EventBasedManager<PlayerEvents> {
-    readonly #client: ArchipelagoClient;
+    readonly #client: Client;
     #players: NetworkPlayer[][] = [];
     #slots: Readonly<Record<string, NetworkSlot>> = {};
     #slot: number = 0;
@@ -21,7 +21,7 @@ export class PlayersManager extends EventBasedManager<PlayerEvents> {
      * @internal
      * @param client The Archipelago client associated with this manager.
      */
-    public constructor(client: ArchipelagoClient) {
+    public constructor(client: Client) {
         super();
         this.#client = client;
 

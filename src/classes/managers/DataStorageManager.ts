@@ -1,7 +1,7 @@
 import { JSONSerializableData } from "../../api";
 import { libraryVersion } from "../../constants.ts";
 import { uuid } from "../../utils.ts";
-import { ArchipelagoClient } from "../ArchipelagoClient.ts";
+import { Client } from "../Client.ts";
 import { IntermediateDataOperation } from "../IntermediateDataOperation.ts";
 
 /** A callback that fires when a monitored key is updated in data storage. */
@@ -14,7 +14,7 @@ export type DataRecordPromise = Promise<Record<string, JSONSerializableData>>;
  * Manages communication between the data storage API and notifies subscribers of changes to storage updates.
  */
 export class DataStorageManager {
-    readonly #client: ArchipelagoClient;
+    readonly #client: Client;
     #storage: Record<string, JSONSerializableData> = {};
     #subscribers: Record<string, DataChangeCallback[]> = {};
 
@@ -23,7 +23,7 @@ export class DataStorageManager {
      * @internal
      * @param client The Archipelago client associated with this manager.
      */
-    public constructor(client: ArchipelagoClient) {
+    public constructor(client: Client) {
         this.#client = client;
 
         this.#client.socket

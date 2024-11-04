@@ -19,7 +19,7 @@ export type ArbitrarySlotData = { [p: string]: JSONSerializableData };
  * The client that connects to an Archipelago server and provides helper methods and objects to facilitate
  * communication, listen for events, and manage data.
  */
-export class ArchipelagoClient {
+export class Client {
     #authenticated: boolean = false;
     #arguments: Required<ConnectionOptions> = defaultConnectionOptions;
     #name: string = "";
@@ -66,7 +66,7 @@ export class ArchipelagoClient {
     }
 
     /**
-     * Instantiates a new Archipelago client. After creating, call {@link ArchipelagoClient.login} to connect and authenticate to
+     * Instantiates a new Archipelago client. After creating, call {@link Client.login} to connect and authenticate to
      * a server.
      * @param options Additional configuration options for this client. See {@link ClientOptions} for more information.
      */

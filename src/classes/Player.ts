@@ -1,5 +1,5 @@
 import { clientStatuses, NetworkHint, NetworkPlayer, NetworkSlot, slotTypes } from "../api";
-import { ArbitrarySlotData, ArchipelagoClient } from "./ArchipelagoClient.ts";
+import { ArbitrarySlotData, Client } from "./Client.ts";
 import { Hint } from "./Hint.ts";
 import { ClientStatus } from "./managers/PlayersManager.ts";
 
@@ -7,7 +7,7 @@ import { ClientStatus } from "./managers/PlayersManager.ts";
  * A collection of metadata and helper methods for interacting with a particular player.
  */
 export class Player {
-    #client: ArchipelagoClient;
+    #client: Client;
     #player: NetworkPlayer;
 
     /**
@@ -16,7 +16,7 @@ export class Player {
      * @param client The Archipelago client associated with this manager.
      * @param player The network player data from the network protocol.
      */
-    public constructor(client: ArchipelagoClient, player: NetworkPlayer) {
+    public constructor(client: Client, player: NetworkPlayer) {
         this.#client = client;
         this.#player = player;
     }

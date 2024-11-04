@@ -1,6 +1,6 @@
 import { NetworkHint, NetworkItem } from "../../api";
 import { ItemEvents } from "../../events/ItemEvents.ts";
-import { ArchipelagoClient } from "../ArchipelagoClient.ts";
+import { Client } from "../Client.ts";
 import { Hint } from "../Hint.ts";
 import { Item } from "../Item.ts";
 import { Player } from "../Player.ts";
@@ -11,7 +11,7 @@ import { EventBasedManager } from "./EventBasedManager.ts";
  * Manages tracking and receiving of all received items and hints.
  */
 export class ItemsManager extends EventBasedManager<ItemEvents> {
-    readonly #client: ArchipelagoClient;
+    readonly #client: Client;
     #received: Item[] = [];
     #hints: Hint[] = [];
 
@@ -20,7 +20,7 @@ export class ItemsManager extends EventBasedManager<ItemEvents> {
      * @internal
      * @param client The Archipelago client associated with this manager.
      */
-    public constructor(client: ArchipelagoClient) {
+    public constructor(client: Client) {
         super();
         this.#client = client;
 

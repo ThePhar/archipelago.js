@@ -1,22 +1,22 @@
 import { DataPackage, GamePackage, GetDataPackagePacket } from "../../api";
-import { ArchipelagoClient } from "../ArchipelagoClient.ts";
+import { Client } from "../Client.ts";
 import { PackageMetadata } from "../PackageMetadata.ts";
 
 /**
  * Managers data packages metadata and exposes name lookup methods.
  */
 export class DataPackageManager {
-    readonly #client: ArchipelagoClient;
+    readonly #client: Client;
     readonly #packages: Map<string, PackageMetadata> = new Map();
     readonly #checksums: Map<string, string> = new Map();
     readonly #games: Set<string> = new Set();
 
     /**
-     * Instantiates a new DataPackageManager. Should only be instantiated by creating a new {@link ArchipelagoClient}.
+     * Instantiates a new DataPackageManager. Should only be instantiated by creating a new {@link Client}.
      * @internal
      * @param client The client object this manager is associated with.
      */
-    public constructor(client: ArchipelagoClient) {
+    public constructor(client: Client) {
         this.#client = client;
         this.#client.socket.on("roomInfo", (packet) => {
             this.#packages.clear();

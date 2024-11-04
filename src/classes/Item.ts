@@ -1,12 +1,12 @@
 import { itemClassifications, NetworkItem } from "../api";
-import { ArchipelagoClient } from "./ArchipelagoClient.ts";
+import { Client } from "./Client.ts";
 import { Player } from "./Player.ts";
 
 /**
  * An abstraction of {@link NetworkItem} that exposes additional helper methods and accessors for this item data.
  */
 export class Item {
-    readonly #client: ArchipelagoClient;
+    readonly #client: Client;
     readonly #item: NetworkItem;
     readonly #sender: Player;
     readonly #receiver: Player;
@@ -19,7 +19,7 @@ export class Item {
      * @param sender The player to send this item.
      * @param receiver The player to receive this item.
      */
-    public constructor(client: ArchipelagoClient, item: NetworkItem, sender: Player, receiver: Player) {
+    public constructor(client: Client, item: NetworkItem, sender: Player, receiver: Player) {
         this.#client = client;
         this.#item = item;
         this.#sender = sender;

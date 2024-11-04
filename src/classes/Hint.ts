@@ -1,5 +1,5 @@
 import { NetworkHint } from "../api";
-import { ArchipelagoClient } from "./ArchipelagoClient.ts";
+import { Client } from "./Client.ts";
 import { Item } from "./Item.ts";
 import { Player } from "./Player.ts";
 
@@ -7,7 +7,7 @@ import { Player } from "./Player.ts";
  * An abstraction of {@link NetworkHint} that exposes additional helper methods and accessors received hint data.
  */
 export class Hint {
-    readonly #client: ArchipelagoClient;
+    readonly #client: Client;
     readonly #hint: NetworkHint;
     readonly #item: Item;
 
@@ -17,7 +17,7 @@ export class Hint {
      * @param client The Archipelago client associated with this manager.
      * @param hint The network hint object.
      */
-    public constructor(client: ArchipelagoClient, hint: NetworkHint) {
+    public constructor(client: Client, hint: NetworkHint) {
         this.#client = client;
         this.#hint = hint;
         this.#item = new Item(

@@ -1,5 +1,5 @@
 import { DeathEvents } from "../../events/DeathLinkEvents.ts";
-import { ArchipelagoClient } from "../ArchipelagoClient.ts";
+import { Client } from "../Client.ts";
 import { EventBasedManager } from "./EventBasedManager.ts";
 
 /**
@@ -24,7 +24,7 @@ export type DeathLinkData = {
  * Manages DeathLink mechanics for clients that choose to opt in to the mechanic.
  */
 export class DeathLinkManager extends EventBasedManager<DeathEvents> {
-    readonly #client: ArchipelagoClient;
+    readonly #client: Client;
     #lastDeath: number = Number.MIN_SAFE_INTEGER;
 
     /**
@@ -32,7 +32,7 @@ export class DeathLinkManager extends EventBasedManager<DeathEvents> {
      * @internal
      * @param client The Archipelago client associated with this manager.
      */
-    public constructor(client: ArchipelagoClient) {
+    public constructor(client: Client) {
         super();
         this.#client = client;
 

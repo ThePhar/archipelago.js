@@ -1,6 +1,6 @@
 import { PrintJSONPacket, SayPacket } from "../../api";
 import { MessageEvents } from "../../events/MessageEvents.ts";
-import { ArchipelagoClient } from "../ArchipelagoClient.ts";
+import { Client } from "../Client.ts";
 import { Player } from "../Player.ts";
 import { EventBasedManager } from "./EventBasedManager.ts";
 
@@ -9,7 +9,7 @@ import { EventBasedManager } from "./EventBasedManager.ts";
  * to interact with the chat system.
  */
 export class MessageManager extends EventBasedManager<MessageEvents> {
-    readonly #client: ArchipelagoClient;
+    readonly #client: Client;
     readonly #messages: { message: string, packet: PrintJSONPacket }[] = [];
 
     /**
@@ -23,11 +23,11 @@ export class MessageManager extends EventBasedManager<MessageEvents> {
     }
 
     /**
-     * Instantiates a new MessageManager. Should only be instantiated by creating a new {@link ArchipelagoClient}.
+     * Instantiates a new MessageManager. Should only be instantiated by creating a new {@link Client}.
      * @internal
      * @param client The client object this manager is associated with.
      */
-    public constructor(client: ArchipelagoClient) {
+    public constructor(client: Client) {
         super();
         this.#client = client;
 

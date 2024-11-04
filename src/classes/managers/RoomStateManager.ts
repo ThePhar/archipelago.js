@@ -1,6 +1,6 @@
 import { PermissionTable } from "../../api";
 import { RoomStateEvents } from "../../events/RoomStateEvents.ts";
-import { ArchipelagoClient } from "../ArchipelagoClient.ts";
+import { Client } from "../Client.ts";
 import { EventBasedManager } from "./EventBasedManager.ts";
 
 /**
@@ -8,7 +8,7 @@ import { EventBasedManager } from "./EventBasedManager.ts";
  * room.
  */
 export class RoomStateManager extends EventBasedManager<RoomStateEvents> {
-    readonly #client: ArchipelagoClient;
+    readonly #client: Client;
     #serverVersion = { major: -1, minor: -1, build: -1 };
     #generatorVersion = { major: -1, minor: -1, build: -1 };
     #games: string[] = [];
@@ -122,11 +122,11 @@ export class RoomStateManager extends EventBasedManager<RoomStateEvents> {
     }
 
     /**
-     * Instantiates a new RoomStateManager. Should only be instantiated by creating a new {@link ArchipelagoClient}.
+     * Instantiates a new RoomStateManager. Should only be instantiated by creating a new {@link Client}.
      * @internal
      * @param client The client object this manager is associated with.
      */
-    public constructor(client: ArchipelagoClient) {
+    public constructor(client: Client) {
         super();
         this.#client = client;
 
