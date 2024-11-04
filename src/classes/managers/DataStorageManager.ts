@@ -22,11 +22,10 @@ export class DataStorageManager {
      */
     public constructor(client: Client) {
         this.#client = client;
-
         this.#client.socket
-            // If connection is lost discard storage and subscribers as the server will no longer notify anyway on
-            // reconnection.
             .on("disconnected", () => {
+                // If connection is lost, discard storage and subscribers as the server no longer will notify and we
+                // cannot be sure the storage is accurate anymore.
                 this.#storage = {};
                 this.#subscribers = {};
             })

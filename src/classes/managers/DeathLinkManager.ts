@@ -2,23 +2,7 @@ import { DeathEvents } from "../../events/DeathLinkEvents.ts";
 import { Client } from "../Client.ts";
 import { EventBasedManager } from "./EventBasedManager.ts";
 
-/**
- * The DeathLink data structure.
- * @internal
- */
-export type DeathLinkData = {
-    /** Unix timestamp of time of death. */
-    readonly time: number
-
-    /**
-     * Optional text explaining the cause of death. When provided, this should include the player's name. (e.g., `Phar
-     * drowned in a vat of kittens.`)
-     */
-    readonly cause?: string
-
-    /** The name of the player who died. Can be a slot name, but could also be a name from within a multiplayer game. */
-    readonly source: string
-};
+type DeathLinkData = { time: number, cause?: string, source: string };
 
 /**
  * Manages DeathLink mechanics for clients that choose to opt in to the mechanic.
@@ -60,9 +44,7 @@ export class DeathLinkManager extends EventBasedManager<DeathEvents> {
         return this.#client.arguments.tags.includes("DeathLink");
     }
 
-    /**
-     * Toggles the DeathLink mechanic on for this client, if disabled, by adding the DeathLink tag.
-     */
+    /** Toggles the DeathLink mechanic on for this client, if disabled, by adding the DeathLink tag. */
     public enableDeathLink(): void {
         if (this.#client.arguments.tags.includes("DeathLink")) {
             return;
@@ -71,9 +53,7 @@ export class DeathLinkManager extends EventBasedManager<DeathEvents> {
         this.#client.updateTags([...this.#client.arguments.tags, "DeathLink"]);
     }
 
-    /**
-     * Toggles the DeathLink mechanic off for this client, if enabled, by removing the DeathLink tag.
-     */
+    /** Toggles the DeathLink mechanic off for this client, if enabled, by removing the DeathLink tag. */
     public disableDeathLink(): void {
         if (!this.#client.arguments.tags.includes("DeathLink")) {
             return;
