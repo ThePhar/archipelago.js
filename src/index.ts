@@ -3,7 +3,6 @@ export * from "./constants.ts";
 export * from "./managers";
 export * from "./operations.ts";
 export * from "./options.ts";
-export * from "./utils.ts";
 
 /**
  * A collection of types, constants, and enumerations that get passed over the Archipelago network protocol.
