@@ -17,8 +17,8 @@
         "node": ">= 18.0.0"
     },
     "scripts": {
-        "build:src": "rimraf -rf dist && bun build.mjs",
-        "build:docs": "rimraf -rf docs && typedoc",
+        "build": "rimraf -rf dist && bun build.mjs",
+        "docs": "typedoc",
         "lint": "eslint src",
         "pack": "pnpm pack --pack-destination packs"
     },
