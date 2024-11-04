@@ -1,14 +1,15 @@
-import { PrintJSONPacket, SayPacket } from "../api";
-import { Client } from "../client.ts";
-import { EventBasedManager } from "./abstract.ts";
-import { Player } from "./players.ts";
+import { PrintJSONPacket, SayPacket } from "../../api";
+import { MessageEvents } from "../../events/MessageEvents.ts";
+import { ArchipelagoClient } from "../ArchipelagoClient.ts";
+import { Player } from "../Player.ts";
+import { EventBasedManager } from "./EventBasedManager.ts";
 
 /**
  * Manages and stores {@link PrintJSONPacket} messages, notifies subscribers of new messages, and exposes helper methods
  * to interact with the chat system.
  */
 export class MessageManager extends EventBasedManager<MessageEvents> {
-    readonly #client: Client;
+    readonly #client: ArchipelagoClient;
     readonly #messages: { message: string, packet: PrintJSONPacket }[] = [];
 
     /**
@@ -22,11 +23,11 @@ export class MessageManager extends EventBasedManager<MessageEvents> {
     }
 
     /**
-     * Instantiates a new MessageManager. Should only be instantiated by creating a new {@link Client}.
+     * Instantiates a new MessageManager. Should only be instantiated by creating a new {@link ArchipelagoClient}.
      * @internal
      * @param client The client object this manager is associated with.
      */
-    public constructor(client: Client) {
+    public constructor(client: ArchipelagoClient) {
         super();
         this.#client = client;
 
@@ -75,36 +76,3 @@ export class MessageManager extends EventBasedManager<MessageEvents> {
             .wait("printJSON", (_, message) => message === text);
     }
 }
-
-/**
- * An interface with all supported message events and their respective callback arguments. To be called from
- * {@link MessageManager}.
- */
-export type MessageEvents = {
-    /**
-     * Fires when any message is received.
-     * @param message The plaintext message content.
-     * @param index The index of this message in {@link MessageManager.messages}, when this event was fired. If message
-     * logging is disabled, this will return `-1`.
-     * @param packet The received PrintJSONPacket, if needed to reconstruct into a specialized message.
-     */
-    receivedMessage: [message: string, index: number, packet: PrintJSONPacket]
-
-    /**
-     * Fires when a countdown message is received.
-     * @param message The plaintext message content.
-     * @param index The index of this message in {@link MessageManager.messages}, when this event was fired. If message
-     * logging is disabled, this will return `-1`.
-     * @param value The current countdown value.
-     */
-    countdown: [message: string, index: number, value: number]
-
-    /**
-     * Fires when a player message is received.
-     * @param message The plaintext message content.
-     * @param index The index of this message in {@link MessageManager.messages}, when this event was fired. If message
-     * logging is disabled, this will return `-1`.
-     * @param sender The metadata of the player who sent this message.
-     */
-    chatMessage: [message: string, index: number, sender: Player]
-};

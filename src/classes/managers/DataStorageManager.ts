@@ -1,8 +1,8 @@
-import { JSONSerializableData } from "../api";
-import { Client } from "../client.ts";
-import { libraryVersion } from "../constants.ts";
-import { IntermediateDataOperation } from "../operations.ts";
-import { generateUuid } from "../utils.ts";
+import { JSONSerializableData } from "../../api";
+import { libraryVersion } from "../../constants.ts";
+import { uuid } from "../../utils.ts";
+import { ArchipelagoClient } from "../ArchipelagoClient.ts";
+import { IntermediateDataOperation } from "../IntermediateDataOperation.ts";
 
 /** A callback that fires when a monitored key is updated in data storage. */
 export type DataChangeCallback = (key: string, value: JSONSerializableData, oldValue?: JSONSerializableData) => void;
@@ -14,7 +14,7 @@ export type DataRecordPromise = Promise<Record<string, JSONSerializableData>>;
  * Manages communication between the data storage API and notifies subscribers of changes to storage updates.
  */
 export class DataStorageManager {
-    readonly #client: Client;
+    readonly #client: ArchipelagoClient;
     #storage: Record<string, JSONSerializableData> = {};
     #subscribers: Record<string, DataChangeCallback[]> = {};
 
@@ -23,7 +23,7 @@ export class DataStorageManager {
      * @internal
      * @param client The Archipelago client associated with this manager.
      */
-    public constructor(client: Client) {
+    public constructor(client: ArchipelagoClient) {
         this.#client = client;
 
         this.#client.socket
@@ -195,10 +195,10 @@ export class DataStorageManager {
     }
 
     async #request(...keys: string[]): DataRecordPromise {
-        const uuid = generateUuid();
+        const _uuid = uuid();
         const [response] = await this.#client.socket
-            .send({ cmd: "Get", keys, uuid })
-            .wait("retrieved", (packet) => packet.uuid === uuid);
+            .send({ cmd: "Get", keys, uuid: _uuid })
+            .wait("retrieved", (packet) => packet.uuid === _uuid);
         return response.keys;
     }
 }

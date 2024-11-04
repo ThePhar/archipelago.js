@@ -1,11 +1,30 @@
-import { Client } from "../client.ts";
-import { EventBasedManager } from "./abstract.ts";
+import { DeathEvents } from "../../events/DeathLinkEvents.ts";
+import { ArchipelagoClient } from "../ArchipelagoClient.ts";
+import { EventBasedManager } from "./EventBasedManager.ts";
+
+/**
+ * The DeathLink data structure.
+ * @internal
+ */
+export type DeathLinkData = {
+    /** Unix timestamp of time of death. */
+    readonly time: number
+
+    /**
+     * Optional text explaining the cause of death. When provided, this should include the player's name. (e.g., `Phar
+     * drowned in a vat of kittens.`)
+     */
+    readonly cause?: string
+
+    /** The name of the player who died. Can be a slot name, but could also be a name from within a multiplayer game. */
+    readonly source: string
+};
 
 /**
  * Manages DeathLink mechanics for clients that choose to opt in to the mechanic.
  */
 export class DeathLinkManager extends EventBasedManager<DeathEvents> {
-    readonly #client: Client;
+    readonly #client: ArchipelagoClient;
     #lastDeath: number = Number.MIN_SAFE_INTEGER;
 
     /**
@@ -13,7 +32,7 @@ export class DeathLinkManager extends EventBasedManager<DeathEvents> {
      * @internal
      * @param client The Archipelago client associated with this manager.
      */
-    public constructor(client: Client) {
+    public constructor(client: ArchipelagoClient) {
         super();
         this.#client = client;
 
@@ -89,35 +108,3 @@ export class DeathLinkManager extends EventBasedManager<DeathEvents> {
         this.#client.bounce({ tags: ["DeathLink"] }, deathLink);
     }
 }
-
-/**
- * An interface with all supported death events and their respective callback arguments. To be called from
- * {@link MessageManager}.
- */
-export type DeathEvents = {
-    /**
-     * Fired when a DeathLink-enabled player has sent a DeathLink.
-     * @param source The player who sent this DeathLink.
-     * @param time The timestamp this player died. Time is in number of milliseconds from unix epoch (same timestamp
-     * system in JavaScript).
-     * @param cause Optional description detailing the specific cause of death.
-     */
-    deathReceived: [source: string, time: number, cause?: string]
-};
-
-/**
- * The DeathLink data structure.
- */
-export type DeathLinkData = {
-    /** Unix timestamp of time of death. */
-    readonly time: number
-
-    /**
-     * Optional text explaining the cause of death. When provided, this should include the player's name. (e.g., `Phar
-     * drowned in a vat of kittens.`)
-     */
-    readonly cause?: string
-
-    /** The name of the player who died. Can be a slot name, but could also be a name from within a multiplayer game. */
-    readonly source: string
-};

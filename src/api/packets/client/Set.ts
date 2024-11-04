@@ -1,4 +1,4 @@
-import { DataStorageOperation } from "../../operations.ts";
+import { DataStorageOperation } from "../../DataStorageOperations.ts";
 import { JSONSerializableData } from "../../types.ts";
 
 /**

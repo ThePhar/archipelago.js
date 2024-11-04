@@ -1,37 +1,46 @@
-import { clientStatuses, ConnectedPacket, ConnectionRefusedPacket, ConnectPacket, JSONSerializableData } from "./api";
-import * as Managers from "./managers";
-import { ClientStatus, Item, Player } from "./managers";
-import { ClientOptions, ConnectionOptions, defaultClientOptions, defaultConnectionOptions } from "./options.ts";
+import { clientStatuses, ConnectedPacket, ConnectionRefusedPacket, ConnectPacket, JSONSerializableData } from "../api";
+import { ClientOptions, defaultClientOptions } from "../interfaces/ClientOptions.ts";
+import { ConnectionOptions, defaultConnectionOptions } from "../interfaces/ConnectionOptions.ts";
+import { Item } from "./Item.ts";
+import { DataPackageManager } from "./managers/DataPackageManager.ts";
+import { DataStorageManager } from "./managers/DataStorageManager.ts";
+import { DeathLinkManager } from "./managers/DeathLinkManager.ts";
+import { ItemsManager } from "./managers/ItemsManager.ts";
+import { MessageManager } from "./managers/MessageManager.ts";
+import { ClientStatus, PlayersManager } from "./managers/PlayersManager.ts";
+import { RoomStateManager } from "./managers/RoomStateManager.ts";
+import { SocketManager } from "./managers/SocketManager.ts";
+import { Player } from "./Player.ts";
 
 /** An abstract type for unknown slot data. */
-export type UnknownSlotData = { [p: string]: JSONSerializableData };
+export type ArbitrarySlotData = { [p: string]: JSONSerializableData };
 
 /**
  * The client that connects to an Archipelago server and provides helper methods and objects to facilitate
  * communication, listen for events, and manage data.
  */
-export class Client {
+export class ArchipelagoClient {
     #authenticated: boolean = false;
     #arguments: Required<ConnectionOptions> = defaultConnectionOptions;
     #name: string = "";
     #game: string = "";
 
     /** A helper object for handling websocket communication and AP network protocol. */
-    public readonly socket = new Managers.SocketManager(this);
+    public readonly socket = new SocketManager();
     /** A helper object for handling game data packages. */
-    public readonly package = new Managers.DataPackageManager(this);
+    public readonly package = new DataPackageManager(this);
     /** A helper object for handling the data storage API. */
-    public readonly storage = new Managers.DataStorageManager(this);
+    public readonly storage = new DataStorageManager(this);
     /** A helper object for handling room state. */
-    public readonly room = new Managers.RoomStateManager(this);
+    public readonly room = new RoomStateManager(this);
     /** A helper object for handling players (including self). */
-    public readonly players = new Managers.PlayersManager(this);
+    public readonly players = new PlayersManager(this);
     /** A helper object for handling received items and hints. */
-    public readonly items = new Managers.ItemsManager(this);
+    public readonly items = new ItemsManager(this);
     /** A helper object for handling chat messages. */
-    public readonly messages = new Managers.MessageManager(this);
+    public readonly messages = new MessageManager(this);
     /** A helper object for handling DeathLink mechanics. */
-    public readonly deathLink = new Managers.DeathLinkManager(this);
+    public readonly deathLink = new DeathLinkManager(this);
 
     /** Current options for this client. */
     public options: Required<ClientOptions>;
@@ -57,7 +66,7 @@ export class Client {
     }
 
     /**
-     * Instantiates a new Archipelago client. After creating, call {@link Client.login} to connect and authenticate to
+     * Instantiates a new Archipelago client. After creating, call {@link ArchipelagoClient.login} to connect and authenticate to
      * a server.
      * @param options Additional configuration options for this client. See {@link ClientOptions} for more information.
      */
@@ -117,7 +126,7 @@ export class Client {
      * // slotData: CliqueSlotData { color: "red", hard_mode: false }
      * const slotData = await client.login<CliqueSlotData>("wss://archipelago.gg:38281", "Phar", "Clique");
      */
-    public async login<SlotData extends UnknownSlotData>(
+    public async login<SlotData extends ArbitrarySlotData>(
         url: URL | string,
         name: string,
         game: string = "",

@@ -1,8 +1,6 @@
-export * from "./client.ts";
+export * from "./classes/ArchipelagoClient.ts";
+export * from "./classes/IntermediateDataOperation.ts";
 export * from "./constants.ts";
-export * from "./managers";
-export * from "./operations.ts";
-export * from "./options.ts";
 
 /**
  * A collection of types, constants, and enumerations that get passed over the Archipelago network protocol.

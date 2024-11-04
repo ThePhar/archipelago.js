@@ -1,21 +1,22 @@
-import { DataPackage, GamePackage, GetDataPackagePacket } from "../api";
-import { Client } from "../client.ts";
+import { DataPackage, GamePackage, GetDataPackagePacket } from "../../api";
+import { ArchipelagoClient } from "../ArchipelagoClient.ts";
+import { PackageMetadata } from "../PackageMetadata.ts";
 
 /**
  * Managers data packages metadata and exposes name lookup methods.
  */
 export class DataPackageManager {
-    readonly #client: Client;
-    readonly #packages: Map<string, Package> = new Map();
+    readonly #client: ArchipelagoClient;
+    readonly #packages: Map<string, PackageMetadata> = new Map();
     readonly #checksums: Map<string, string> = new Map();
     readonly #games: Set<string> = new Set();
 
     /**
-     * Instantiates a new DataPackageManager. Should only be instantiated by creating a new {@link Client}.
+     * Instantiates a new DataPackageManager. Should only be instantiated by creating a new {@link ArchipelagoClient}.
      * @internal
      * @param client The client object this manager is associated with.
      */
-    public constructor(client: Client) {
+    public constructor(client: ArchipelagoClient) {
         this.#client = client;
         this.#client.socket.on("roomInfo", (packet) => {
             this.#packages.clear();
@@ -35,7 +36,7 @@ export class DataPackageManager {
      * `null` instead.
      * @param game The specific game package to look up.
      */
-    public findPackage(game: string): Package | null {
+    public findPackage(game: string): PackageMetadata | null {
         return this.#packages.get(game) ?? null;
     }
 
@@ -115,7 +116,7 @@ export class DataPackageManager {
      */
     public importPackage(dataPackage: DataPackage): void {
         for (const game in dataPackage.games) {
-            this.#packages.set(game, new Package(game, dataPackage.games[game]));
+            this.#packages.set(game, new PackageMetadata(game, dataPackage.games[game]));
             this.#checksums.set(game, dataPackage.games[game].checksum);
         }
     }
@@ -215,68 +216,12 @@ export class DataPackageManager {
      * @private
      * @remarks If updates to the AP game package happen, this should be updated.
      */
-    private preloadArchipelago(): Package {
+    private preloadArchipelago(): PackageMetadata {
         // As of AP 0.5.0
-        return new Package("Archipelago", {
+        return new PackageMetadata("Archipelago", {
             checksum: "ac9141e9ad0318df2fa27da5f20c50a842afeecb",
             item_name_to_id: { Nothing: -1 },
             location_name_to_id: { "Cheat Console": -1, "Server": -2 },
         });
-    }
-}
-
-/**
- * An abstraction of a {@link GamePackage} object which includes additional helper methods for interacting with a game's
- * package.
- */
-export class Package {
-    /** The name of the game this game package is for. */
-    public readonly game: string;
-
-    /** The SHA256 hexadecimal string representation of this game package. */
-    public readonly checksum: string;
-
-    /** A record of names to ids for all items in this game package. */
-    public readonly itemTable: Readonly<Record<string, number>>;
-
-    /** A record of names to ids for all locations in this game package. */
-    public readonly locationTable: Readonly<Record<string, number>>;
-
-    /** A record of ids to names for all items in this game package. */
-    public readonly reverseItemTable: Readonly<Record<string, string>>;
-
-    /** A record of ids to names for all locations in this game package. */
-    public readonly reverseLocationTable: Readonly<Record<string, string>>;
-
-    /**
-     * Creates a new PackageMetadata from a given {@link GamePackage}.
-     * @internal
-     * @param game The name of the game for this game package.
-     * @param _package The API-level game package to expand upon.
-     */
-    public constructor(game: string, _package: GamePackage) {
-        this.game = game;
-        this.checksum = _package.checksum;
-        this.itemTable = Object.freeze(_package.item_name_to_id);
-        this.locationTable = Object.freeze(_package.location_name_to_id);
-        this.reverseItemTable = Object.freeze(Object.fromEntries(Object
-            .entries(this.itemTable)
-            .map(([k, v]) => [v, k]),
-        ));
-        this.reverseLocationTable = Object.freeze(Object.fromEntries(Object
-            .entries(this.locationTable)
-            .map(([k, v]) => [v, k]),
-        ));
-    }
-
-    /**
-     * Returns a network-safe {@link GamePackage} that can be cached and preloaded ahead of time to reduce network load.
-     */
-    public exportPackage(): GamePackage {
-        return {
-            checksum: this.checksum,
-            item_name_to_id: { ...this.itemTable },
-            location_name_to_id: { ...this.locationTable },
-        };
     }
 }

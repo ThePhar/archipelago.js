@@ -1,12 +1,12 @@
-import { DataStorageOperation, JSONSerializableData, SetPacket } from "./api";
-import { Client } from "./client.ts";
-import { generateUuid } from "./utils.ts";
+import { DataStorageOperation, JSONSerializableData, SetPacket } from "../api";
+import { uuid } from "../utils.ts";
+import { ArchipelagoClient } from "./ArchipelagoClient.ts";
 
 /**
  * An intermediate abstract object holding an array of data storage operations to be performed in order by the server.
  */
 export class IntermediateDataOperation {
-    readonly #client: Client;
+    readonly #client: ArchipelagoClient;
     readonly #operations: DataStorageOperation[] = [];
     readonly #key: string;
     readonly #default: JSONSerializableData;
@@ -18,7 +18,7 @@ export class IntermediateDataOperation {
      * @param key The data storage key.
      * @param _default Default value to use, if no value exists.
      */
-    public constructor(client: Client, key: string, _default: JSONSerializableData) {
+    public constructor(client: ArchipelagoClient, key: string, _default: JSONSerializableData) {
         this.#client = client;
         this.#key = key;
         this.#default = _default;
@@ -196,14 +196,14 @@ export class IntermediateDataOperation {
     public async commit(awaitReply: false): Promise<void>;
 
     public async commit(awaitReply: boolean = false): Promise<JSONSerializableData | void> {
-        const uuid = generateUuid();
+        const _uuid = uuid();
         const request: SetPacket = {
             cmd: "Set",
             default: this.#default,
             key: this.#key,
             operations: this.#operations,
             want_reply: awaitReply,
-            uuid, // Used to identify this request/response.
+            uuid: _uuid, // Used to identify this request/response.
         };
 
         this.#client.socket.send(request);
@@ -212,7 +212,7 @@ export class IntermediateDataOperation {
         }
 
         // Wait for our expected response packet to return.
-        const [response] = await this.#client.socket.wait("setReply", (packet) => packet.uuid === uuid);
+        const [response] = await this.#client.socket.wait("setReply", (packet) => packet.uuid === _uuid);
         return response;
     }
 }
