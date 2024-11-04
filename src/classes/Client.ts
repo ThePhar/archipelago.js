@@ -1,4 +1,11 @@
-import { clientStatuses, ConnectedPacket, ConnectionRefusedPacket, ConnectPacket, JSONSerializableData } from "../api";
+import {
+    clientStatuses,
+    ConnectedPacket,
+    ConnectionRefusedPacket,
+    ConnectPacket,
+    JSONRecord,
+    JSONSerializableData,
+} from "../api";
 import { ClientOptions, defaultClientOptions } from "../interfaces/ClientOptions.ts";
 import { ConnectionOptions, defaultConnectionOptions } from "../interfaces/ConnectionOptions.ts";
 import { Item } from "./Item.ts";
@@ -11,9 +18,6 @@ import { ClientStatus, PlayersManager } from "./managers/PlayersManager.ts";
 import { RoomStateManager } from "./managers/RoomStateManager.ts";
 import { SocketManager } from "./managers/SocketManager.ts";
 import { Player } from "./Player.ts";
-
-/** An abstract type for unknown slot data. */
-export type ArbitrarySlotData = { [p: string]: JSONSerializableData };
 
 /**
  * The client that connects to an Archipelago server and provides helper methods and objects to facilitate
@@ -126,7 +130,7 @@ export class Client {
      * // slotData: CliqueSlotData { color: "red", hard_mode: false }
      * const slotData = await client.login<CliqueSlotData>("wss://archipelago.gg:38281", "Phar", "Clique");
      */
-    public async login<SlotData extends ArbitrarySlotData>(
+    public async login<SlotData extends JSONRecord>(
         url: URL | string,
         name: string,
         game: string = "",
@@ -325,10 +329,7 @@ export class Client {
      * @throws Error If attempting to send a bounce while not authenticated.
      * @remarks If no targets are specified, no clients will receive this bounce packet.
      */
-    public bounce(
-        targets: { games?: string[], slots?: number[], tags?: string[] },
-        data: { [p: string]: JSONSerializableData },
-    ): void {
+    public bounce(targets: { games?: string[], slots?: number[], tags?: string[] }, data: JSONRecord): void {
         if (!this.authenticated) {
             throw new Error("Cannot send bounces while not connected and authenticated.");
         }

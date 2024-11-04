@@ -1,5 +1,5 @@
-import { clientStatuses, NetworkHint, NetworkPlayer, NetworkSlot, slotTypes } from "../api";
-import { ArbitrarySlotData, Client } from "./Client.ts";
+import { clientStatuses, JSONRecord, NetworkHint, NetworkPlayer, NetworkSlot, slotTypes } from "../api";
+import { Client } from "./Client.ts";
 import { Hint } from "./Hint.ts";
 import { ClientStatus } from "./managers/PlayersManager.ts";
 
@@ -102,7 +102,7 @@ export class Player {
      * @remarks This data is not tracked after running, so slot data should be cached to reduce additional network
      * calls, if necessary.
      */
-    public async fetchSlotData<SlotData extends ArbitrarySlotData>(): Promise<SlotData> {
+    public async fetchSlotData<SlotData extends JSONRecord>(): Promise<SlotData> {
         if (this.slot === 0) {
             throw new Error("Cannot fetch slot data for Archipelago slot; not a real player.");
         }

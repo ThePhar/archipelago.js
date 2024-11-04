@@ -39,16 +39,17 @@ export type GamePackage = {
     readonly checksum: string
 };
 
-/**
- * A type union of all basic JSON-compatible types.
- */
+/** A type union of all basic JSON-compatible types. */
 export type JSONSerializableData =
     | string
     | number
     | boolean
     | null
-    | { [p: string]: JSONSerializableData }
+    | JSONRecord
     | JSONSerializableData[];
+
+/** A record of JSON-serializable data. */
+export type JSONRecord = { [p: string]: JSONSerializableData };
 
 /**
  * An object representing a hint information for a particular item and location that contains it.

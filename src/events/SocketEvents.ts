@@ -4,7 +4,7 @@ import {
     ConnectedPacket,
     ConnectionRefusedPacket,
     DataPackagePacket,
-    InvalidPacketPacket,
+    InvalidPacketPacket, JSONRecord,
     JSONSerializableData,
     LocationInfoPacket,
     PrintJSONPacket,
@@ -35,7 +35,7 @@ export type SocketEvents = {
      * Fires when the client receives a {@link BouncedPacket}.
      * @param packet The raw {@link BouncedPacket}.
      */
-    bounced: [packet: BouncedPacket, data: { [p: string]: JSONSerializableData }]
+    bounced: [packet: BouncedPacket, data: JSONRecord]
 
     /**
      * Fires when the client receives a {@link ConnectedPacket}

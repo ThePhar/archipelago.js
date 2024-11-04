@@ -1,4 +1,4 @@
-import { JSONSerializableData } from "../../api";
+import { JSONRecord, JSONSerializableData } from "../../api";
 import { libraryVersion } from "../../constants.ts";
 import { uuid } from "../../utils.ts";
 import { Client } from "../Client.ts";
@@ -12,7 +12,7 @@ export type DataChangeCallback = (key: string, value: JSONSerializableData, oldV
  */
 export class DataStorageManager {
     readonly #client: Client;
-    #storage: Record<string, JSONSerializableData> = {};
+    #storage: JSONRecord = {};
     #subscribers: Record<string, DataChangeCallback[]> = {};
 
     /**
@@ -24,7 +24,7 @@ export class DataStorageManager {
         this.#client = client;
         this.#client.socket
             .on("disconnected", () => {
-                // If connection is lost, discard storage and subscribers as the server no longer will notify and we
+                // If connection is lost, discard storage and subscribers as the server no longer will notify, and we
                 // cannot be sure the storage is accurate anymore.
                 this.#storage = {};
                 this.#subscribers = {};
@@ -51,7 +51,7 @@ export class DataStorageManager {
     }
 
     /** Returns a copy of all currently monitored keys. */
-    public get store(): Record<string, JSONSerializableData> {
+    public get store(): JSONRecord {
         return structuredClone(this.#storage);
     }
 
@@ -64,7 +64,7 @@ export class DataStorageManager {
      * @returns An object containing all current values for each key requested.
      * @remarks Any keys not currently cached and monitored will be requested over the network instead of from memory.
      */
-    public async fetch<T extends Record<string, JSONSerializableData>>(keys: Array<keyof T>, monitor?: boolean): Promise<T>;
+    public async fetch<T extends JSONRecord>(keys: Array<keyof T>, monitor?: boolean): Promise<T>;
 
     /**
      * Fetches a single key-value pair from data storage.
@@ -87,7 +87,7 @@ export class DataStorageManager {
         }
 
         // Pull keys that exist in monitored local storage.
-        let data: Record<string, JSONSerializableData> = {};
+        let data: JSONRecord = {};
         keys = keys.filter((key) => {
             const value = structuredClone(this.#storage[key]);
             const exists = value !== undefined;
@@ -131,10 +131,7 @@ export class DataStorageManager {
      *     .commit();
      * // Key 'key2' has been updated from 0 to 5!
      */
-    public async notify<T extends Record<string, JSONSerializableData>>(
-        keys: Array<keyof T>,
-        callback: DataChangeCallback,
-    ): Promise<T> {
+    public async notify<T extends JSONRecord>(keys: Array<keyof T>, callback: DataChangeCallback): Promise<T> {
         keys.forEach((key) => {
             this.#subscribers[key as string] ??= [];
             this.#subscribers[key as string].push(callback);
@@ -185,7 +182,7 @@ export class DataStorageManager {
         return await this.fetch([`_read_location_name_groups_${game}`], true);
     }
 
-    async #get(keys: string[]): Promise<Record<string, JSONSerializableData>> {
+    async #get(keys: string[]): Promise<JSONRecord> {
         const _uuid = uuid();
         const [response] = await this.#client.socket
             .send({ cmd: "Get", keys, uuid: _uuid })
