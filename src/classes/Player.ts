@@ -64,19 +64,15 @@ export class Player {
         return this.#player.slot;
     }
 
-    /** If this player is a group, returns all members. Otherwise, returns `null`. */
-    public get members(): Player[] | null {
+    /** Returns all group members of this player, if player is a group. Otherwise, returns an empty array. */
+    public get members(): Player[] {
         if (this.type !== slotTypes.group) {
-            return null;
+            return [];
         }
 
-        return this.#client.players.teams[this.team].reduce((members, player) => {
-            if (this.#networkSlot.group_members.includes(player.slot)) {
-                members.push(player);
-            }
-
-            return members;
-        }, [] as Player[]);
+        return this.#client.players.teams[this.team].filter((player) => (
+            this.#networkSlot.group_members.includes(player.slot)
+        ));
     }
 
     /** Returns all the groups this player is a member of. */
@@ -85,18 +81,9 @@ export class Player {
             return [];
         }
 
-        return this.#client.players.teams[this.team].reduce((groups, player) => {
-            // Don't bother checking slot #0.
-            if (player.slot === 0) {
-                return groups;
-            }
-
-            if (this.#client.players.slots[player.slot].group_members.includes(this.slot)) {
-                groups.push(player);
-            }
-
-            return groups;
-        }, [] as Player[]);
+        return this.#client.players.teams[this.team].filter((player) => (
+            player.slot !== 0 && this.#client.players.slots[player.slot].group_members.includes(this.slot)
+        ));
     }
 
     /** Returns this slot's current status. See {@link clientStatuses} for more information. */
