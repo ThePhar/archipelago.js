@@ -44,6 +44,7 @@
         "ws": "^8.13.0"
     },
     "devDependencies": {
+        "@shipgirl/typedoc-plugin-versions": "^0.2.8",
         "@trivago/prettier-plugin-sort-imports": "^4.1.1",
         "@types/node": "^18.15.11",
         "@types/uuid": "^9.0.1",
@@ -55,10 +56,10 @@
         "prettier": "^2.8.7",
         "rimraf": "^4.4.1",
         "terser-webpack-plugin": "^5.3.9",
-        "typedoc": "^0.24.8",
+        "ts-loader": "^9.4.4",
+        "typedoc": "^0.26.11",
         "typescript": "^5.1.6",
-        "webpack-cli": "^5.1.4",
         "webpack": "^5.88.1",
-        "ts-loader": "^9.4.4"
+        "webpack-cli": "^5.1.4"
     }
 }
