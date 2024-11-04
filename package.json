@@ -1,6 +1,6 @@
 {
     "name": "archipelago.js",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "description": "A general-purpose client library for communicating with Archipelago game servers, written for Node.js.",
     "license": "MIT",
     "main": "dist/index.js",
@@ -40,9 +40,7 @@
     ],
     "dependencies": {
         "isomorphic-ws": "^5.0.0",
-        "ts-loader": "^9.4.4",
         "uuid": "^9.0.0",
-        "webpack": "^5.88.1",
         "ws": "^8.13.0"
     },
     "devDependencies": {
@@ -59,6 +57,8 @@
         "terser-webpack-plugin": "^5.3.9",
         "typedoc": "^0.24.8",
         "typescript": "^5.1.6",
-        "webpack-cli": "^5.1.4"
+        "webpack-cli": "^5.1.4",
+        "webpack": "^5.88.1",
+        "ts-loader": "^9.4.4"
     }
 }
