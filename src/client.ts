@@ -255,7 +255,7 @@ export class Client {
 
     /**
      * Request the server update the kinds of item received events this client should receive.
-     * @param items New item handling flags. See {@link API.itemsHandlingFlags} for more information.
+     * @param items New item handling flags.
      * @throws Error If not connected and authenticated.
      */
     public updateItemsHandling(items: number): void {
