@@ -22,7 +22,7 @@
     "scripts": {
         "clean": "rimraf -rf dist",
         "docs": "typedoc --options typedoc.json",
-        "build": "npm run clean && tsc && webpack",
+        "build": "npm run clean && bun build.mjs",
         "lint": "eslint src",
         "pack": "npm run build && npm pack --pack-destination packs"
     },
@@ -46,20 +46,19 @@
     "devDependencies": {
         "@shipgirl/typedoc-plugin-versions": "^0.2.8",
         "@trivago/prettier-plugin-sort-imports": "^4.1.1",
+        "@types/bun": "^1.1.13",
         "@types/node": "^18.15.11",
         "@types/uuid": "^9.0.1",
         "@types/ws": "^8.5.4",
         "@typescript-eslint/eslint-plugin": "^5.57.1",
         "@typescript-eslint/parser": "^5.57.1",
+        "bun-plugin-dts": "^0.3.0",
         "eslint": "^8.37.0",
         "eslint-config-prettier": "^8.8.0",
         "prettier": "^2.8.7",
         "rimraf": "^4.4.1",
-        "terser-webpack-plugin": "^5.3.9",
         "ts-loader": "^9.4.4",
         "typedoc": "^0.26.11",
-        "typescript": "^5.1.6",
-        "webpack": "^5.88.1",
-        "webpack-cli": "^5.1.4"
+        "typescript": "^5.1.6"
     }
 }
