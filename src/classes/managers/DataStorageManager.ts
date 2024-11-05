@@ -1,21 +1,18 @@
-import { JSONSerializableData } from "../api";
-import { Client } from "../client.ts";
-import { libraryVersion } from "../constants.ts";
-import { IntermediateDataOperation } from "../operations.ts";
-import { generateUuid } from "../utils.ts";
+import { JSONRecord, JSONSerializable } from "../../api";
+import { libraryVersion } from "../../constants.ts";
+import { uuid } from "../../utils.ts";
+import { Client } from "../Client.ts";
+import { IntermediateDataOperation } from "../IntermediateDataOperation.ts";
 
 /** A callback that fires when a monitored key is updated in data storage. */
-export type DataChangeCallback = (key: string, value: JSONSerializableData, oldValue?: JSONSerializableData) => void;
-
-/** A promise that resolves to a record of key-value pairs from data storage. */
-export type DataRecordPromise = Promise<Record<string, JSONSerializableData>>;
+export type DataChangeCallback = (key: string, value: JSONSerializable, oldValue?: JSONSerializable) => void;
 
 /**
  * Manages communication between the data storage API and notifies subscribers of changes to storage updates.
  */
 export class DataStorageManager {
     readonly #client: Client;
-    #storage: Record<string, JSONSerializableData> = {};
+    #storage: JSONRecord = {};
     #subscribers: Record<string, DataChangeCallback[]> = {};
 
     /**
@@ -25,11 +22,10 @@ export class DataStorageManager {
      */
     public constructor(client: Client) {
         this.#client = client;
-
         this.#client.socket
-            // If connection is lost discard storage and subscribers as the server will no longer notify anyway on
-            // reconnection.
             .on("disconnected", () => {
+                // If connection is lost, discard storage and subscribers as the server no longer will notify, and we
+                // cannot be sure the storage is accurate anymore.
                 this.#storage = {};
                 this.#subscribers = {};
             })
@@ -55,71 +51,65 @@ export class DataStorageManager {
     }
 
     /** Returns a copy of all currently monitored keys. */
-    public get store(): Record<string, JSONSerializableData> {
+    public get store(): JSONRecord {
         return structuredClone(this.#storage);
     }
 
     /**
-     * Fetches provided keys from data storage.
-     * @param keys A list of keys to be fetched.
+     * Fetches a list of key-value pairs from data storage.
+     * @template T The expected key-value types to be returned.
+     * @param keys A list of keys to fetch values for.
      * @param monitor Adds keys to local cache and request the server to update client when changes are made to speed up
-     * subsequent lookups. For one-off adhoc lookups, should be omitted.
+     * subsequent lookups.
      * @returns An object containing all current values for each key requested.
      * @remarks Any keys not currently cached and monitored will be requested over the network instead of from memory.
      */
-    public async fetch(keys: string[], monitor: boolean = false): DataRecordPromise {
+    public async fetch<T extends JSONRecord>(keys: Array<keyof T>, monitor?: boolean): Promise<T>;
+
+    /**
+     * Fetches a single key-value pair from data storage.
+     * @template T The expected value type to be returned.
+     * @param key The key to fetch a value for.
+     * @param monitor Adds key to local cache and request the server to update client when changes are made to speed up
+     * subsequent lookups.
+     * @returns The current value for this key.
+     * @remarks Any keys not currently cached and monitored will be requested over the network instead of from memory.
+     */
+    public async fetch<T extends JSONSerializable>(key: string, monitor?: boolean): Promise<T>;
+
+    public async fetch<T>(input: string | Array<keyof T>, monitor: boolean = false): Promise<T> {
+        let keys: string[] = typeof input === "string" ? [input] : input as string[];
         if (monitor) {
-            // Request new keys that are not already being monitored to be notified of changes.
-            const newKeys = keys.filter((key) => this.#storage[key] === undefined);
-            if (newKeys.length > 0) {
-                this.#client.socket.send({ cmd: "SetNotify", keys: newKeys });
+            const monitorKeys = keys.filter((key) => this.#storage[key] === undefined);
+            if (monitorKeys.length > 0) {
+                this.#client.socket.send({ cmd: "SetNotify", keys: monitorKeys });
             }
         }
 
-        let data: Record<string, JSONSerializableData> = {};
-        const request = keys.reduce((keys, key) => {
+        // Pull keys that exist in monitored local storage.
+        let data: JSONRecord = {};
+        keys = keys.filter((key) => {
             const value = structuredClone(this.#storage[key]);
-            if (value !== undefined) {
+            const exists = value !== undefined;
+            if (exists) {
                 data[key] = value;
-            } else {
-                keys.push(key); // Will need to request it from data storage.
             }
 
-            return keys;
-        }, [] as string[]);
+            return !exists;
+        });
 
-        // Request additional keys from API.
-        if (request.length > 0) {
-            const response = await this.#request(...request);
+        // Request remaining keys from API.
+        if (keys.length > 0) {
+            const response = await this.#get(keys);
             data = { ...data, ...response };
         }
 
+        // Add monitored keys to local storage.
         if (monitor) {
             this.#storage = { ...this.#storage, ...data };
         }
 
-        return data;
-    }
-
-    /**
-     * Gets a single provided key from data storage.
-     * @param key The keys to be fetched.
-     * @param monitor Adds key to local cache and request the server to update client when changes are made to speed up
-     * subsequent lookups. For one-off adhoc lookups, should be omitted.
-     * @returns The current value for this key.
-     * @remarks Any keys not currently cached and monitored will be requested over the network instead of from memory.
-     */
-    public async get<T>(key: string, monitor: boolean = false): Promise<T> {
-        if (this.#storage[key] !== undefined) {
-            return this.#storage[key] as T;
-        }
-
-        if (monitor && this.#storage[key] === undefined) {
-            this.#client.socket.send({ cmd: "SetNotify", keys: [key] });
-        }
-
-        const response = await this.#request(key);
-        return response[key] as T;
+        return (typeof input === "string" ? data[input] : data) as T;
     }
 
     /**
@@ -136,21 +126,19 @@ export class DataStorageManager {
      * });
      *
      * client.storage
-     *     .prepare("key2")
+     *     .prepare("key2", 0)
      *     .add(5)
      *     .commit();
      * // Key 'key2' has been updated from 0 to 5!
      */
-    public async notify(keys: string[], callback: DataChangeCallback): DataRecordPromise {
+    public async notify<T extends JSONRecord>(keys: Array<keyof T>, callback: DataChangeCallback): Promise<T> {
         keys.forEach((key) => {
-            this.#subscribers[key] ??= [];
-            this.#subscribers[key].push(callback);
+            this.#subscribers[key as string] ??= [];
+            this.#subscribers[key as string].push(callback);
         });
 
         // Get current values and update local storage.
-        const request = await this.fetch(keys, true);
-        this.#storage = { ...this.#storage, ...request };
-        return request;
+        return this.fetch(keys, true);
     }
 
     /**
@@ -158,7 +146,7 @@ export class DataStorageManager {
      * perform certain operations, just chain additional methods until finished, then call `prepare()`.
      * @param key The key to manipulate.
      * @param _default The default value to be used if key does not exist.
-     * @throws Error if attempting to modify a read only key.
+     * @throws TypeError if attempting to modify a read only key.
      * @example
      * // Prepare key "my-key" and set initial value to 100, if key doesn't exist.
      * client.storage
@@ -168,9 +156,9 @@ export class DataStorageManager {
      *     .max(0)         // Clamp value above 0.
      *     .commit();      // Commit operations to data storage.
      */
-    public prepare(key: string, _default: JSONSerializableData = 0): IntermediateDataOperation {
+    public prepare<T extends JSONSerializable>(key: string, _default: T): IntermediateDataOperation<T> {
         if (key.startsWith("_read_")) {
-            throw Error("Cannot manipulate read only keys.");
+            throw TypeError("Cannot manipulate read only keys.");
         }
 
         return new IntermediateDataOperation(this.#client, key, _default);
@@ -182,7 +170,7 @@ export class DataStorageManager {
      */
     public async fetchItemNameGroups(game: string): Promise<Record<string, string[]>> {
         // Get key and locally cache for faster subsequent lookups.
-        return await this.fetch([`_read_item_name_groups_${game}`], true) as Record<string, string[]>;
+        return await this.fetch([`_read_item_name_groups_${game}`], true);
     }
 
     /**
@@ -191,14 +179,15 @@ export class DataStorageManager {
      */
     public async fetchLocationNameGroups(game: string): Promise<Record<string, string[]>> {
         // Get key and locally cache for faster subsequent lookups.
-        return await this.fetch([`_read_location_name_groups_${game}`], true) as Record<string, string[]>;
+        return await this.fetch([`_read_location_name_groups_${game}`], true);
     }
 
-    async #request(...keys: string[]): DataRecordPromise {
-        const uuid = generateUuid();
+    async #get(keys: string[]): Promise<JSONRecord> {
+        const _uuid = uuid();
         const [response] = await this.#client.socket
-            .send({ cmd: "Get", keys, uuid })
-            .wait("retrieved", (packet) => packet.uuid === uuid);
+            .send({ cmd: "Get", keys, uuid: _uuid })
+            .wait("retrieved", (packet) => packet.uuid === _uuid);
+
         return response.keys;
     }
 }

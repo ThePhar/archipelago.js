@@ -1,30 +1,23 @@
-import {
-    BouncedPacket,
-    ClientPacket,
-    ConnectedPacket,
-    ConnectionRefusedPacket,
-    DataPackagePacket,
-    InvalidPacketPacket, JSONSerializableData,
-    LocationInfoPacket,
-    PrintJSONPacket,
-    ReceivedItemsPacket,
-    RetrievedPacket,
-    RoomInfoPacket,
-    RoomUpdatePacket,
-    ServerPacket,
-    SetReplyPacket,
-} from "../api";
-import { Client } from "../client.ts";
-import { EventBasedManager } from "./abstract.ts";
+import { ClientPacket, RoomInfoPacket, ServerPacket } from "../../api";
+import { SocketError } from "../../errors.ts";
+import { SocketEvents } from "../../events/SocketEvents.ts";
+import { EventBasedManager } from "./EventBasedManager.ts";
 
 /**
  * Manages socket-level communication and exposes helper methods/events for interacting with the Archipelago API
  * directly.
  */
 export class SocketManager extends EventBasedManager<SocketEvents> {
-    #client: Client;
     #socket: WebSocket | null = null;
     #connected: boolean = false;
+
+    /**
+     * Instantiates a new SocketManager. Should only be instantiated by creating a new {@link Client}.
+     * @internal
+     */
+    public constructor() {
+        super();
+    }
 
     /** Returns `true` if currently connected to a websocket server. */
     public get connected(): boolean {
@@ -37,20 +30,10 @@ export class SocketManager extends EventBasedManager<SocketEvents> {
     }
 
     /**
-     * Instantiates a new SocketManager. Should only be instantiated by creating a new {@link Client}.
-     * @internal
-     * @param client The client object this manager is associated with.
-     */
-    public constructor(client: Client) {
-        super();
-        this.#client = client;
-    }
-
-    /**
      * Send a list of raw client packets to the server.
      * @param packets List of client packets to send.
      * @returns This SocketManager.
-     * @throws Error if not connected to a server.
+     * @throws SocketError if not connected to a server.
      */
     public send(...packets: ClientPacket[]): SocketManager {
         if (this.#socket) {
@@ -59,7 +42,7 @@ export class SocketManager extends EventBasedManager<SocketEvents> {
             return this;
         }
 
-        throw new Error("Unable to send packets to the server; not connected to a server.");
+        throw new SocketError("Unable to send packets to the server; not connected to a server.");
     }
 
     /**
@@ -67,6 +50,8 @@ export class SocketManager extends EventBasedManager<SocketEvents> {
      * needed to be performed before authenticating, but after connecting (e.g., DataPackage).
      * @param url The url of the server, including the protocol (e.g., `wss://archipelago.gg:38281`).
      * @returns The {@link RoomInfoPacket} received on initial connection.
+     * @throws SocketError If failed to connect or no websocket API is available.
+     * @throws TypeError If provided URL is malformed or invalid protocol.
      * @remarks If the port is omitted, client will default to `38281`.
      *
      * If the protocol is omitted, client will attempt to connect via `wss`, then fallback to `ws` if unsuccessful.
@@ -102,9 +87,9 @@ export class SocketManager extends EventBasedManager<SocketEvents> {
 
         try {
             return new Promise((resolve, reject) => {
-                const IsomorphousWebSocket = findWebSocket();
+                const IsomorphousWebSocket = this.#findWebSocket();
                 if (IsomorphousWebSocket === null) {
-                    throw new Error("Unable to find a suitable WebSocket API in the current runtime.");
+                    throw new SocketError("Unable to find a suitable WebSocket API in the current runtime.");
                 }
 
                 // Establish a websocket connection and setup basic handlers.
@@ -112,11 +97,11 @@ export class SocketManager extends EventBasedManager<SocketEvents> {
                 this.#socket.onmessage = this.#parseMessage.bind(this);
                 this.#socket.onclose = () => {
                     this.disconnect();
-                    reject(new Error("Failed to connect to Archipelago server."));
+                    reject(new SocketError("Failed to connect to Archipelago server."));
                 };
                 this.#socket.onerror = () => {
                     this.disconnect();
-                    reject(new Error("Failed to connect to Archipelago server."));
+                    reject(new SocketError("Failed to connect to Archipelago server."));
                 };
                 this.#socket.onopen = () => {
                     this.wait("roomInfo")
@@ -133,7 +118,7 @@ export class SocketManager extends EventBasedManager<SocketEvents> {
 
                             // Lost socket after connecting somehow? Should never happen, hopefully.
                             this.disconnect();
-                            reject(new Error("Failed to connect to Archipelago server."));
+                            reject(new SocketError("Failed to connect to Archipelago server."));
                         })
                         .catch((error) => {
                             // Throw error up to the try...catch.
@@ -212,144 +197,26 @@ export class SocketManager extends EventBasedManager<SocketEvents> {
             this.emit("receivedPacket", [packet]);
         }
     }
-}
 
-/**
- * An interface with all supported socket events and their respective callback arguments. To be called from
- * {@link SocketManager}.
- * @example
- * // Print all chat messages to the console when received.
- * client.socket.on("PrintJSON", (packet, message) => {
- *     console.log(message);
- * });
- *
- * // Warn when lost connection.
- * client.socket.on("Disconnect", () => {
- *     console.warn("Lost connection to the server!");
- * }
- */
-export type SocketEvents = {
-    /**
-     * Fires when the client receives a {@link BouncedPacket}.
-     * @param packet The raw {@link BouncedPacket}.
-     */
-    bounced: [packet: BouncedPacket, data: { [p: string]: JSONSerializableData }]
+    #findWebSocket(): typeof WebSocket | null {
+        let IsomorphousWebSocket: typeof WebSocket | null = null;
+        if (typeof window !== "undefined") {
+            // @ts-expect-error WebSocket may not exist in this context.
+            IsomorphousWebSocket = window.WebSocket || window.MozWebSocket;
+        } else if (typeof global !== "undefined") {
+            // @ts-expect-error WebSocket may not exist in this context.
+            IsomorphousWebSocket = global.WebSocket || global.MozWebSocket;
+        } else if (typeof self !== "undefined") {
+            // @ts-expect-error WebSocket may not exist in this context.
+            IsomorphousWebSocket = self.WebSocket || self.MozWebSocket;
+        } else if (typeof WebSocket !== "undefined") {
+            IsomorphousWebSocket = WebSocket;
+            // @ts-expect-error WebSocket may not exist in this context.
+        } else if (typeof MozWebSocket !== "undefined") {
+            // @ts-expect-error WebSocket may not exist in this context.
+            IsomorphousWebSocket = MozWebSocket as WebSocket;
+        }
 
-    /**
-     * Fires when the client receives a {@link ConnectedPacket}
-     * @param packet The raw {@link ConnectedPacket} packet.
-     * @remarks This also means the client has authenticated to an Archipelago server.
-     */
-    connected: [packet: ConnectedPacket]
-
-    /**
-     * Fires when the client receives a {@link ConnectionRefusedPacket}.
-     * @param packet The raw {@link ConnectionRefusedPacket}.
-     */
-    connectionRefused: [packet: ConnectionRefusedPacket]
-
-    /**
-     * Fires when the client receives a {@link DataPackagePacket}.
-     * @param packet The raw {@link DataPackagePacket}.
-     */
-    dataPackage: [packet: DataPackagePacket]
-
-    /**
-     * Fires when the client receives a {@link InvalidPacketPacket}.
-     * @param packet The raw {@link InvalidPacketPacket}.
-     */
-    invalidPacket: [packet: InvalidPacketPacket]
-
-    /**
-     * Fires when the client receives a {@link LocationInfoPacket}.
-     * @param packet The raw {@link LocationInfoPacket}.
-     */
-    locationInfo: [packet: LocationInfoPacket]
-
-    /**
-     * Fires when the client receives a {@link PrintJSONPacket}.
-     * @param packet The raw {@link PrintJSONPacket} packet.
-     * @param message The full plaintext message content.
-     */
-    printJSON: [packet: PrintJSONPacket, message: string]
-
-    /**
-     * Fires when the client receives a {@link ReceivedItemsPacket}.
-     * @param packet The raw {@link ReceivedItemsPacket}.
-     */
-    receivedItems: [packet: ReceivedItemsPacket]
-
-    /**
-     * Fires when the client receives a {@link RetrievedPacket}.
-     * @param packet The raw {@link RetrievedPacket}.
-     */
-    retrieved: [packet: RetrievedPacket]
-
-    /**
-     * Fires when the client receives a {@link RoomInfoPacket}.
-     * @param packet The raw {@link RoomInfoPacket}.
-     * @remarks This also means the client has established a websocket connection to an Archipelago server, but not yet
-     * authenticated.
-     */
-    roomInfo: [packet: RoomInfoPacket]
-
-    /**
-     * Fires when the client receives a {@link RoomUpdatePacket}.
-     * @param packet The raw {@link RoomUpdatePacket}.
-     */
-    roomUpdate: [packet: RoomUpdatePacket]
-
-    /**
-     * Fires when the client receives a {@link SetReplyPacket}.
-     * @param packet The raw {@link SetReplyPacket}.
-     */
-    setReply: [packet: SetReplyPacket]
-
-    /**
-     * Fires when the client receives any {@link ServerPacket}.
-     * @param packet Any received {@link ServerPacket}. Additional checks on the `cmd` property will be required to
-     * determine the type of packet received.
-     * @remarks All specific packet event listeners will fire before this event fires.
-     */
-    receivedPacket: [packet: ServerPacket]
-
-    /**
-     * Fires when the client sends an array of {@link ClientPacket}.
-     * @param packets An array of {@link ClientPacket} sent to the server.
-     */
-    sentPackets: [packets: ClientPacket[]]
-
-    /**
-     * Fires when the client has lost connection to the server, intentionally or not.
-     */
-    disconnected: []
-};
-
-/**
- * Finds the first appropriate WebSocket prototype available in the current scope.
- * @internal
- * @returns The first WebSocket class available or `null` if none available.
- * @remarks Not all features of the Web WebSocket API maybe available (due to runtime differences), so care should be
- * taken when interacting with the API directly.
- */
-function findWebSocket(): typeof WebSocket | null {
-    let IsomorphousWebSocket: typeof WebSocket | null = null;
-    if (typeof window !== "undefined") {
-        // @ts-expect-error WebSocket may not exist in this context.
-        IsomorphousWebSocket = window.WebSocket || window.MozWebSocket;
-    } else if (typeof global !== "undefined") {
-        // @ts-expect-error WebSocket may not exist in this context.
-        IsomorphousWebSocket = global.WebSocket || global.MozWebSocket;
-    } else if (typeof self !== "undefined") {
-        // @ts-expect-error WebSocket may not exist in this context.
-        IsomorphousWebSocket = self.WebSocket || self.MozWebSocket;
-    } else if (typeof WebSocket !== "undefined") {
-        IsomorphousWebSocket = WebSocket;
-        // @ts-expect-error WebSocket may not exist in this context.
-    } else if (typeof MozWebSocket !== "undefined") {
-        // @ts-expect-error WebSocket may not exist in this context.
-        IsomorphousWebSocket = MozWebSocket as WebSocket;
+        return IsomorphousWebSocket;
     }
-
-    return IsomorphousWebSocket;
 }

@@ -1,4 +1,4 @@
-import { JSONSerializableData } from "../../types.ts";
+import { JSONRecord } from "../../types.ts";
 
 /**
  * Sent to clients after a client requested this message be sent to them, more info in the {@link BouncePacket}.
@@ -17,5 +17,5 @@ export interface BouncedPacket {
     readonly tags?: string[]
 
     /** A verbatim copy of the data in the {@link BouncePacket} package. */
-    readonly data: { [p: string]: JSONSerializableData }
+    readonly data: JSONRecord
 }

@@ -1,4 +1,4 @@
-import { JSONMessagePart } from "../../parts.ts";
+import { JSONMessagePart } from "../../JSONMessageParts.ts";
 import { NetworkItem } from "../../types.ts";
 
 /**

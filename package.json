@@ -1,6 +1,6 @@
 {
     "name": "archipelago.js",
-    "version": "2.0.0-rc4",
+    "version": "2.0.0-rc5",
     "description": "A runtime-agnostic and zero dependency TypeScript/JavaScript library for communicating with Archipelago servers.",
     "license": "MIT",
     "type": "module",
@@ -18,7 +18,7 @@
     },
     "scripts": {
         "build": "rimraf -rf dist && bun build.mjs",
-        "docs": "typedoc",
+        "docs": "typedoc --options typedoc.json",
         "lint": "eslint src",
         "pack": "pnpm pack --pack-destination packs"
     },
