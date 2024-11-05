@@ -106,7 +106,7 @@ client.deathLink
 // ... misc client code below ...
 ```
 
-### Sending Client Events
+## Sending Client Events
 
 You can also inform the server of actions you take as a client, such as checking locations:
 
@@ -132,7 +132,7 @@ Or sending your own DeathLinks to other players if you die.
 client.deathLink.sendDeathLink("Phar", "Phar spontanously combusted after pressing a large red button.");
 ```
 
-### Conclusion
+## Conclusion
 
 Congratulations! You are now a client developer and hopefully got a taste of what this library is capable of. For more
 information, check out the rest of the API documentation for **archipelago.js** (Client might be a good one to start

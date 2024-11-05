@@ -16,19 +16,11 @@ Targeted to work on all major desktop and mobile browsers ([Firefox](https://www
 
 Install via `npm install archipelago.js` (or via your preferred package manager's flavor).
 
-## Quick Start
+## Quick Start Guide
 
-```js
-import { Client } from "archipelago.js";
+Check out the quick start documentation [here](https://archipealgo.js.org/stable/documents/Quick_Start.html)!
 
-const client = new Client();
-
-// Connect to Archipelago session.
-client.login("wss://archipelago.gg:38281", "Phar", "Clique")
-    .then(() => client.messages.say("Hello, multiworld!"));
-```
-
-## Documentation
+## API Documentation
 
 The full API documentation is located [here](https://thephar.github.io/archipelago.js/). Please be sure to reference it
 while you are developing your JavaScript-based clients.
