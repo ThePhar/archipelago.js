@@ -1,4 +1,5 @@
 import { clientStatuses, NetworkPlayer, NetworkSlot } from "../../api";
+import { PlayerEvents } from "../../events/PlayerEvents.ts";
 import { Client } from "../Client.ts";
 import { Player } from "../Player.ts";
 import { EventBasedManager } from "./EventBasedManager.ts";
@@ -110,13 +111,3 @@ export class PlayersManager extends EventBasedManager<PlayerEvents> {
         return undefined;
     }
 }
-
-export type PlayerEvents = {
-    /**
-     * Fires when a player updates their alias.
-     * @param player The {@link Player} for this player with the changes applied.
-     * @param oldAlias The player's previous alias.
-     * @param newAlias The player's new alias.
-     */
-    aliasUpdated: [player: Player, oldAlias: string, newAlias: string]
-};

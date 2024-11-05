@@ -25,7 +25,7 @@ const client = new Client();
 
 // Connect to Archipelago session.
 client.login("wss://archipelago.gg:38281", "Phar", "Clique")
-    .then(() => client.messages.chat("Hello, multiworld!"));
+    .then(() => client.messages.say("Hello, multiworld!"));
 ```
 
 ## Documentation

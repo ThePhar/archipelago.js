@@ -65,7 +65,7 @@ export class MessageManager extends EventBasedManager<MessageEvents> {
      * @returns A promise that resolves when the server responds with the PrintJSON packet.
      * @throws UnauthenticatedError if attempting to send a chat message when not connected or authenticated.
      */
-    public async chat(text: string): Promise<void> {
+    public async say(text: string): Promise<void> {
         if (!this.#client.authenticated) {
             throw new UnauthenticatedError("Cannot send chat messages without being authenticated.");
         }
