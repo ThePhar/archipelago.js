@@ -146,7 +146,7 @@ export class DataStorageManager {
      * perform certain operations, just chain additional methods until finished, then call `prepare()`.
      * @param key The key to manipulate.
      * @param _default The default value to be used if key does not exist.
-     * @throws Error if attempting to modify a read only key.
+     * @throws TypeError if attempting to modify a read only key.
      * @example
      * // Prepare key "my-key" and set initial value to 100, if key doesn't exist.
      * client.storage
@@ -158,7 +158,7 @@ export class DataStorageManager {
      */
     public prepare<T extends JSONSerializable>(key: string, _default: T): IntermediateDataOperation<T> {
         if (key.startsWith("_read_")) {
-            throw Error("Cannot manipulate read only keys.");
+            throw TypeError("Cannot manipulate read only keys.");
         }
 
         return new IntermediateDataOperation(this.#client, key, _default);

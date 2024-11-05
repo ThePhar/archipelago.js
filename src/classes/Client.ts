@@ -5,6 +5,7 @@ import {
     ConnectPacket,
     JSONRecord,
 } from "../api";
+import { ArgumentError, LoginError, SocketError, UnauthenticatedError } from "../errors.ts";
 import { ClientOptions, defaultClientOptions } from "../interfaces/ClientOptions.ts";
 import { ConnectionOptions, defaultConnectionOptions } from "../interfaces/ConnectionOptions.ts";
 import { Item } from "./Item.ts";
@@ -102,6 +103,9 @@ export class Client {
      * @param name The slot name this client will be connecting to.
      * @param game The game name this client will be connecting to. If omitted, client will connect in "TextOnly" mode.
      * @param options Additional optional connection arguments.
+     * @throws ArgumentError If slot name is empty.
+     * @throws LoginError If the server refuses the authentication attempt.
+     * @throws TypeError If provided URL is malformed or invalid protocol.
      * @remarks If the port is omitted, the client will default to `38281` (AP default).
      *
      * If the protocol is omitted, client will attempt to connect via wss, then fallback to ws if unsuccessful.
@@ -136,7 +140,7 @@ export class Client {
         options?: ConnectionOptions,
     ): Promise<SlotData> {
         if (name === "") {
-            throw Error("Provided slot name cannot be blank.");
+            throw new ArgumentError("Provided slot name cannot be blank.", "name", name);
         }
 
         if (options) {
@@ -174,8 +178,7 @@ export class Client {
 
         return new Promise<SlotData>((resolve, reject) => {
             const timeout = setTimeout(
-                // TODO: Replace with custom error object that can export the reasons easier.
-                () => reject(new Error("Server has not responded in time.")),
+                () => reject(new SocketError("Server failed to respond in time.")),
                 this.options.timeout,
             );
 
@@ -198,7 +201,10 @@ export class Client {
 
                 // TODO: Replace with custom error object that can export the reasons easier.
                 clearTimeout(timeout);
-                reject(new Error(`Connection was refused. Reason(s): [${packet.errors?.join(", ")}`));
+                reject(new LoginError(
+                    `Connection was refused by the server. Reason(s): [${packet.errors?.join(", ")}`,
+                    packet.errors ?? [],
+                ));
             };
 
             this.socket
@@ -211,7 +217,7 @@ export class Client {
     /**
      * Update the client status for the current player. For a list of known client statuses, see {@link clientStatuses}.
      * @param status The status to change to.
-     * @throws Error If not connected and authenticated.
+     * @throws UnauthenticatedError If not connected and authenticated.
      * @remarks The server will automatically set the player's status to {@link clientStatuses.disconnected} when all
      * clients connected to this slot have disconnected, set the status to {@link clientStatuses.connected} if a client
      * connects to this slot when previously set to {@link clientStatuses.disconnected}, or ignores any future updates
@@ -227,7 +233,7 @@ export class Client {
      */
     public updateStatus(status: ClientStatus): void {
         if (!this.authenticated) {
-            throw new Error("Cannot update status while not connected and authenticated.");
+            throw new UnauthenticatedError("Cannot update status while not connected and authenticated.");
         }
 
         this.socket.send({ cmd: "StatusUpdate", status });
@@ -236,6 +242,7 @@ export class Client {
     /**
      * A shorthand for running `Client.updateStatus(clientStatuses.goal)`. Once set, cannot be changed and if release
      * and/or collect is set to automatic, will release/collect all items.
+     * @throws UnauthenticatedError If not connected and authenticated.
      */
     public goal(): void {
         this.updateStatus(clientStatuses.goal);
@@ -244,11 +251,11 @@ export class Client {
     /**
      * Request the server update this client's tags.
      * @param tags Tags to replace the current ones.
-     * @throws Error If not connected and authenticated.
+     * @throws UnauthenticatedError If not connected and authenticated.
      */
     public updateTags(tags: string[]): void {
         if (!this.authenticated) {
-            throw new Error("Cannot update tags while not connected and authenticated.");
+            throw new UnauthenticatedError("Cannot update tags while not connected and authenticated.");
         }
 
         this.socket.send({ cmd: "ConnectUpdate", tags, items_handling: this.arguments.items });
@@ -257,11 +264,11 @@ export class Client {
     /**
      * Request the server update the kinds of item received events this client should receive.
      * @param items New item handling flags.
-     * @throws Error If not connected and authenticated.
+     * @throws UnauthenticatedError If not connected and authenticated.
      */
     public updateItemsHandling(items: number): void {
         if (!this.authenticated) {
-            throw new Error("Cannot update tags while not connected and authenticated.");
+            throw new UnauthenticatedError("Cannot update tags while not connected and authenticated.");
         }
 
         this.socket.send({ cmd: "ConnectUpdate", tags: this.arguments.tags, items_handling: items });
@@ -270,12 +277,12 @@ export class Client {
     /**
      * Marks a list of locations as checked on the server.
      * @param locations Location ids to check.
-     * @throws Error If attempting to check locations while not authenticated.
+     * @throws UnauthenticatedError If attempting to check locations while not authenticated.
      * @remarks Locations that do not exist or have already been checked in the multi-world are ignored.
      */
     public check(...locations: number[]): void {
         if (!this.authenticated) {
-            throw new Error("Cannot check locations while not connected and authenticated.");
+            throw new UnauthenticatedError("Cannot check locations while not connected and authenticated.");
         }
 
         // Only allow checking missing locations.
@@ -293,11 +300,11 @@ export class Client {
      * relevant clients.
      * - If set to `2`, this packet will create hints for all locations in this packet and broadcast only new hints to
      * all relevant clients.
-     * @throws Error If attempting to scout locations while not authenticated.
+     * @throws UnauthenticatedError If attempting to scout locations while not authenticated.
      */
     public async scout(locations: number[], createHint: 0 | 1 | 2 = 0): Promise<Item[]> {
         if (!this.authenticated) {
-            throw new Error("Cannot scout locations while not connected and authenticated.");
+            throw new UnauthenticatedError("Cannot scout locations while not connected and authenticated.");
         }
 
         // Only allow scouting existing locations.
@@ -325,12 +332,12 @@ export class Client {
      * @param targets.slots Specific slots that should receive this bounce.
      * @param targets.tags Specific clients with these tags that should receive this bounce.
      * @param data The json-serializable data to send.
-     * @throws Error If attempting to send a bounce while not authenticated.
+     * @throws UnauthenticatedError If attempting to send a bounce while not authenticated.
      * @remarks If no targets are specified, no clients will receive this bounce packet.
      */
     public bounce(targets: { games?: string[], slots?: number[], tags?: string[] }, data: JSONRecord): void {
         if (!this.authenticated) {
-            throw new Error("Cannot send bounces while not connected and authenticated.");
+            throw new UnauthenticatedError("Cannot send bounces while not connected and authenticated.");
         }
 
         this.socket.send({

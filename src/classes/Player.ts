@@ -1,4 +1,5 @@
 import { clientStatuses, JSONRecord, NetworkHint, NetworkPlayer, NetworkSlot, slotTypes } from "../api";
+import { ArgumentError } from "../errors.ts";
 import { Client } from "./Client.ts";
 import { Hint } from "./Hint.ts";
 import { ClientStatus } from "./managers/PlayersManager.ts";
@@ -103,20 +104,16 @@ export class Player {
      * calls, if necessary.
      */
     public async fetchSlotData<SlotData extends JSONRecord>(): Promise<SlotData> {
-        if (this.slot === 0) {
-            throw new Error("Cannot fetch slot data for Archipelago slot; not a real player.");
-        }
-
         return await this.#client.storage.fetch<SlotData>(`_read_slot_data_${this.slot}`);
-    }
-
-    get #networkSlot(): NetworkSlot {
-        return this.#client.players.slots[this.slot];
     }
 
     /** Fetch this player's current hints. */
     public async fetchHints(): Promise<Hint[]> {
         const hints = await this.#client.storage.fetch<NetworkHint[]>(`_read_hints_${this.team}_${this.slot}`);
         return hints.map((hint) => new Hint(this.#client, hint));
+    }
+
+    get #networkSlot(): NetworkSlot {
+        return this.#client.players.slots[this.slot];
     }
 }

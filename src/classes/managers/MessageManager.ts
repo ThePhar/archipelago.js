@@ -1,4 +1,5 @@
 import { PrintJSONPacket, SayPacket } from "../../api";
+import { UnauthenticatedError } from "../../errors.ts";
 import { MessageEvents } from "../../events/MessageEvents.ts";
 import { Client } from "../Client.ts";
 import { Player } from "../Player.ts";
@@ -62,11 +63,11 @@ export class MessageManager extends EventBasedManager<MessageEvents> {
      * Sends a chat message to the server.
      * @param text The textual message to broadcast to all connected clients.
      * @returns A promise that resolves when the server responds with the PrintJSON packet.
-     * @throws Error if attempting to send a chat message when not connected or authenticated.
+     * @throws UnauthenticatedError if attempting to send a chat message when not connected or authenticated.
      */
     public async chat(text: string): Promise<void> {
         if (!this.#client.authenticated) {
-            throw new Error("Cannot send chat messages without logging in first.");
+            throw new UnauthenticatedError("Cannot send chat messages without being authenticated.");
         }
 
         text = text.trim();

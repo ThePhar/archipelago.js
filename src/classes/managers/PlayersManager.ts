@@ -54,7 +54,10 @@ export class PlayersManager extends EventBasedManager<PlayerEvents> {
             });
     }
 
-    /** Returns the {@link Player} for this client's player. */
+    /**
+     * Returns the {@link Player} for this client's player.
+     * @throws Error If attempting to lookup {@link Player} object before connecting to the server.
+     */
     public get self(): Player {
         if (this.#slot === 0) {
             throw new Error("Cannot lookup own player object when client has never connected to a server.");
