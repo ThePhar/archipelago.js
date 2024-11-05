@@ -126,7 +126,7 @@ export class DataStorageManager {
      * });
      *
      * client.storage
-     *     .prepare("key2")
+     *     .prepare("key2", 0)
      *     .add(5)
      *     .commit();
      * // Key 'key2' has been updated from 0 to 5!
