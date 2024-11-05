@@ -1,0 +1,98 @@
+name: Report an Issue or Bug
+description: Template for bug reports in the **archipelago.js** library.
+labels:
+    - 'is: bug'
+    - 'meta: unconfirmed'
+body:
+    -   type: markdown
+        attributes:
+            value: >-
+                Thanks for reporting an issue!
+                
+                
+                This form is for reporting bugs found in **archipelago.js**
+                (https://github.com/ThePhar/archipelago.js). 
+                
+                
+                If you have a question on how to achieve something and are struggling,
+                please post a question in either the
+                [Discussions](https://github.com/ThePhar/archipelago.js/discussions) tab
+                or in the [Archipelago Discord](https://discord.gg/8Z65BR2) server, in
+                the [**#archipelago.js**
+                thread](https://discord.com/channels/731205301247803413/1127258929357934662).
+                
+                
+                Before submitting a new issue, please verify this bug has not already
+                been reported or a solution was already posted in a Discussion.
+                
+                
+                * Issues:
+                https://github.com/ThePhar/archipelago.js/issues?q=is%3Aissue+sort%3Aupdated-desc
+                
+                * Discussions: https://github.com/ThePhar/archipelago.js/discussions
+                
+                
+                Finally, remember, the more information you provide, the easier we can
+                do to reproduce and assist.
+    -   type: checkboxes
+        attributes:
+            label: >-
+                I have read the above disclaimer and I am submitting a new bug report
+                and have verified no other duplicate reports exist in the Issues or
+                Discussions tabs.
+            options:
+                -   label: Confirm
+                    required: true
+    -   type: textarea
+        attributes:
+            label: Describe the Issue
+            description: >-
+                Provide a clear and concise description on the issue you are
+                experiencing.
+        validations:
+            required: true
+    -   type: textarea
+        attributes:
+            label: Reproduction Steps
+            description: Describe the steps to reproduce this behavior.
+        validations:
+            required: true
+    -   type: textarea
+        attributes:
+            label: Expected Behavior
+            description: >-
+                Provide a clear and concise description of what you were expecting to
+                happen instead.
+        validations:
+            required: true
+    -   type: input
+        attributes:
+            label: Library Version
+            description: >-
+                What is the verison of **archipelago.js** you experienced this issue
+                with?
+            placeholder: (e.g., 2.0.0, 1.2.0)
+        validations:
+            required: true
+    -   type: input
+        attributes:
+            label: Environment / Runtime
+            description: What runtime environment were you running this in and its version.
+            placeholder: (e.g., Firefox 132.0, Node 22.9.0, Bun 1.1.30)
+        validations:
+            required: true
+    -   type: input
+        attributes:
+            label: Project Repository
+            description: >-
+                If you are comfortable with it, you can share a link to your project
+                repository which may make it easier to troubleshoot incase we need to
+                see more than a few code snippets / back and forth.
+            placeholder: (e.g., https://github.com/ThePhar/clique)
+    -   type: textarea
+        attributes:
+            label: Additional Notes, Screenshots, or Files
+            description: >-
+                If applicable, add any additional notes, screenshots, or files that help
+                explain your problem.
+            placeholder: You can drag files inside this editor box!
