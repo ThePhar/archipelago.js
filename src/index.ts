@@ -18,6 +18,7 @@ export * from "./constants.ts";
 export * from "./events/DeathLinkEvents.ts";
 export * from "./events/ItemEvents.ts";
 export * from "./events/MessageEvents.ts";
+export * from "./events/PlayerEvents.ts";
 export * from "./events/RoomStateEvents.ts";
 export * from "./events/SocketEvents.ts";
 export * from "./interfaces/ClientOptions.ts";
