@@ -1,3 +1,4 @@
+import { UnauthenticatedError } from "../../errors.ts";
 import { DeathEvents } from "../../events/DeathLinkEvents.ts";
 import { Client } from "../Client.ts";
 import { EventBasedManager } from "./EventBasedManager.ts";
@@ -68,10 +69,15 @@ export class DeathLinkManager extends EventBasedManager<DeathEvents> {
      * multiplayer game.
      * @param cause Optional text explaining the cause of death. When provided, this should include the player's name.
      * (e.g., `Phar drowned in a vat of kittens.`)
+     * @throws UnauthenticatedError If attempting to send a death link before authenticating to the server.
      * @remarks DeathLinks sent from this client will not fire a {@link DeathEvents.deathReceived} event to avoid
      * an infinite feedback loop of deaths.
      */
     public sendDeathLink(source: string, cause?: string): void {
+        if (!this.#client.authenticated) {
+            throw new UnauthenticatedError("Cannot send death links before connecting and authenticating.");
+        }
+
         if (!this.enabled) {
             return;
         }
