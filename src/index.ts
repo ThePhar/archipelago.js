@@ -12,6 +12,7 @@ export * from "./classes/managers/MessageManager.ts";
 export * from "./classes/managers/PlayersManager.ts";
 export * from "./classes/managers/RoomStateManager.ts";
 export * from "./classes/managers/SocketManager.ts";
+export * from "./classes/MessageNode.ts";
 export * from "./classes/PackageMetadata.ts";
 export * from "./classes/Player.ts";
 export * from "./constants.ts";
