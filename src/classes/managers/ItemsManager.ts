@@ -35,7 +35,7 @@ export class ItemsManager extends EventBasedManager<ItemEvents> {
                     this.#received[index++] = new Item(
                         this.#client,
                         networkItem,
-                        this.#client.players.findPlayer(this.#client.players.self.team, networkItem.player) as Player,
+                        this.#client.players.findPlayer(networkItem.player) as Player,
                         this.#client.players.self,
                     );
                 }

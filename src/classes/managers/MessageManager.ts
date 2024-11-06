@@ -49,7 +49,7 @@ export class MessageManager extends EventBasedManager<MessageEvents> {
                     this.emit("chatMessage", [
                         message,
                         index,
-                        this.#client.players.findPlayer(packet.team, packet.slot) as Player,
+                        this.#client.players.findPlayer(packet.slot, packet.team) as Player,
                     ]);
                     break;
                 case "Countdown":

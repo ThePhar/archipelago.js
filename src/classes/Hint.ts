@@ -23,8 +23,8 @@ export class Hint {
         this.#item = new Item(
             this.#client,
             { item: hint.item, location: hint.location, player: hint.finding_player, flags: hint.item_flags },
-            this.#client.players.findPlayer(this.#client.players.self.team, hint.finding_player) as Player,
-            this.#client.players.findPlayer(this.#client.players.self.team, hint.receiving_player) as Player,
+            this.#client.players.findPlayer(hint.finding_player) as Player,
+            this.#client.players.findPlayer(hint.receiving_player) as Player,
         );
     }
 

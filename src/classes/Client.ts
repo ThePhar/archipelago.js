@@ -314,7 +314,7 @@ export class Client {
             this,
             item,
             this.players.self,
-            this.players.findPlayer(this.players.self.team, item.player) as Player),
+            this.players.findPlayer(item.player) as Player),
         );
     }
 

@@ -98,11 +98,16 @@ export class PlayersManager extends EventBasedManager<PlayerEvents> {
 
     /**
      * Attempt to find a player by their team or slot name.
-     * @param team The team id associated with the searched player.
      * @param slot The slot id associated with the searched player.
+     * @param team The team id associated with the searched player. If omitted, defaults to the team of the client
+     * player.
      * @returns The player's metadata or `undefined` if not found.
      */
-    public findPlayer(team: number, slot: number): Player | undefined {
+    public findPlayer(slot: number, team?: number): Player | undefined {
+        if (team === undefined) {
+            team = this.#client.players.self.team;
+        }
+
         const playerTeam = this.#players[team];
         if (playerTeam) {
             return new Player(this.#client, this.#players[team][slot]);
