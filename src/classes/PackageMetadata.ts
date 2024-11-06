@@ -18,10 +18,10 @@ export class PackageMetadata {
     public readonly locationTable: Readonly<Record<string, number>>;
 
     /** A record of ids to names for all items in this game package. */
-    public readonly reverseItemTable: Readonly<Record<string, string>>;
+    public readonly reverseItemTable: Readonly<Record<number, string>>;
 
     /** A record of ids to names for all locations in this game package. */
-    public readonly reverseLocationTable: Readonly<Record<string, string>>;
+    public readonly reverseLocationTable: Readonly<Record<number, string>>;
 
     /**
      * Creates a new PackageMetadata from a given {@link GamePackage}.

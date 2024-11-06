@@ -73,7 +73,7 @@ export type SocketEvents = {
      * @param packet The raw {@link PrintJSONPacket} packet.
      * @param message The full plaintext message content.
      */
-    printJSON: [packet: PrintJSONPacket, message: string]
+    printJSON: [packet: PrintJSONPacket]
 
     /**
      * Fires when the client receives a {@link ReceivedItemsPacket}.

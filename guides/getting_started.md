@@ -45,10 +45,9 @@ import { Client } from "archipelago.js";
 const client = new Client();
 
 // Setup a listener for incoming chat messages and print them to the console.
-client.messages
-    .on("chatMessage", (message, _, sender) => {
-        console.log(`${sender}: ${message}`);
-    });
+client.messages.on("chat", (message, sender) => {
+    console.log(`${sender.alias}: ${message}`);
+});
 
 // Connect to the Archipelago server (replace url, slot name, and game as appropriate for your scenario).
 await client.login("wss://archipelago.gg:38281", "Phar", "Clique");
@@ -66,12 +65,11 @@ You can also listen for events, such as when your client receives items from the
 
 ```js
 // Setup a listener for whenever items are received and log the details.
-client.items
-    .on("itemsReceived", (items) => {
-        for (const item of items) {
-            console.log(`Received item ${item} from player ${item.sender}.`);
-        }
-    });
+client.items.on("itemsReceived", (items) => {
+    for (const item of items) {
+        console.log(`Received item ${item} from player ${item.sender}.`);
+    }
+});
 
 // ... misc client code below ...
 ```
@@ -80,10 +78,9 @@ Or if another player changes their alias:
 
 ```js
 // Setup a listener for when a player's alias (name) changes.
-client.players
-    .on("aliasUpdated", (_, oldAlias, newAlias) => {
-        console.log(`${oldAlias} has changed their alias to ${newAlias}.`);
-    });
+client.players.on("aliasUpdated", (_, oldAlias, newAlias) => {
+    console.log(`${oldAlias} has changed their alias to ${newAlias}.`);
+});
 
 // ... misc client code below ...
 ```
@@ -92,16 +89,15 @@ Or if you're using the DeathLink mechanic and another player dies:
 
 ```js
 // Setup a listener for when another DeathLink player dies.
-client.deathLink
-    .on("deathReceived", (source, time, cause) => {
-        if (cause) {
-            console.log(`DeathLink received from ${source}: ${cause}`);
-            return;
-        }
-        
-        // No cause was supplied.
-        console.log(`DeathLink received from ${source}!`);
-    });
+client.deathLink.on("deathReceived", (source, time, cause) => {
+    if (cause) {
+        console.log(`DeathLink received from ${source}: ${cause}`);
+        return;
+    }
+    
+    // No cause was supplied.
+    console.log(`DeathLink received from ${source}!`);
+});
 
 // ... misc client code below ...
 ```

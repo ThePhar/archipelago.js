@@ -170,11 +170,7 @@ export class SocketManager extends EventBasedManager<SocketEvents> {
                     this.emit("locationInfo", [packet]);
                     break;
                 case "PrintJSON":
-                    if (packet.type === "Chat" || packet.type === "ServerChat") {
-                        this.emit("printJSON", [packet, packet.message]);
-                    } else {
-                        this.emit("printJSON", [packet, packet.data.reduce((prev, value) => prev + value.text, "")]);
-                    }
+                    this.emit("printJSON", [packet]);
                     break;
                 case "ReceivedItems":
                     this.emit("receivedItems", [packet]);

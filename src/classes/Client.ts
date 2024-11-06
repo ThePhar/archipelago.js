@@ -1,10 +1,4 @@
-import {
-    clientStatuses,
-    ConnectedPacket,
-    ConnectionRefusedPacket,
-    ConnectPacket,
-    JSONRecord,
-} from "../api";
+import { clientStatuses, ConnectedPacket, ConnectionRefusedPacket, ConnectPacket, JSONRecord } from "../api";
 import { ArgumentError, LoginError, SocketError, UnauthenticatedError } from "../errors.ts";
 import { ClientOptions, defaultClientOptions } from "../interfaces/ClientOptions.ts";
 import { ConnectionOptions, defaultConnectionOptions } from "../interfaces/ConnectionOptions.ts";
@@ -313,14 +307,14 @@ export class Client {
             .send({ cmd: "LocationScouts", create_as_hint: createHint, locations })
             .wait("locationInfo", (packet) => {
                 // Easy way to check if both lists are identical.
-                return packet.locations.toSorted().join(",") === locations.toSorted().join(",");
+                return packet.locations.map((location) => location.location).toSorted().join(",") === locations.toSorted().join(",");
             });
 
         return response.locations.map((item) => new Item(
             this,
             item,
             this.players.self,
-            this.players.findPlayer(this.players.self.team, item.player) as Player),
+            this.players.findPlayer(item.player) as Player),
         );
     }
 
