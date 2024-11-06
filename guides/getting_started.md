@@ -45,8 +45,8 @@ import { Client } from "archipelago.js";
 const client = new Client();
 
 // Setup a listener for incoming chat messages and print them to the console.
-client.messages.on("message", (message, sender) => {
-    console.log(`${sender}: ${message}`);
+client.messages.on("chat", (message, sender) => {
+    console.log(`${sender.alias}: ${message}`);
 });
 
 // Connect to the Archipelago server (replace url, slot name, and game as appropriate for your scenario).
