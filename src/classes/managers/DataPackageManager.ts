@@ -152,7 +152,7 @@ export class DataPackageManager {
      * @param fallback If `true`, returns `"Unknown Item {id}"` instead of `undefined`, if id does not exist in package.
      * Defaults to `true`, if omitted.
      */
-    public lookupItemName(game: string, id: number, fallback: true): string;
+    public lookupItemName(game: string, id: number, fallback?: true): string;
 
     /**
      * Lookup an item name by its integer id.
@@ -185,7 +185,7 @@ export class DataPackageManager {
      * @param fallback If `true`, returns `"Unknown Location {id}"` instead of `undefined`, if id does not exist in
      * package. Defaults to `true`, if omitted.
      */
-    public lookupLocationName(game: string, id: number, fallback: true): string;
+    public lookupLocationName(game: string, id: number, fallback?: true): string;
 
     /**
      * Lookup a location name by its integer id.
