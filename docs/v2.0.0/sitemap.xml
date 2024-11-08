@@ -2,514 +2,514 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 	<url>
 		<loc>https://archipelago.js.org/modules.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/index.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/hierarchy.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/documents/Quick_Start.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/modules/index.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/modules/index.API.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.AdminCommandResultJSONPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.BouncedPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.BouncePacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.ChatJSONPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.CollectJSONPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.CommandResultJSONPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.ConnectedPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.ConnectionRefusedPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.ConnectPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.ConnectUpdatePacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.CountdownJSONPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.DataPackagePacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.GetDataPackagePacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.GetPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.GoalJSONPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.HintJSONPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.InvalidArgumentsPacketPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.InvalidCommandPacketPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.ItemCheatJSONPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.ItemSendJSONPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.JoinJSONPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.LocationChecksPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.LocationInfoPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.LocationScoutsPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.PartJSONPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.ReceivedItemsPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.ReleaseJSONPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.RetrievedPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.RoomInfoPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.RoomUpdatePacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.SayPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.ServerChatJSONPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.SetNotifyPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.SetPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.SetReplyPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.StatusUpdatePacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.SyncPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.TagsChangedJSONPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.API.TutorialJSONPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.AddDataStorageOperation.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.AndDataStorageOperation.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.CeilingDataStorageOperation.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.ClientPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.ColorJSONMessagePart.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.ConnectionError.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.DataPackage.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.DataStorageOperation.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.DefaultDataStorageOperation.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.FloorDataStorageOperation.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.GamePackage.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.InvalidPacketPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.ItemJSONMessagePart.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.JSONMessagePart.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.JSONRecord.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.JSONSerializable.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.LeftShiftDataStorageOperation.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.LocationJSONMessagePart.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.MaxDataStorageOperation.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.MinDataStorageOperation.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.ModuloDataStorageOperation.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.MultiplyDataStorageOperation.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.NetworkHint.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.NetworkItem.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.NetworkPlayer.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.NetworkSlot.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.NetworkVersion.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.OrDataStorageOperation.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.PermissionTable.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.PermissionValue.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.PopDataStorageOperation.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.PowerDataStorageOperation.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.PrintJSONPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.PrintJSONType.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.RemoveDataStorageOperation.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.ReplaceDataStorageOperation.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.RightShiftDataStorageOperation.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.ServerPacket.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.TextJSONMessagePart.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.UpdateDataStorageOperation.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.ValidJSONColorType.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.ValidJSONMessagePartType.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.API.XorDataStorageOperation.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/variables/index.API.clientStatuses.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/variables/index.API.itemClassifications.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/variables/index.API.itemsHandlingFlags.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/variables/index.API.permissions.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/variables/index.API.slotTypes.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/classes/index.BaseMessageNode.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/classes/index.Client.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/classes/index.ColorMessageNode.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/classes/index.DataPackageManager.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/classes/index.DataStorageManager.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/classes/index.DeathLinkManager.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/classes/index.EventBasedManager.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/classes/index.Hint.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/classes/index.IntermediateDataOperation.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/classes/index.Item.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/classes/index.ItemMessageNode.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/classes/index.ItemsManager.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/classes/index.LocationMessageNode.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/classes/index.MessageManager.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/classes/index.PackageMetadata.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/classes/index.Player.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/classes/index.PlayerMessageNode.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/classes/index.PlayersManager.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/classes/index.RoomStateManager.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/classes/index.SocketManager.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/classes/index.TextualMessageNode.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.ClientOptions.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/interfaces/index.ConnectionOptions.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.ClientStatus.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.DataChangeCallback.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.DeathEvents.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.ItemEvents.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.MessageEvents.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.MessageLog.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.MessageNode.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.PlayerEvents.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.RoomStateEvents.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/types/index.SocketEvents.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/variables/index.libraryVersion.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 	<url>
 		<loc>https://archipelago.js.org/variables/index.targetVersion.html</loc>
-		<lastmod>2024-11-08T15:31:46.940Z</lastmod>
+		<lastmod>2024-11-08T15:44:04.440Z</lastmod>
 	</url>
 </urlset>
