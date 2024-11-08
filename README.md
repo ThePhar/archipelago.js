@@ -18,7 +18,7 @@ Install via `npm install archipelago.js` (or via your preferred package manager'
 
 ## Quick Start Guide
 
-Check out the quick start documentation [here](https://archipealgo.js.org/stable/documents/Quick_Start.html)!
+Check out the quick start documentation [here](https://archipelago.js.org/stable/documents/Quick_Start.html)!
 
 ## API Documentation
 
