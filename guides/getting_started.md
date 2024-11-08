@@ -27,7 +27,7 @@ import { /* ... */ } from "archipelago.js";
 ```
 to
 ```js
-import { /* ... */ } from "https://unpkg.com/archipelago.js/dist/archipelago.min.js";
+import { /* ... */ } from "https://unpkg.com/archipelago.js/dist/index.js";
 // or any other path to archipelago.js as desired
 ``` 
 
@@ -50,7 +50,7 @@ client.messages.on("chat", (message, sender) => {
 });
 
 // Connect to the Archipelago server (replace url, slot name, and game as appropriate for your scenario).
-await client.login("wss://archipelago.gg:38281", "Phar", "Clique");
+await client.login("wss://archipelago.gg:38281", "Phar", "Pusche");
 
 // Send a message after connecting.
 client.messages.say("Hello, multiworld!")
@@ -67,7 +67,7 @@ You can also listen for events, such as when your client receives items from the
 // Setup a listener for whenever items are received and log the details.
 client.items.on("itemsReceived", (items) => {
     for (const item of items) {
-        console.log(`Received item ${item} from player ${item.sender}.`);
+        console.log(`Received item ${item.name} from player ${item.sender}.`);
     }
 });
 
@@ -125,7 +125,8 @@ Or sending your own DeathLinks to other players if you die.
 
 ```js
 // Send a DeathLink to all DeathLink enabled players.
-client.deathLink.sendDeathLink("Phar", "Phar spontanously combusted after pressing a large red button.");
+client.deathLink
+    .sendDeathLink("Phar", "Phar spontanously combusted after pressing a large red button.");
 ```
 
 ## Conclusion
