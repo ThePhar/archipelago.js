@@ -27,8 +27,8 @@ export class DeathLinkManager extends EventBasedManager<DeathEvents> {
                 // Good enough for me.
                 const deathLink = packet.data as DeathLinkData;
 
-                // Ignore any DeathLinks in the past (or from ourselves), by checking the timestamp.
-                if (deathLink.time <= this.#lastDeath) {
+                // Ignore any DeathLinks from ourselves we *just* sent, by checking if the timestamp is ours.
+                if (deathLink.time === this.#lastDeath) {
                     return;
                 }
 

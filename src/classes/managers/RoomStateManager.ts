@@ -156,8 +156,8 @@ export class RoomStateManager extends EventBasedManager<RoomStateEvents> {
                 this.#checkedLocations = packet.checked_locations;
                 this.emit("locationsChecked", [this.checkedLocations]);
 
-                this.emit("hintPointsUpdated", [this.#hintPoints, packet.hint_points]);
                 this.#hintPoints = packet.hint_points;
+                this.emit("hintPointsUpdated", [0, packet.hint_points]);
             })
             .on("roomUpdate", (packet) => {
                 if (packet.hint_cost !== undefined) {
