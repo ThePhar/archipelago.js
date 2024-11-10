@@ -97,9 +97,9 @@ export class Client {
      * @param name The slot name this client will be connecting to.
      * @param game The game name this client will be connecting to. If omitted, client will connect in "TextOnly" mode.
      * @param options Additional optional connection arguments.
-     * @throws ArgumentError If slot name is empty.
-     * @throws LoginError If the server refuses the authentication attempt.
-     * @throws TypeError If provided URL is malformed or invalid protocol.
+     * @throws {@link ArgumentError} if slot name is empty.
+     * @throws {@link LoginError} if the server refuses the authentication attempt.
+     * @throws {@link TypeError} if provided URL is malformed or invalid protocol.
      * @remarks If the port is omitted, the client will default to `38281` (AP default).
      *
      * If the protocol is omitted, client will attempt to connect via wss, then fallback to ws if unsuccessful.
@@ -211,7 +211,7 @@ export class Client {
     /**
      * Update the client status for the current player. For a list of known client statuses, see {@link clientStatuses}.
      * @param status The status to change to.
-     * @throws UnauthenticatedError If not connected and authenticated.
+     * @throws {@link UnauthenticatedError} if not connected and authenticated.
      * @remarks The server will automatically set the player's status to {@link clientStatuses.disconnected} when all
      * clients connected to this slot have disconnected, set the status to {@link clientStatuses.connected} if a client
      * connects to this slot when previously set to {@link clientStatuses.disconnected}, or ignores any future updates
@@ -236,7 +236,7 @@ export class Client {
     /**
      * A shorthand for running `Client.updateStatus(clientStatuses.goal)`. Once set, cannot be changed and if release
      * and/or collect is set to automatic, will release/collect all items.
-     * @throws UnauthenticatedError If not connected and authenticated.
+     * @throws {@link UnauthenticatedError} if not connected and authenticated.
      */
     public goal(): void {
         this.updateStatus(clientStatuses.goal);
@@ -245,7 +245,7 @@ export class Client {
     /**
      * Request the server update this client's tags.
      * @param tags Tags to replace the current ones.
-     * @throws UnauthenticatedError If not connected and authenticated.
+     * @throws {@link UnauthenticatedError} if not connected and authenticated.
      */
     public updateTags(tags: string[]): void {
         if (!this.authenticated) {
@@ -258,7 +258,7 @@ export class Client {
     /**
      * Request the server update the kinds of item received events this client should receive.
      * @param items New item handling flags.
-     * @throws UnauthenticatedError If not connected and authenticated.
+     * @throws {@link UnauthenticatedError} if not connected and authenticated.
      */
     public updateItemsHandling(items: number): void {
         if (!this.authenticated) {
@@ -271,7 +271,7 @@ export class Client {
     /**
      * Marks a list of locations as checked on the server.
      * @param locations Location ids to check.
-     * @throws UnauthenticatedError If attempting to check locations while not authenticated.
+     * @throws {@link UnauthenticatedError} if attempting to check locations while not authenticated.
      * @remarks Locations that do not exist or have already been checked in the multi-world are ignored.
      */
     public check(...locations: number[]): void {
@@ -294,7 +294,7 @@ export class Client {
      * relevant clients.
      * - If set to `2`, this packet will create hints for all locations in this packet and broadcast only new hints to
      * all relevant clients.
-     * @throws UnauthenticatedError If attempting to scout locations while not authenticated.
+     * @throws {@link UnauthenticatedError} if attempting to scout locations while not authenticated.
      */
     public async scout(locations: number[], createHint: 0 | 1 | 2 = 0): Promise<Item[]> {
         if (!this.authenticated) {
@@ -326,7 +326,7 @@ export class Client {
      * @param targets.slots Specific slots that should receive this bounce.
      * @param targets.tags Specific clients with these tags that should receive this bounce.
      * @param data The json-serializable data to send.
-     * @throws UnauthenticatedError If attempting to send a bounce while not authenticated.
+     * @throws {@link UnauthenticatedError} if attempting to send a bounce while not authenticated.
      * @remarks If no targets are specified, no clients will receive this bounce packet.
      */
     public bounce(targets: { games?: string[], slots?: number[], tags?: string[] }, data: JSONRecord): void {

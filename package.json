@@ -1,6 +1,6 @@
 {
     "name": "archipelago.js",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "description": "A runtime-agnostic and zero dependency TypeScript/JavaScript library for communicating with Archipelago servers.",
     "license": "MIT",
     "type": "module",
