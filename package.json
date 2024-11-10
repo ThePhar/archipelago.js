@@ -22,7 +22,7 @@
         "lint": "eslint src",
         "pack": "pnpm pack --pack-destination packs"
     },
-    "homepage": "https://thephar.github.io/archipelago.js/",
+    "homepage": "https://archipelago.js.org",
     "repository": "https://github.com/ThePhar/archipelago.js.git",
     "bugs": "https://github.com/ThePhar/archipelago.js/issues",
     "devDependencies": {
