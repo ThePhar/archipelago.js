@@ -13,6 +13,7 @@
     "hostedBaseUrl": "https://archipelago.js.org",
     "includeVersion": true,
     "theme": "default-modern",
+    "customCss": "./assets/api.css",
     "plugin": [
         "@shipgirl/typedoc-plugin-versions",
         "@typhonjs-typedoc/typedoc-theme-dmt"
