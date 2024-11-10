@@ -22,7 +22,7 @@ export const clientStatuses = {
 } as const;
 
 /**
- * Bit flags that define the special characteristics of a {@link NetworkItem}.
+ * Bit flags that define the special characteristics of a {@link API.NetworkItem}.
  */
 export const itemClassifications = {
     /** If set, indicates the item may unlock logical advancement. */
