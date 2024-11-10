@@ -10,5 +10,6 @@ await Bun.build({
 await Bun.build({
     entrypoints: ["./src/index.ts"],
     outdir: "./dist",
-    naming: "[dir]/archipelago.[hash].[ext]",
+    naming: "[dir]/archipelago.min.[ext]",
+    minify: true,
 });
