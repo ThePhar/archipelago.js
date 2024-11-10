@@ -69,7 +69,7 @@ export class DeathLinkManager extends EventBasedManager<DeathEvents> {
      * multiplayer game.
      * @param cause Optional text explaining the cause of death. When provided, this should include the player's name.
      * (e.g., `Phar drowned in a vat of kittens.`)
-     * @throws UnauthenticatedError If attempting to send a death link before authenticating to the server.
+     * @throws {@link UnauthenticatedError} if attempting to send a death link before authenticating to the server.
      * @remarks DeathLinks sent from this client will not fire a {@link DeathEvents.deathReceived} event to avoid
      * an infinite feedback loop of deaths.
      */

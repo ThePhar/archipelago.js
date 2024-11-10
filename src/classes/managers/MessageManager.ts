@@ -51,7 +51,7 @@ export class MessageManager extends EventBasedManager<MessageEvents> {
      * Sends a chat message to the server.
      * @param text The textual message to broadcast to all connected clients.
      * @returns A promise that resolves when the server has broadcast the chat message.
-     * @throws UnauthenticatedError if attempting to send a chat message when not connected or authenticated.
+     * @throws {@link UnauthenticatedError} if attempting to send a chat message when not connected or authenticated.
      */
     public async say(text: string): Promise<void> {
         if (!this.#client.authenticated) {
