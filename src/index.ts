@@ -16,6 +16,7 @@ export * from "./classes/MessageNode.ts";
 export * from "./classes/PackageMetadata.ts";
 export * from "./classes/Player.ts";
 export * from "./constants.ts";
+export * from "./errors.ts";
 export * from "./events/DeathLinkEvents.ts";
 export * from "./events/ItemEvents.ts";
 export * from "./events/MessageEvents.ts";
@@ -24,6 +25,9 @@ export * from "./events/RoomStateEvents.ts";
 export * from "./events/SocketEvents.ts";
 export * from "./interfaces/ClientOptions.ts";
 export * from "./interfaces/ConnectionOptions.ts";
+
+/* Export these API consts to the root module. */
+export { clientStatuses, itemClassifications, itemsHandlingFlags, permissions, slotTypes } from "./api";
 
 /**
  * A collection of types, constants, and enumerations that get passed over the Archipelago network protocol.

@@ -88,7 +88,7 @@ export class Item {
 
     /** Returns `true` if this item has no special flags. */
     public get filler(): boolean {
-        return this.flags === itemClassifications.normal;
+        return this.flags === itemClassifications.none;
     }
 
     /** Returns the item classification bitflags for this item. */

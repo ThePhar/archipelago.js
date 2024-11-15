@@ -22,7 +22,7 @@ export const clientStatuses = {
 } as const;
 
 /**
- * Bit flags that define the special characteristics of a {@link NetworkItem}.
+ * Bit flags that define the special characteristics of a {@link API.NetworkItem}.
  */
 export const itemClassifications = {
     /** If set, indicates the item may unlock logical advancement. */
@@ -35,7 +35,7 @@ export const itemClassifications = {
     trap: 0b100,
 
     /** A shorthand with no flags set, also known as 'filler' or 'junk' items. */
-    normal: 0,
+    none: 0,
 } as const;
 
 /**
@@ -48,13 +48,13 @@ export const itemsHandlingFlags = {
     /** Indicates the client get items sent from other worlds. */
     others: 0b001,
 
-    /** Indicates the client get items sent from your own world. Requires `REMOTE_DIFFERENT_WORLDS` to be set. */
+    /** Indicates the client get items sent from your own world. Requires `others` bitflag to be set. */
     own: 0b010,
 
-    /** Indicates the client get your starting inventory sent. Requires `REMOTE_DIFFERENT_WORLDS` to be set. */
+    /** Indicates the client get your starting inventory sent. Requires `others` bitflag to be set. */
     starting: 0b100,
 
-    /** Shorthand for `REMOTE_DIFFERENT_WORLDS`, `REMOTE_OWN_WORLD`, and `REMOTE_STARTING_INVENTORY`. */
+    /** Shorthand for `others`, `own`, and `starting`. */
     all: 0b111,
 } as const;
 

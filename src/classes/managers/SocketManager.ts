@@ -33,7 +33,7 @@ export class SocketManager extends EventBasedManager<SocketEvents> {
      * Send a list of raw client packets to the server.
      * @param packets List of client packets to send.
      * @returns This SocketManager.
-     * @throws SocketError if not connected to a server.
+     * @throws {@link SocketError} if not connected to a server.
      */
     public send(...packets: ClientPacket[]): SocketManager {
         if (this.#socket) {
@@ -50,8 +50,8 @@ export class SocketManager extends EventBasedManager<SocketEvents> {
      * needed to be performed before authenticating, but after connecting (e.g., DataPackage).
      * @param url The url of the server, including the protocol (e.g., `wss://archipelago.gg:38281`).
      * @returns The {@link RoomInfoPacket} received on initial connection.
-     * @throws SocketError If failed to connect or no websocket API is available.
-     * @throws TypeError If provided URL is malformed or invalid protocol.
+     * @throws {@link SocketError} if failed to connect or no websocket API is available.
+     * @throws {@link TypeError} if provided URL is malformed or invalid protocol.
      * @remarks If the port is omitted, client will default to `38281`.
      *
      * If the protocol is omitted, client will attempt to connect via `wss`, then fallback to `ws` if unsuccessful.
