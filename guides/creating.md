@@ -93,7 +93,7 @@ Then running our code we should get something like so:
   <div style="text-align: right">
     <b>Next</b>
     <div>
-      <a></a>
+      <a href="./placeholder.md">More docs under development...</a>
     </div>
   </div>
 </footer>
