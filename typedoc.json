@@ -13,6 +13,8 @@
     "hostedBaseUrl": "https://archipelago.js.org",
     "includeVersion": true,
     "theme": "default-modern",
+    "customCss": "./assets/api.css",
+    "sortEntryPoints": false,
     "plugin": [
         "@shipgirl/typedoc-plugin-versions",
         "@typhonjs-typedoc/typedoc-theme-dmt"
@@ -20,7 +22,12 @@
     "versions": {
         "stable": "2.0"
     },
-    "projectDocuments": ["guides/*.md"],
+    "projectDocuments": [
+        "./guides/introduction.md",
+        "./guides/installation.md",
+        "./guides/creating.md",
+        "./guides/placeholder.md"
+    ],
 
     "dmtFavicon": "./assets/favicon.png",
     "dmtLinksService": {

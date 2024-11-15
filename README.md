@@ -1,4 +1,4 @@
-# archipelago.js
+# ![archipelago.js Icon](./assets/icon_small.png) archipelago.js
 
 ![GitHub License](https://img.shields.io/github/license/thephar/archipelago.js?style=flat-square)
 ![Types](https://img.shields.io/npm/types/archipelago.js?style=flat-square)

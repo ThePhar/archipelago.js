@@ -194,7 +194,7 @@ export class IntermediateDataOperation<T extends JSONSerializable> {
     public async commit(awaitReply: true): Promise<T>;
 
     /** Commit the current operations to data store. */
-    public async commit(awaitReply: false): Promise<void>;
+    public async commit(awaitReply?: false): Promise<void>;
 
     public async commit(awaitReply: boolean = false): Promise<T | void> {
         const _uuid = uuid();

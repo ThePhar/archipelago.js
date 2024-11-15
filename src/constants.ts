@@ -7,5 +7,6 @@
 export const targetVersion = { major: 0, minor: 5, build: 1 } as const;
 
 // Phar if you forget to update this on release, I swear to god.
+
 /** The version of this library. */
-export const libraryVersion = "2.0.1";
+export const libraryVersion = "2.0.2";
