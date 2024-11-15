@@ -41,7 +41,7 @@ deno add npm:archipelago.js
 Then, in your JavaScript or TypeScript files, just import using ESM syntax.
 
 ```js
-import { /* ... */ } from "archipelag.js";
+import { /* ... */ } from "archipelago.js";
 
 // Rest of your code here...
 ```
