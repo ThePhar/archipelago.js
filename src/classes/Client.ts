@@ -110,14 +110,14 @@ export class Client {
      *
      * const client = new Client();
      *
-     * await client.login("wss://archipelago.gg:38281", "Phar", "Clique", {
+     * await client.login("archipelago.gg:38281", "Phar", "Clique", {
      *     slotData: false,
      *     password: "4444"
      * });
      * @example <caption>TypeScript with Slot Data</caption>
      * import { Client } from "archipelago.js";
      *
-     * interface CliqueSlotData {
+     * type CliqueSlotData = {
      *     color: string
      *     hard_mode: boolean
      * }
@@ -125,7 +125,7 @@ export class Client {
      * const client = new Client();
      *
      * // slotData: CliqueSlotData { color: "red", hard_mode: false }
-     * const slotData = await client.login<CliqueSlotData>("wss://archipelago.gg:38281", "Phar", "Clique");
+     * const slotData = await client.login<CliqueSlotData>("archipelago.gg:38281", "Phar", "Clique");
      */
     public async login<SlotData extends JSONRecord>(
         url: URL | string,
