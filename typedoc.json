@@ -24,7 +24,8 @@
     },
     "projectDocuments": [
         "./guides/introduction.md",
-        "./guides/installation.md"
+        "./guides/installation.md",
+        "./guides/creating.md",
     ],
 
     "dmtFavicon": "./assets/favicon.png",

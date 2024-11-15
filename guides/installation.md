@@ -73,7 +73,7 @@ provided **archipelago.js** bundle.
   <div style="text-align: right">
     <b>Next</b>
     <div>
-      <a></a>
+      <a href="./creating.md">Creating Your Client</a>
     </div>
   </div>
 </footer>
