@@ -26,6 +26,7 @@
         "./guides/introduction.md",
         "./guides/installation.md",
         "./guides/creating.md",
+        "./guides/placeholder.md"
     ],
 
     "dmtFavicon": "./assets/favicon.png",
