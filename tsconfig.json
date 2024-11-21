@@ -15,7 +15,7 @@
         "noEmit": true
     },
     "exclude": [
-        "_ignore",
+        "playground",
         "coverage",
         "dist",
         "docs",

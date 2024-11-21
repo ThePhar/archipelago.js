@@ -1,5 +1,4 @@
 import { clientStatuses, JSONRecord, NetworkHint, NetworkPlayer, NetworkSlot, slotTypes } from "../api";
-import { ArgumentError } from "../errors.ts";
 import { Client } from "./Client.ts";
 import { Hint } from "./Hint.ts";
 import { ClientStatus } from "./managers/PlayersManager.ts";
