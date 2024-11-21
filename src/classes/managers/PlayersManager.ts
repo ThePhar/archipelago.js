@@ -77,6 +77,9 @@ export class PlayersManager extends EventBasedManager<PlayerEvents> {
 
     /**
      * Returns a 2D array of player metadata ranked by team number, then slot number.
+     * @remarks Take care when accessing data for 0th slot on a team (such as when iterating over all team members), as
+     * slot 0 does not technically exist in the server's multi-data, and is only relevant in-case a server sends cheated
+     * items.
      * @example <caption>Print All Player Aliases to Console</caption>
      * for (const team of client.players.teams) {
      *     for (const player of team) {

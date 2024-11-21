@@ -20,7 +20,7 @@
         "build": "rimraf -rf dist && bun build.mjs",
         "docs": "typedoc --options typedoc.json",
         "lint": "eslint src",
-        "pack": "pnpm pack --pack-destination packs"
+        "pack": "pnpm run lint && pnpm run build && pnpm run docs && pnpm pack --pack-destination packs"
     },
     "homepage": "https://archipelago.js.org",
     "repository": "https://github.com/ThePhar/archipelago.js.git",
