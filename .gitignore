@@ -308,5 +308,6 @@ docs
 
 ### Extra stuff
 _ignore/
+playground/
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,linux,intellij+all,node
