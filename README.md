@@ -6,10 +6,10 @@
 ![NPM Downloads](https://img.shields.io/npm/dm/archipelago.js?style=flat-square)
 ![Static Badge](https://img.shields.io/badge/bsky-%40pharware.com-gray?style=flat-square&labelColor=%233b78fc&link=https%3A%2F%2Fbsky.app%2Fprofile%2Fpharware.com)
 
-A runtime-agnostic and zero dependency TypeScript/JavaScript library for communicating with Archipelago servers. 
+A runtime-agnostic and zero dependency TypeScript/JavaScript library for communicating with Archipelago servers.
 
-Targeted to work on all major desktop and mobile browsers ([Firefox](https://www.mozilla.org/en-US/firefox/), 
-[Chromium](https://www.chromium.org/), and [Safari](https://www.apple.com/safari/)) and server-side runtimes such as 
+Targeted to work on all major desktop and mobile browsers ([Firefox](https://www.mozilla.org/en-US/firefox/),
+[Chromium](https://www.chromium.org/), and [Safari](https://www.apple.com/safari/)) and server-side runtimes such as
 [Node.js](https://nodejs.org/en), [Bun](https://bun.sh/), and [Deno](https://deno.com/).
 
 ## Installation
@@ -25,13 +25,13 @@ Check out the intro documentation [here](https://archipelago.js.org/stable/docum
 The full API documentation is located [here](https://thephar.github.io/archipelago.js/). Please be sure to reference it
 while you are developing your JavaScript-based clients.
 
-This library supports 100% of the Archipelago network protocol referenced 
-[here](https://github.com/ArchipelagoMW/Archipelago/blob/main/docs/network%20protocol.md) as of **2026-04-11** 
+This library supports 100% of the Archipelago network protocol referenced
+[here](https://github.com/ArchipelagoMW/Archipelago/blob/main/docs/network%20protocol.md) as of **2026-04-11**
 (0.6.7). See more information about [Archipelago](https://archipelago.gg) at their website.
 
 ## Contribution
 
-Archipelago.js is built using TypeScript and the Bun bundler. You can set up your development environment  by cloning 
+Archipelago.js is built using TypeScript and the Bun bundler. You can set up your development environment  by cloning
 this repository to a desired location on your computer and installing its devDependencies.
 
 ```bash
@@ -47,7 +47,7 @@ to follow the code standards of this repository and check your work with `npm ru
 
 ### Disclaimer / Call for Help
 
-Currently, there are no automated tests for this library, so all testing in browser, Node, Deno, and Bun are done 
+Currently, there are no automated tests for this library, so all testing in browser, Node, Deno, and Bun are done
 manually. This is certainly one area that can be expanded upon.
 
-Alternatively, expanding upon the documentation (either through the JSDoc or tutorial-like guides) would be appreciated. 
+Alternatively, expanding upon the documentation (either through the JSDoc or tutorial-like guides) would be appreciated.

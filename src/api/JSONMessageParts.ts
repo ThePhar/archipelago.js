@@ -1,3 +1,11 @@
+import { hintStatuses } from "./constants.ts";
+
+/* eslint-disable @typescript-eslint/consistent-type-definitions --
+ *
+ * Since this has already shipped, it's TECHNICALLY a breaking change to turn all of these into interfaces.
+ * While it's highly unlikely that anyone would ever notice, let's save such things for the next major version bump.
+ */
+
 /**
  * A textual node containing item metadata.
  * @see {@link JSONMessagePart} for all possible message part node subtypes.
@@ -14,6 +22,21 @@ export type ItemJSONMessagePart = {
 
     /** The `id` of the player who owns this item. */
     readonly player: number
+};
+
+/**
+ * A textual node containing item metadata.
+ * @see {@link JSONMessagePart} for all possible message part node subtypes.
+ */
+export type HintStatusJSONMessagePart = {
+    /** Used to denote the intent of the message part. */
+    readonly type: "hint_status"
+
+    /** Used to supply text data for this node. */
+    readonly text: string
+
+    /** The status of the hint */
+    readonly hint_status: typeof hintStatuses
 };
 
 /**
@@ -61,6 +84,8 @@ export type TextJSONMessagePart = {
     readonly text: string
 };
 
+/* eslint-enable @typescript-eslint/consistent-type-definitions */
+
 /**
  * A union of all message node subtypes sent along with {@link PrintJSONPacket}, which can be reconstructed into a
  * legible message. Each node is intended to be read in the order provided in the packet.
@@ -70,7 +95,8 @@ export type JSONMessagePart =
     | ItemJSONMessagePart
     | LocationJSONMessagePart
     | ColorJSONMessagePart
-    | TextJSONMessagePart;
+    | TextJSONMessagePart
+    | HintStatusJSONMessagePart;
 
 /**
  * This is a type union of all supported message types for denoting the intent of the message part. This can be used to
@@ -95,6 +121,7 @@ export type ValidJSONMessagePartType =
     | "location_id"
     | "location_name"
     | "entrance_name"
+    | "hint_status"
     | "color";
 
 /**

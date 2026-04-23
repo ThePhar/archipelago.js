@@ -88,15 +88,9 @@ export class PlayersManager extends EventBasedManager<PlayerEvents> {
      * }
      */
     public get teams(): Player[][] {
-        const players: Player[][] = [];
-        for (let team = 0; team < this.#players.length; team++) {
-            players[team] = [];
-            for (let player = 0; player < this.#players[team].length; player++) {
-                players[team].push(new Player(this.#client, this.#players[team][player]));
-            }
-        }
-
-        return players;
+        return this.#players.map((team) =>
+            team.map((player) => new Player(this.#client, player)),
+        );
     }
 
     /**
@@ -107,9 +101,7 @@ export class PlayersManager extends EventBasedManager<PlayerEvents> {
      * @returns The player's metadata or `undefined` if not found.
      */
     public findPlayer(slot: number, team?: number): Player | undefined {
-        if (team === undefined) {
-            team = this.#client.players.self.team;
-        }
+        team ??= this.#client.players.self.team;
 
         const playerTeam = this.#players[team];
         if (playerTeam) {

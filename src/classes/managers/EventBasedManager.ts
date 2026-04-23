@@ -4,7 +4,7 @@ import { ArchipelagoEventEmitter } from "../ArchipelagoEventEmitter.ts";
  * An abstract class for managers that offer an event-based API.
  * @template Events An interface of events supported by this derived manager.
  */
-export abstract class EventBasedManager<Events extends { [p: string]: unknown[] }> {
+export abstract class EventBasedManager<Events extends Record<string, unknown[]>> {
     readonly #events = new ArchipelagoEventEmitter();
 
     /**

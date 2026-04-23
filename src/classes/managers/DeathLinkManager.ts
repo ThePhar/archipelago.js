@@ -3,6 +3,7 @@ import { DeathEvents } from "../../events/DeathLinkEvents.ts";
 import { Client } from "../Client.ts";
 import { EventBasedManager } from "./EventBasedManager.ts";
 
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- more trouble than it's worth tbh
 type DeathLinkData = { time: number, cause?: string, source: string };
 
 /**

@@ -13,7 +13,8 @@ import { EventBasedManager } from "./EventBasedManager.ts";
 export class ItemsManager extends EventBasedManager<ItemEvents> {
     readonly #client: Client;
     #received: Item[] = [];
-    #hints: Record<string, Hint> = {};
+    #hints: Hint[] = [];
+    #hintIndexLookup = new Map<string, number>();
 
     /**
      * Instantiates a new ItemsManager.
@@ -30,7 +31,7 @@ export class ItemsManager extends EventBasedManager<ItemEvents> {
                 const count = packet.items.length;
                 const items = [...packet.items]; // Shallow copy to prevent modifying the received items.
                 while (items.length > 0) {
-                // Update received items cache at index, then increment the index value (postfix).
+                    // Update received items cache at index, then increment the index value (postfix).
                     const networkItem = items.shift() as NetworkItem;
                     this.#received[index++] = new Item(
                         this.#client,
@@ -43,7 +44,8 @@ export class ItemsManager extends EventBasedManager<ItemEvents> {
                 this.emit("itemsReceived", [this.#received.slice(packet.index, packet.index + count), packet.index]);
             })
             .on("connected", () => {
-                this.#hints = {};
+                this.#hints = [];
+                this.#hintIndexLookup = new Map();
                 this.#received = [];
                 this.#client.storage
                     .notify(
@@ -52,11 +54,12 @@ export class ItemsManager extends EventBasedManager<ItemEvents> {
                     )
                     .then((data) => {
                         const hints = data[`_read_hints_${this.#client.players.self.team}_${this.#client.players.self.slot}`] as NetworkHint[];
-                        for (const hint of hints) {
-                            this.#hints[`${hint.finding_player}-${hint.location}`] = new Hint(this.#client, hint);
-                        }
-
-                        this.emit("hintsInitialized", [Object.values(this.#hints)]);
+                        this.#hints = hints.map((hint, index) => {
+                            const newHint = new Hint(this.#client, hint);
+                            this.#hintIndexLookup.set(newHint.uniqueKey, index);
+                            return newHint;
+                        });
+                        this.emit("hintsInitialized", [[...this.#hints]]);
                     })
                     .catch((error) => {
                         throw error;
@@ -86,14 +89,20 @@ export class ItemsManager extends EventBasedManager<ItemEvents> {
 
     #receivedHint(_: string, hints: NetworkHint[]): void {
         for (const hint of hints) {
-            const id = `${hint.finding_player}-${hint.location}`;
-
-            if (this.#hints[id] === undefined) {
-                this.#hints[id] = new Hint(this.#client, hint);
-                this.emit("hintReceived", [this.#hints[id]]);
-            } else if (this.#hints[id] && this.#hints[id].found !== hint.found) {
-                this.#hints[id] = new Hint(this.#client, hint);
-                this.emit("hintFound", [this.#hints[id]]);
+            const networkHintKey = Hint.getUniqueKey(hint);
+            const matchingHintIndex = this.#hintIndexLookup.get(networkHintKey);
+            if (matchingHintIndex !== undefined && this.#hints[matchingHintIndex].status !== hint.status) {
+                const newHint = new Hint(this.#client, hint);
+                this.#hints[matchingHintIndex] = newHint;
+                if (hint.found) {
+                    this.emit("hintFound", [newHint]);
+                }
+                this.emit("hintUpdated", [newHint]);
+            } else if (matchingHintIndex === undefined) {
+                const newHint = new Hint(this.#client, hint);
+                this.#hintIndexLookup.set(newHint.uniqueKey, this.#hints.length);
+                this.#hints.push(newHint);
+                this.emit("hintReceived", [newHint]);
             }
         }
     }

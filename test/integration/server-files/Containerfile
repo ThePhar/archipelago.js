@@ -1,0 +1,50 @@
+ARG python_version=3.12
+FROM python:$python_version AS generic_archipelago
+
+ARG archipelago_tag=0.6.7
+RUN git clone --depth 1 --branch $archipelago_tag https://github.com/ArchipelagoMW/Archipelago.git /opt/Archipelago
+
+WORKDIR /opt/Archipelago
+RUN find . -name requirements.txt -exec python -m pip install -r '{}' ';' && \
+    python -m pip install --upgrade 'setuptools<82'
+
+# create host.yaml so we can edit it
+ARG webhost_port=8888
+ARG host_address=localhost
+RUN python -c "import settings; settings.get_settings()" && \
+    perl -pi -e 's$rom_file: "$rom_file: "/data/roms/$g; s$enemizer_path: "EnemizerCLI/EnemizerCLI.Core"$enemizer_path: "/data/externals/EnemizerCLI/EnemizerCLI.Core"$g; s$sni_path: "SNI"$sni_path: "/data/externals/SNI"$g' host.yaml && \
+    python -c "import yaml; print(yaml.dump({ 'HOST_ADDRESS': '$host_address', 'PORT': $webhost_port, 'PONY': { 'provider': 'sqlite', 'filename': '/data/db/ap.db3', 'create_db': True } }))" > "/opt/Archipelago/config.yaml"
+
+EXPOSE $webhost_port/tcp
+EXPOSE 38281/tcp
+
+# web host data
+VOLUME ["/data/db"]
+# EnemizerCLI and SNI
+VOLUME ["/data/externals"]
+# ROMs
+VOLUME ["/data/roms"]
+# Player YAMLs
+VOLUME ["/data/players"]
+# Generated multiworlds
+VOLUME ["/data/output"]
+
+# logs
+VOLUME ["/opt/Archipelago/logs"]
+# APWorlds
+VOLUME ["/opt/Archipelago/custom_worlds"]
+
+ENTRYPOINT ["python"]
+# just run the web host by default because it doesn't require any additional args.
+# but most use cases I can think of for this will run something else.
+CMD ["WebHost.py"]
+
+FROM generic_archipelago
+
+EXPOSE 38281/tcp
+
+COPY yaml /data/players
+RUN mkdir /data/oneoff && python Generate.py --player_files_path /data/players --outputpath /data/oneoff --seed=8675309
+
+ENTRYPOINT ["python"]
+CMD ["MultiServer.py", "/data/oneoff/AP_77736814537648744499.zip", "--disable_save"]

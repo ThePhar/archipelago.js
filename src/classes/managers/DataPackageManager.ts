@@ -7,9 +7,9 @@ import { PackageMetadata } from "../PackageMetadata.ts";
  */
 export class DataPackageManager {
     readonly #client: Client;
-    readonly #packages: Map<string, PackageMetadata> = new Map();
-    readonly #checksums: Map<string, string> = new Map();
-    readonly #games: Set<string> = new Set();
+    readonly #packages = new Map<string, PackageMetadata>();
+    readonly #checksums = new Map<string, string>();
+    readonly #games = new Set<string>();
     #cache: DataPackageCache | null = null;
 
     /**
@@ -159,12 +159,12 @@ export class DataPackageManager {
      * fs.writeFileSync("path/to/cache/datapackage_cache.json", JSON.stringify(data), "utf8");
      */
     public exportPackage(): DataPackage {
-        return {
-            games: [...this.#packages.entries()].reduce((games, [game, pkg]) => {
-                games[game] = pkg.exportPackage();
-                return games;
-            }, {} as Record<string, GamePackage>),
-        };
+        const games: Record<string, GamePackage> = {};
+        for (const [game, pkg] of this.#packages.entries()) {
+            games[game] = pkg.exportPackage();
+        }
+
+        return { games };
     }
 
     /**

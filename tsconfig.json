@@ -1,27 +1,25 @@
 {
     "compilerOptions": {
-        "rootDir": "./src/",
-        "target": "ES2023",
-        "module": "ES2022",
-        "moduleResolution": "Node",
+        "rootDir": "./",
+        "target": "ES2015",
+        "module": "ES2015",
+        "moduleResolution": "bundler",
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
         "allowImportingTsExtensions": true,
         "strict": true,
         "skipLibCheck": true,
         "resolveJsonModule": true,
-        "allowJs": true,
-        "checkJs": true,
-        "noEmit": true
+        "noEmit": true,
+        "types": [
+            "@types/bun"
+        ]
     },
-    "exclude": [
-        "playground",
-        "coverage",
-        "dist",
-        "docs",
-        "node_modules",
-        "packs",
-        "eslint.config.mjs",
-        "build.mjs",
-    ],
+    "include": [
+        "build.ts",
+        "eslint.config.ts",
+        "vitest.config.ts",
+        "src",
+        "test"
+    ]
 }

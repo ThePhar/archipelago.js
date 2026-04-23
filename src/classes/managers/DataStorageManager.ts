@@ -64,7 +64,7 @@ export class DataStorageManager {
      * @returns An object containing all current values for each key requested.
      * @remarks Any keys not currently cached and monitored will be requested over the network instead of from memory.
      */
-    public async fetch<T extends JSONRecord>(keys: Array<keyof T>, monitor?: boolean): Promise<T>;
+    public async fetch<T extends JSONRecord>(keys: (keyof T)[], monitor?: boolean): Promise<T>;
 
     /**
      * Fetches a single key-value pair from data storage.
@@ -77,7 +77,7 @@ export class DataStorageManager {
      */
     public async fetch<T extends JSONSerializable>(key: string, monitor?: boolean): Promise<T>;
 
-    public async fetch<T>(input: string | Array<keyof T>, monitor: boolean = false): Promise<T> {
+    public async fetch<T>(input: string | (keyof T)[], monitor: boolean = false): Promise<T> {
         let keys: string[] = typeof input === "string" ? [input] : input as string[];
         if (monitor) {
             const monitorKeys = keys.filter((key) => this.#storage[key] === undefined);
@@ -131,7 +131,7 @@ export class DataStorageManager {
      *     .commit();
      * // Key 'key2' has been updated from 0 to 5!
      */
-    public async notify<T extends JSONRecord>(keys: Array<keyof T>, callback: DataChangeCallback): Promise<T> {
+    public async notify<T extends JSONRecord>(keys: (keyof T)[], callback: DataChangeCallback): Promise<T> {
         keys.forEach((key) => {
             this.#subscribers[key as string] ??= [];
             this.#subscribers[key as string].push(callback);

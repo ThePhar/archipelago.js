@@ -55,4 +55,12 @@ export class Hint {
     public get status(): typeof hintStatuses[keyof typeof hintStatuses] {
         return this.#hint.status;
     }
+
+    get uniqueKey(): string {
+        return `${this.#item.sender.slot}-${this.#item.locationId}`;
+    }
+
+    static getUniqueKey(hint: NetworkHint): string {
+        return `${hint.finding_player}-${hint.location}`;
+    }
 }

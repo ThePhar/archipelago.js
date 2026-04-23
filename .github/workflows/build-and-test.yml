@@ -1,0 +1,59 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      archipelago:
+        # build locally by running "podman build . -t something/whatever" in:
+        #   test/integration/server-files
+        # to get it hosted on quay.io (you need an account, it's free today):
+        #   - rename Containerfile to Dockerfile
+        #   - zip up the relevant files in that folder (if you're lazy, just zip it all up)
+        #   - have quay.io run a build using that zip file
+        # in future commits on this branch, we'll see about making that easier. for now,
+        # I need to stop somewhere, and this seems like as appropriate a place as any.
+        image: quay.io/airbreather/archipelagomw-server:20260414
+        ports:
+          - 38281:38281
+        options: >-
+          --health-cmd "grep -qr 'websockets.server.*server listening' /opt/Archipelago/logs"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Get Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Run tests
+        run: bun run --bun vitest --coverage
+
+      - name: Build prerelease package
+        run: bun pm pack --filename artifact.tgz
+
+      - name: Upload prerelease package
+        uses: actions/upload-artifact@v7
+        with:
+          path: artifact.tgz
+          archive: false
+
+      - name: Report Coverage
+        if: (!cancelled())
+        uses: davelosert/vitest-coverage-report-action@v2
+        with:
+          file-coverage-mode: all

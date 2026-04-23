@@ -1,5 +1,7 @@
 import {
     ColorJSONMessagePart,
+    hintStatuses,
+    HintStatusJSONMessagePart,
     ItemJSONMessagePart,
     JSONMessagePart,
     LocationJSONMessagePart,
@@ -54,7 +56,7 @@ export abstract class BaseMessageNode {
  */
 export class ItemMessageNode extends BaseMessageNode {
     protected override readonly part: ItemJSONMessagePart;
-    public readonly type = "item" as const;
+    public readonly type = "item";
 
     /** The item this node is referring to. */
     public readonly item: Item;
@@ -88,7 +90,7 @@ export class LocationMessageNode extends BaseMessageNode {
     readonly #name: string;
 
     protected override readonly part: LocationJSONMessagePart;
-    public readonly type = "location" as const;
+    public readonly type = "location";
 
     /** The integer id of this location. */
     public readonly id: number;
@@ -125,7 +127,7 @@ export class LocationMessageNode extends BaseMessageNode {
  */
 export class ColorMessageNode extends BaseMessageNode {
     protected override readonly part: ColorJSONMessagePart;
-    public readonly type = "color" as const;
+    public readonly type = "color";
 
     /** The explicit color (or style) of this node. */
     public readonly color: ValidJSONColorType;
@@ -141,6 +143,34 @@ export class ColorMessageNode extends BaseMessageNode {
 
         this.part = part;
         this.color = part.color;
+    }
+
+    public get text(): string {
+        return this.part.text;
+    }
+}
+
+/**
+ * A message node object containing Hint status data.
+ */
+export class HintStatusMessageNode extends BaseMessageNode {
+    protected override readonly part: HintStatusJSONMessagePart;
+    public readonly type = "hint_status";
+
+    /** The {@link hintStatuses} of this node. */
+    public readonly hint_status: typeof hintStatuses;
+
+    /**
+     * Instantiates a new message node object.
+     * @internal
+     * @param client The client object containing additional context metadata for this node.
+     * @param part The underlying message part component from the network protocol.
+     */
+    public constructor(client: Client, part: HintStatusJSONMessagePart) {
+        super(client, part);
+
+        this.part = part;
+        this.hint_status = part.hint_status;
     }
 
     public get text(): string {
@@ -182,7 +212,7 @@ export class TextualMessageNode extends BaseMessageNode {
  */
 export class PlayerMessageNode extends BaseMessageNode {
     protected override readonly part: TextJSONMessagePart;
-    public readonly type = "player" as const;
+    public readonly type = "player";
 
     /** The player being referenced by this node. */
     public readonly player: Player;
@@ -224,4 +254,5 @@ export type MessageNode =
     | LocationMessageNode
     | ColorMessageNode
     | TextualMessageNode
+    | HintStatusMessageNode
     | PlayerMessageNode;

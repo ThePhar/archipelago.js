@@ -5,6 +5,7 @@ import { Client } from "../Client.ts";
 import { Item } from "../Item.ts";
 import {
     ColorMessageNode,
+    HintStatusMessageNode,
     ItemMessageNode,
     LocationMessageNode,
     MessageNode,
@@ -62,11 +63,27 @@ export class MessageManager extends EventBasedManager<MessageEvents> {
         const request: SayPacket = { cmd: "Say", text };
         this.#client.socket.send(request);
 
-        if (text.startsWith("!admin ")) {
-            await this.wait("adminCommand", (message) => message === text);
-        } else {
-            await this.wait("chat", (message) => message === text);
+        if (text.toLowerCase() === "!admin") {
+            // edge case: "!admin" without anything after echoes back with a space appended, at least in 0.6.7.
+            // let's not fret over the details of that in case it changes. just trim it for matching purposes.
+            await this.wait("chat", (message) => message.trimEnd() === "!admin");
+            return;
         }
+
+        const specialCommandMatch = /^!admin ((login)|(\/option server_password))/i.exec(text);
+        if (specialCommandMatch) {
+            // ThePhar#232: handle special cases where the server masks the rest of certain commands when echoing:
+            //     https://github.com/ArchipelagoMW/Archipelago/blob/0.6.7/MultiServer.py#L1452-L1458
+            // it would be NICE to wait for an "adminCommand" result in those cases, but for whatever reason, the server
+            // gives us a "CommandResult" instead of "AdminCommandResult", and it doesn't seem appropriate to look for
+            // the wrong one in our own code. Just be a *little* wrong and wait for any echo that looks like it could
+            // have been a reply to us so that we don't spin indefinitely.
+            await this.wait("chat", (message) => message.toLowerCase().startsWith(specialCommandMatch[0]));
+            return;
+        }
+
+        // that's all the special cases we recognize. everything else should echo back exactly as we sent it.
+        await this.wait("chat", (message) => message === text);
     }
 
     #onPrintJSON(packet: PrintJSONPacket): void {
@@ -96,6 +113,11 @@ export class MessageManager extends EventBasedManager<MessageEvents> {
 
                 case "color": {
                     nodes.push(new ColorMessageNode(this.#client, part));
+                    break;
+                }
+
+                case "hint_status": {
+                    nodes.push(new HintStatusMessageNode(this.#client, part));
                     break;
                 }
 

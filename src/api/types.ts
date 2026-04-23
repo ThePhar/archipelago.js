@@ -11,6 +11,12 @@ export type ConnectionError =
     | "InvalidPassword"
     | "InvalidItemsHandling";
 
+/* eslint-disable @typescript-eslint/consistent-type-definitions --
+ *
+ * Since this has already shipped, it's TECHNICALLY a breaking change to turn all of these into interfaces.
+ * While it's highly unlikely that anyone would ever notice, let's save such things for the next major version bump.
+ */
+
 /**
  * A {@link DataPackage} is an object which contains arbitrary metadata about each game to enable a client to interact
  * with the Archipelago server easily.
@@ -39,6 +45,8 @@ export type GamePackage = {
     readonly checksum: string
 };
 
+/* eslint-enable @typescript-eslint/consistent-type-definitions */
+
 /** An interface for fetching data packages from a cache, Should return a {@link GamePackage} if available, else null */
 export interface DataPackageCache {
     getPackage(game: string, checksum?: string): Promise<GamePackage | null>
@@ -52,6 +60,12 @@ export type JSONSerializable =
     | null
     | JSONRecord
     | JSONSerializable[];
+
+/* eslint-disable @typescript-eslint/consistent-type-definitions --
+ *
+ * Since this has already shipped, it's TECHNICALLY a breaking change to turn all of these into interfaces.
+ * While it's highly unlikely that anyone would ever notice, let's save such things for the next major version bump.
+ */
 
 /** A record of JSON-serializable data. */
 export type JSONRecord = { [p: string]: JSONSerializable };
@@ -168,8 +182,16 @@ export type NetworkVersion = {
     readonly build: number
 };
 
+/* eslint-enable @typescript-eslint/consistent-type-definitions */
+
 /** The type for a given permission value. */
 export type PermissionValue = typeof permissions[keyof typeof permissions];
+
+/* eslint-disable @typescript-eslint/consistent-type-definitions --
+ *
+ * Since this has already shipped, it's TECHNICALLY a breaking change to turn all of these into interfaces.
+ * While it's highly unlikely that anyone would ever notice, let's save such things for the next major version bump.
+ */
 
 /** Mapping of restrict-able commands to their current {@link permissions} level. */
 export type PermissionTable = {
@@ -211,3 +233,5 @@ export type PermissionTable = {
      */
     readonly remaining: Omit<PermissionValue, typeof permissions.auto | typeof permissions.autoEnabled>
 };
+
+/* eslint-enable @typescript-eslint/consistent-type-definitions */

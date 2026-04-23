@@ -1,5 +1,11 @@
 import { JSONSerializable } from "./types.ts";
 
+/* eslint-disable @typescript-eslint/consistent-type-definitions --
+ *
+ * Since this has already shipped, it's TECHNICALLY a breaking change to turn all of these into interfaces.
+ * While it's highly unlikely that anyone would ever notice, let's save such things for the next major version bump.
+ */
+
 /**
  * Sets the current value of the key to `value`.
  * @see {@link DataStorageOperation} for all possible operation subtypes.
@@ -219,6 +225,8 @@ export type UpdateDataStorageOperation = {
     /** A value for the operation to apply against the current data storage value. */
     readonly value: JSONSerializable
 };
+
+/* eslint-enable @typescript-eslint/consistent-type-definitions */
 
 /**
  * A union of all possible DataStorages. An operation manipulates or alters the value of a key in the data

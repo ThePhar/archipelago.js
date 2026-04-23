@@ -81,7 +81,6 @@ export class Client {
         } else {
             this.options = { ...defaultClientOptions };
         }
-
         // Setup disconnection event handler to reset internal state.
         this.socket
             .on("disconnected", () => {
@@ -314,7 +313,9 @@ export class Client {
             .send({ cmd: "LocationScouts", create_as_hint: createHint, locations })
             .wait("locationInfo", (packet) => {
                 // Easy way to check if both lists are identical.
-                return packet.locations.map((location) => location.location).toSorted().join(",") === locations.toSorted().join(",");
+                const existing = new Set<number>(packet.locations.map((location) => location.location));
+                const received = new Set<number>(locations);
+                return existing.size === received.size && [...existing].every((value) => received.has(value));
             });
 
         return response.locations.map((item) => new Item(
@@ -335,6 +336,18 @@ export class Client {
      */
     public hint(locations: number[], player?: number, status?: typeof hintStatuses[keyof typeof hintStatuses]): void {
         this.socket.send({ cmd: "CreateHints", locations, player, status });
+    }
+
+    public updateHint(location: { id: number, player: number }, status: typeof hintStatuses[keyof typeof hintStatuses]) {
+        if (!this.authenticated) {
+            throw new UnauthenticatedError("Cannot update hints while not connected and authenticated.");
+        }
+
+        if (status === hintStatuses.found) {
+            throw new Error("Cannot update status of hint to HINT_FOUND");
+        }
+
+        this.socket.send({ cmd: "UpdateHint", location: location.id, player: location.player, status });
     }
 
     /**
