@@ -11,6 +11,7 @@ type DeathLinkData = { time: number, cause?: string, source: string };
 export class DeathLinkManager extends EventBasedManager<DeathEvents> {
     readonly #client: Client;
     #lastDeath: number = Number.MIN_SAFE_INTEGER;
+    #groupName: string = ""
 
     /**
      * Instantiates a new DeathLinkManager.
@@ -23,7 +24,7 @@ export class DeathLinkManager extends EventBasedManager<DeathEvents> {
 
         this.#client.socket.on("bounced", (packet) => {
             // Check if DeathLink packet.
-            if (packet.tags?.includes("DeathLink") && packet.data.time && packet.data.source) {
+            if (packet.tags?.includes(this.tag) && packet.data.time && packet.data.source) {
                 // Good enough for me.
                 const deathLink = packet.data as DeathLinkData;
 
@@ -42,25 +43,53 @@ export class DeathLinkManager extends EventBasedManager<DeathEvents> {
 
     /** Returns `true` if this client is participating in the DeathLink mechanic. */
     public get enabled(): boolean {
-        return this.#client.arguments.tags.includes("DeathLink");
+        return this.#client.arguments.tags.includes(this.tag);
+    }
+
+    /** Returns the tag used for DeathLink, including DeathLink Group handling */
+    private get tag(): string {
+        return "DeathLink" + this.#groupName
+    }
+
+    /** Returns the current Group Name */
+    public get group(): string {
+        return this.#groupName
+    }
+
+    /**
+     * Updates the current DeathLink Group name, including changing the tag if enabled.
+     * @param newGroup The group name to change to. Default group is empty-string.
+     */
+    public changeGroup(newGroup: string): void {
+        if (this.#groupName == newGroup) {
+            return;
+        }
+        if (!this.enabled) {
+            this.#groupName = newGroup
+            return
+        }
+        let oldTag: string = this.tag
+        this.#groupName = newGroup
+        // Remove the old tag, and add the new one
+        this.#client.updateTags([...this.#client.arguments.tags.filter((tag) => tag !== oldTag), this.tag]);
     }
 
     /** Toggles the DeathLink mechanic on for this client, if disabled, by adding the DeathLink tag. */
     public enableDeathLink(): void {
-        if (this.#client.arguments.tags.includes("DeathLink")) {
+        if (this.enabled) {
             return;
         }
 
-        this.#client.updateTags([...this.#client.arguments.tags, "DeathLink"]);
+        this.#client.updateTags([...this.#client.arguments.tags, this.tag]);
     }
 
     /** Toggles the DeathLink mechanic off for this client, if enabled, by removing the DeathLink tag. */
     public disableDeathLink(): void {
-        if (!this.#client.arguments.tags.includes("DeathLink")) {
+        if (!this.enabled) {
             return;
         }
 
-        this.#client.updateTags(this.#client.arguments.tags.filter((tag) => tag !== "DeathLink"));
+        this.#client.updateTags(this.#client.arguments.tags.filter((tag) => tag !== this.tag));
     }
 
     /**
@@ -91,6 +120,6 @@ export class DeathLinkManager extends EventBasedManager<DeathEvents> {
             cause,
             time: this.#lastDeath,
         };
-        this.#client.bounce({ tags: ["DeathLink"] }, deathLink);
+        this.#client.bounce({ tags: [this.tag] }, deathLink);
     }
 }
