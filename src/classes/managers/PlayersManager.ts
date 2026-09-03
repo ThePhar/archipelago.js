@@ -106,14 +106,24 @@ export class PlayersManager extends EventBasedManager<PlayerEvents> {
      * player.
      * @returns The player's metadata or `undefined` if not found.
      */
-    public findPlayer(slot: number, team?: number): Player | undefined {
+    public findPlayer(slot: number | string, team?: number): Player | undefined {
         if (team === undefined) {
             team = this.#client.players.self.team;
         }
 
         const playerTeam = this.#players[team];
-        if (playerTeam) {
-            return new Player(this.#client, this.#players[team][slot]);
+        if (!playerTeam) {
+            return undefined;
+        }
+
+        if (playerTeam[slot]) {
+            return new Player(this.#client, playerTeam[slot]);
+        }
+
+        for (let teamSlot of playerTeam) {
+            if (teamSlot.name === slot) {
+                return new Player(this.#client, teamSlot);
+            }
         }
 
         return undefined;
