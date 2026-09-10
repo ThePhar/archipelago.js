@@ -91,9 +91,15 @@ export class ItemsManager extends EventBasedManager<ItemEvents> {
             if (this.#hints[id] === undefined) {
                 this.#hints[id] = new Hint(this.#client, hint);
                 this.emit("hintReceived", [this.#hints[id]]);
-            } else if (this.#hints[id] && this.#hints[id].found !== hint.found) {
-                this.#hints[id] = new Hint(this.#client, hint);
-                this.emit("hintFound", [this.#hints[id]]);
+            } else {
+                if (this.#hints[id].found !== hint.found) {
+                    this.#hints[id] = new Hint(this.#client, hint);
+                    this.emit("hintFound", [this.#hints[id]]);
+                    this.emit("hintUpdated", [this.#hints[id]]);
+                } else if (this.#hints[id].status !== hint.status) {
+                    this.#hints[id] = new Hint(this.#client, hint);
+                    this.emit("hintUpdated", [this.#hints[id]]);
+                }
             }
         }
     }
